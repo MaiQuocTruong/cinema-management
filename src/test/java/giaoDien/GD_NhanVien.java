@@ -184,7 +184,7 @@ public class GD_NhanVien extends JFrame implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				GD_MuaVe gdMuaVe = new GD_MuaVe();
+				GD_MuaVe_Phim gdMuaVe = new GD_MuaVe_Phim();
 				gdMuaVe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				gdMuaVe.setVisible(true);
 				dispose();

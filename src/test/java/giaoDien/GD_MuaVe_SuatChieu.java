@@ -55,8 +55,10 @@ import javax.swing.JTextField;
 import com.toedter.calendar.JDateChooser;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import javax.swing.JComboBox;
+import javax.swing.ButtonGroup;
 
-public class GD_MuaVe extends JFrame implements ActionListener {
+public class GD_MuaVe_SuatChieu extends JFrame implements ActionListener {
 	/**
 	 * 
 	 */
@@ -75,10 +77,9 @@ public class GD_MuaVe extends JFrame implements ActionListener {
 	private DefaultTableModel tableModel;
 	private JButton btnThem, btnCapNhat, btnXoa, btnLamMoi;
 	private JTextField txtTuNgay;
-	private JTextField txtDenNgay;
-	private JDateChooser tuNgayDateChooser, denNgayDateChooser; // Thêm đối tượng JDateChooser cho từ ngày
+	private JDateChooser tuNgayDateChooser; // Thêm đối tượng JDateChooser cho từ ngày
 	private boolean isCalendarVisible = false;
-
+    private JComboBox<String> phongChieuComboBox; // Declare the JComboBox here
 //	static String quanly;
 	/**
 	 * Launch the application.
@@ -92,26 +93,30 @@ public class GD_MuaVe extends JFrame implements ActionListener {
 				}
 			}
 		} catch (ClassNotFoundException ex) {
-			java.util.logging.Logger.getLogger(GD_MuaVe.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(GD_MuaVe_SuatChieu.class.getName()).log(java.util.logging.Level.SEVERE,
+					null, ex);
 		} catch (InstantiationException ex) {
-			java.util.logging.Logger.getLogger(GD_MuaVe.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(GD_MuaVe_SuatChieu.class.getName()).log(java.util.logging.Level.SEVERE,
+					null, ex);
 		} catch (IllegalAccessException ex) {
-			java.util.logging.Logger.getLogger(GD_MuaVe.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(GD_MuaVe_SuatChieu.class.getName()).log(java.util.logging.Level.SEVERE,
+					null, ex);
 		} catch (javax.swing.UnsupportedLookAndFeelException ex) {
-			java.util.logging.Logger.getLogger(GD_MuaVe.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(GD_MuaVe_SuatChieu.class.getName()).log(java.util.logging.Level.SEVERE,
+					null, ex);
 		}
-		GD_MuaVe run = new GD_MuaVe();
+		GD_MuaVe_SuatChieu run = new GD_MuaVe_SuatChieu();
 		run.setVisible(true);
 	}
 
 	/**
 	 * Create the frame.
 	 */
-	public GD_MuaVe() {
+	public GD_MuaVe_SuatChieu() {
 		initComponents();
 		setResizable(false);
 		setBackground(Color.WHITE);
-		setTitle("Giao Diện Mua Vé");
+		setTitle("Giao Diện Mua Vé - Suất Chiếu");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setLocationRelativeTo(null);
 		setBounds(100, 100, 1168, 650);
@@ -119,38 +124,11 @@ public class GD_MuaVe extends JFrame implements ActionListener {
 		contentPane.setBorder(null);
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
-				// Khởi tạo JDateChooser cho từ ngày
-				denNgayDateChooser = new JDateChooser();
-				denNgayDateChooser.setBounds(140, 437, 100, 29);
-				denNgayDateChooser.getDateEditor().getUiComponent().setVisible(isCalendarVisible);
-				
-						JPanel panel12_1_1 = new JPanel();
-						panel12_1_1.setOpaque(false);
-						panel12_1_1.setBackground(Color.YELLOW);
-						panel12_1_1.setBounds(10, 430, 191, 37);
-						contentPane.add(panel12_1_1);
-						
-								txtDenNgay = new JTextField();
-								txtDenNgay.setFont(new Font("Open Sans", 0, 16));
-								txtDenNgay.setColumns(13);
-								panel12_1_1.add(txtDenNgay);
-				contentPane.add(denNgayDateChooser);
-				
-						// Thêm sự kiện cho JDateChooser để cập nhật giá trị vào textfield khi người
-						// dùng chọn ngày
-						denNgayDateChooser.addPropertyChangeListener("date", new PropertyChangeListener() {
-							@Override
-							public void propertyChange(PropertyChangeEvent evt) {
-								Date selectedDate = denNgayDateChooser.getDate();
-								SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-								txtDenNgay.setText(dateFormat.format(selectedDate));
-							}
-						});
 
 		lblNvIcon = new JLabel("");
-		lblNvIcon.setIcon(new ImageIcon(GD_MuaVe.class.getResource("/imgs/avt.png"))); // Thay đổi đường dẫn ảnh của
-																						// bạn
+		lblNvIcon.setIcon(new ImageIcon(GD_MuaVe_SuatChieu.class.getResource("/imgs/avt.png"))); // Thay đổi đường dẫn
+																									// ảnh của
+		// bạn
 		lblNvIcon.setBounds(760, 5, 40, 40); // Điều chỉnh tọa độ và kích thước của ảnh
 		contentPane.add(lblNvIcon);
 
@@ -195,7 +173,7 @@ public class GD_MuaVe extends JFrame implements ActionListener {
 		muaVeButton.setForeground(SystemColor.text);
 		muaVeButton.setRippleColor(new Color(255, 255, 255));
 		muaVeButton.setBackground(new Color(255, 128, 64));
-		muaVeButton.setIcon(new ImageIcon(GD_MuaVe.class.getResource("/imgs/tickets1.png")));
+		muaVeButton.setIcon(new ImageIcon(GD_MuaVe_SuatChieu.class.getResource("/imgs/tickets1.png")));
 		muaVeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
@@ -222,16 +200,27 @@ public class GD_MuaVe extends JFrame implements ActionListener {
 
 		JButton btnPhim = new JButton("Chọn Phim");
 		btnPhim.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnPhim.setIcon(new ImageIcon(GD_MuaVe.class.getResource("/imgs/film-reel.png")));
+		btnPhim.setIcon(new ImageIcon(GD_MuaVe_SuatChieu.class.getResource("/imgs/film-reel.png")));
+		btnPhim.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				GD_MuaVe_Phim gdMuaVe = new GD_MuaVe_Phim();
+				gdMuaVe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				gdMuaVe.setVisible(true);
+				dispose();
+			}
+		});
 		JButton btnGhe = new JButton("Chọn Ghế");
 		btnGhe.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnGhe.setIcon(new ImageIcon(GD_MuaVe.class.getResource("/imgs/chair.png")));
+		btnGhe.setIcon(new ImageIcon(GD_MuaVe_SuatChieu.class.getResource("/imgs/chair.png")));
 		JButton btnThucAn = new JButton("Thức Ăn");
 		btnThucAn.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnThucAn.setIcon(new ImageIcon(GD_MuaVe.class.getResource("/imgs/popcorn2.png")));
+		btnThucAn.setIcon(new ImageIcon(GD_MuaVe_SuatChieu.class.getResource("/imgs/popcorn2.png")));
 		JButton btnSuatChieu = new JButton("Suất Chiếu");
 		btnSuatChieu.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnSuatChieu.setIcon(new ImageIcon(GD_MuaVe.class.getResource("/imgs/clapperboard2.png")));
+		btnSuatChieu.setIcon(new ImageIcon(GD_MuaVe_SuatChieu.class.getResource("/imgs/clapperboard2.png")));
 
 		panelChonVe.add(btnPhim);
 		panelChonVe.add(btnSuatChieu);
@@ -248,7 +237,7 @@ public class GD_MuaVe extends JFrame implements ActionListener {
 		hoaDonButton.setForeground(SystemColor.text);
 		hoaDonButton.setRippleColor(new Color(255, 255, 255));
 		hoaDonButton.setBackground(new Color(46, 139, 87));
-		hoaDonButton.setIcon(new ImageIcon(GD_MuaVe.class.getResource("/imgs/bill.png")));
+		hoaDonButton.setIcon(new ImageIcon(GD_MuaVe_SuatChieu.class.getResource("/imgs/bill.png")));
 		hoaDonToolbar.add(hoaDonButton);
 		hoaDonToolbar.setBackground(customColor); // Thay đổi ở đây
 		topPanel.add(hoaDonToolbar);
@@ -263,7 +252,7 @@ public class GD_MuaVe extends JFrame implements ActionListener {
 		khachHangButton.setForeground(SystemColor.text);
 		khachHangButton.setRippleColor(new Color(255, 255, 255));
 		khachHangButton.setBackground(new Color(100, 100, 255));
-		khachHangButton.setIcon(new ImageIcon(GD_MuaVe.class.getResource("/imgs/bill.png")));
+		khachHangButton.setIcon(new ImageIcon(GD_MuaVe_SuatChieu.class.getResource("/imgs/bill.png")));
 		khachHangToolbar.add(khachHangButton);
 		khachHangToolbar.setBackground(customColor);
 		topPanel.add(khachHangToolbar);
@@ -278,36 +267,19 @@ public class GD_MuaVe extends JFrame implements ActionListener {
 		logoutButton.setForeground(SystemColor.text);
 		logoutButton.setRippleColor(new Color(255, 255, 255));
 		logoutButton.setBackground(new Color(226, 110, 110));
-		logoutButton.setIcon(new ImageIcon(GD_MuaVe.class.getResource("/imgs/logout.png")));
+		logoutButton.setIcon(new ImageIcon(GD_MuaVe_SuatChieu.class.getResource("/imgs/logout.png")));
 		logoutToolBar.add(logoutButton);
 		logoutToolBar.setBackground(customColor);
 		topPanel.add(logoutToolBar);
 
-		JLabel lblNewLabel = new JLabel("Tra cứu phim");
+		JLabel lblNewLabel = new JLabel("Tra cứu suất chiếu");
 		lblNewLabel.setFont(new Font("Open Sans", 1, 16));
-		lblNewLabel.setBounds(70, 102, 108, 20);
+		lblNewLabel.setBounds(45, 102, 152, 20);
 		contentPane.add(lblNewLabel);
-
-		JPanel panel = new JPanel();
-		panel.setBackground(new Color(255, 255, 0));
-		panel.setBounds(51, 140, 130, 30);
-		panel.setOpaque(false);
-		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS)); // Use vertical BoxLayout
-		contentPane.add(panel);
-		JCheckBox chkTenPhim = new JCheckBox();
-		chkTenPhim.setFont(new Font("Open Sans", 0, 16)); // NOI18N
-		chkTenPhim.setSelected(true);
-		chkTenPhim.setText("Theo tên phim");
-		chkTenPhim.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-//                chkTenPhimActionPerformed(evt);
-			}
-		});
-		panel.add(chkTenPhim);
 
 		JPanel panel12 = new JPanel();
 		panel12.setBackground(new Color(255, 255, 0));
-		panel12.setBounds(10, 170, 230, 37);
+		panel12.setBounds(10, 464, 230, 37);
 		panel12.setOpaque(false);
 		contentPane.add(panel12);
 		// Add JTextField below JCheckBox
@@ -316,25 +288,10 @@ public class GD_MuaVe extends JFrame implements ActionListener {
 		textField.setColumns(16); // You can adjust the column count based on your requirement
 		panel12.add(textField);
 
-		JPanel panel3 = new JPanel();
-		panel3.setBackground(new Color(255, 255, 0));
-		panel3.setBounds(32, 217, 182, 40);
-		panel3.setOpaque(false);
-		contentPane.add(panel3);
-		JCheckBox chkNgayCongChieu = new JCheckBox();
-		chkNgayCongChieu.setFont(new Font("Open Sans", 0, 16));
-		chkNgayCongChieu.setText("Theo ngày công chiếu");
-		chkNgayCongChieu.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-//                chkNgayCongChieuActionPerformed(evt);
-			}
-		});
-		panel3.add(chkNgayCongChieu);
-
 		JPanel panel12_1 = new JPanel();
 		panel12_1.setOpaque(false);
 		panel12_1.setBackground(Color.YELLOW);
-		panel12_1.setBounds(10, 313, 191, 37);
+		panel12_1.setBounds(10, 187, 191, 37);
 		contentPane.add(panel12_1);
 
 		txtTuNgay = new JTextField();
@@ -344,7 +301,7 @@ public class GD_MuaVe extends JFrame implements ActionListener {
 
 		// Khởi tạo JDateChooser cho từ ngày
 		tuNgayDateChooser = new JDateChooser();
-		tuNgayDateChooser.setBounds(140, 320, 100, 29);
+		tuNgayDateChooser.setBounds(140, 194, 100, 29);
 		tuNgayDateChooser.getDateEditor().getUiComponent().setVisible(isCalendarVisible);
 		contentPane.add(tuNgayDateChooser);
 
@@ -362,25 +319,72 @@ public class GD_MuaVe extends JFrame implements ActionListener {
 		JPanel panel12_2 = new JPanel();
 		panel12_2.setOpaque(false);
 		panel12_2.setBackground(Color.YELLOW);
-		panel12_2.setBounds(10, 266, 222, 37);
+		panel12_2.setBounds(10, 140, 230, 37);
 		panel12_2.setLayout(new FlowLayout(FlowLayout.LEFT));
 		contentPane.add(panel12_2);
 
-		JLabel lbltungay = new JLabel("Từ ngày:");
+		JLabel lbltungay = new JLabel("Ngày hiển thị:");
 		lbltungay.setFont(new Font("Open Sans", 0, 16));
 		panel12_2.add(lbltungay);
 
-		JPanel panel12_3 = new JPanel();
-		panel12_3.setOpaque(false);
-		panel12_3.setBackground(Color.YELLOW);
-		panel12_3.setBounds(10, 383, 230, 37);
-		panel12_3.setLayout(new FlowLayout(FlowLayout.LEFT));
-		contentPane.add(panel12_3);
+		JPanel panel12_2_1 = new JPanel();
+		panel12_2_1.setOpaque(false);
+		panel12_2_1.setBackground(Color.YELLOW);
+		panel12_2_1.setBounds(10, 234, 230, 37);
+		contentPane.add(panel12_2_1);
+		panel12_2_1.setLayout(new FlowLayout(FlowLayout.LEFT));
 
-		JLabel lbldenngay = new JLabel("Đến ngày:");
-		lbldenngay.setFont(new Font("Open Sans", 0, 16));
-		panel12_3.add(lbldenngay);
+		JLabel lbltungay_1 = new JLabel("Phòng chiếu:");
+		lbltungay_1.setFont(new Font("Open Sans", 0, 16));
+		panel12_2_1.add(lbltungay_1);
+		
+		String[] phongChieuList = {"Phòng 1", "Phòng 2", "Phòng 3", "Phòng 4"};
+        phongChieuComboBox = new JComboBox<>(phongChieuList);
+        panel12_2_1.add(phongChieuComboBox);
 
+		JPanel panel12_2_2 = new JPanel();
+		panel12_2_2.setOpaque(false);
+		panel12_2_2.setBackground(Color.YELLOW);
+		panel12_2_2.setBounds(10, 281, 230, 37);
+		contentPane.add(panel12_2_2);
+		panel12_2_2.setLayout(new FlowLayout(FlowLayout.LEFT));
+		
+		JLabel lbltungay_2 = new JLabel("Theo trạng thái:");
+		lbltungay_2.setFont(new Font("Open Sans", 0, 16));
+		panel12_2_2.add(lbltungay_2);
+		
+		JRadioButton rdbtnSapChieu = new JRadioButton("Sắp chiếu");
+		rdbtnSapChieu.setFont(new Font("Open Sans", 0, 16));
+		rdbtnSapChieu.setBounds(14, 324, 103, 21);
+		contentPane.add(rdbtnSapChieu);
+		
+		JRadioButton rdbtnDangChieu = new JRadioButton("Đang chiếu");
+		rdbtnDangChieu.setFont(new Font("Open Sans", 0, 16));
+		rdbtnDangChieu.setBounds(14, 358, 103, 21);
+		contentPane.add(rdbtnDangChieu);
+
+		JRadioButton rdbtnDaChieu = new JRadioButton("Đã chiếu");
+		rdbtnDaChieu.setFont(new Font("Open Sans", 0, 16));
+		rdbtnDaChieu.setBounds(14, 392, 103, 21);
+		contentPane.add(rdbtnDaChieu);
+		
+		// Thêm chúng vào ButtonGroup
+		ButtonGroup buttonGroup = new ButtonGroup();
+		buttonGroup.add(rdbtnSapChieu);
+		buttonGroup.add(rdbtnDangChieu);
+		buttonGroup.add(rdbtnDaChieu);
+		
+		JPanel panel12_2_2_1 = new JPanel();
+		panel12_2_2_1.setOpaque(false);
+		panel12_2_2_1.setBackground(Color.YELLOW);
+		panel12_2_2_1.setBounds(10, 429, 230, 37);
+		contentPane.add(panel12_2_2_1);
+		panel12_2_2_1.setLayout(new FlowLayout(FlowLayout.LEFT));
+		
+		JLabel lbltungay_2_1 = new JLabel("Theo tên phim:");
+		lbltungay_2_1.setFont(new Font("Dialog", Font.PLAIN, 16));
+		panel12_2_2_1.add(lbltungay_2_1);
+		
 		// Khởi tạo các nút
 		btnThem = new JButton("Thêm");
 		btnCapNhat = new JButton("Cập nhật");
@@ -400,14 +404,14 @@ public class GD_MuaVe extends JFrame implements ActionListener {
 		contentPane.add(btnLamMoi);
 
 		// Khởi tạo DefaultTableModel với các cột
-		String[] columnNames = { "STT", "Mã phim", "Tên phim", "Thời lượng", "Giới hạn tuổi", "Ngày chiếu", "Ngôn ngữ",
-				"Quốc gia", "Trạng thái" }; // Thay đổi tên cột tùy ý
+		String[] columnNames = { "STT", "Mã suất chiếu", "Tên phim", "Ngày chiếu", "Giờ chiếu", "Định dạng", "Ngôn ngữ",
+				"Phòng chiếu", "Trạng thái" }; // Thay đổi tên cột tùy ý
 		tableModel = new DefaultTableModel(columnNames, 0);
 
 		// Khởi tạo JTable với DefaultTableModel
 		table = new JTable(tableModel);
 		// Đặt chiều rộng cho cột "Tên phim"
-		table.getColumnModel().getColumn(2).setPreferredWidth(230); // Đặt giá trị 300 làm ví dụ, bạn có thể điều chỉnh
+		table.getColumnModel().getColumn(2).setPreferredWidth(200); // Đặt giá trị 300 làm ví dụ, bạn có thể điều chỉnh
 																	// theo ý muốn
 
 		// Tạo JScrollPane để thêm bảng vào để có thể cuộn
@@ -418,8 +422,8 @@ public class GD_MuaVe extends JFrame implements ActionListener {
 		contentPane.add(scrollPane);
 
 		// Thêm dữ liệu vào bảng
-		Object[] rowData = { "1", "PH00001", "Thám Tử Conan: Kẻ hành pháp Zero", "120", "13", "01-01-2018",
-				"Tiếng Nhật", "Nhật Bản", "Ngừng Chiếu" }; // Thay đổi dữ liệu tùy ý
+		Object[] rowData = { "1", "SC00001", "Màn Sương Phủ Máu", "10-12-2019", "08:30 - 09:15", "3D",
+				"Tiếng Anh", "Phòng 1", "Đã Chiếu" }; // Thay đổi dữ liệu tùy ý
 		tableModel.addRow(rowData);
 		JLabel background = new JLabel("");
 		background.setHorizontalAlignment(SwingConstants.CENTER);
@@ -446,12 +450,12 @@ public class GD_MuaVe extends JFrame implements ActionListener {
 
 		pack();
 	}
-	
+
 	private void formWindowClosing(java.awt.event.WindowEvent evt) {// GEN-FIRST:event_formWindowClosing
-		GD_NhanVien gdnv = new GD_NhanVien();
-		gdnv.setVisible(true);
+		GD_MuaVe_Phim gdmvphim = new GD_MuaVe_Phim();
+		gdmvphim.setVisible(true);
 	}
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 	}
