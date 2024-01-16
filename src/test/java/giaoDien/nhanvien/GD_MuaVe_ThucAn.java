@@ -114,7 +114,7 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 	 * Create the frame.
 	 */
 	public GD_MuaVe_ThucAn() {
-//		initComponents();
+		initComponents();
 		setResizable(false);
 		setBackground(Color.WHITE);
 		setTitle("Giao Diện Mua Vé - Thức Ăn");
@@ -128,7 +128,7 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 
 		lblNvIcon = new JLabel("");
 		lblNvIcon.setIcon(new ImageIcon(GD_MuaVe_ThucAn.class.getResource("/imgs/avt.png"))); // Thay đổi đường dẫn
-																								
+
 		// bạn
 		lblNvIcon.setBounds(760, 5, 40, 40); // Điều chỉnh tọa độ và kích thước của ảnh
 		contentPane.add(lblNvIcon);
@@ -209,6 +209,7 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 				// TODO Auto-generated method stub
 				GD_MuaVe_Phim gdMuaVe = new GD_MuaVe_Phim();
 				gdMuaVe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				gdMuaVe.setLocationRelativeTo(null);
 				gdMuaVe.setVisible(true);
 				dispose();
 			}
@@ -216,6 +217,18 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 		JButton btnGhe = new JButton("Chọn Ghế");
 		btnGhe.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnGhe.setIcon(new ImageIcon(GD_MuaVe_ThucAn.class.getResource("/imgs/chair.png")));
+		btnGhe.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				GD_MuaVe_ChonGhe gdmGHE = new GD_MuaVe_ChonGhe();
+				gdmGHE.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				gdmGHE.setLocationRelativeTo(null);
+				gdmGHE.setVisible(true);
+				dispose();
+			}
+		});
 		JButton btnThucAn = new JButton("Thức Ăn");
 		btnThucAn.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnThucAn.setIcon(new ImageIcon(GD_MuaVe_ThucAn.class.getResource("/imgs/popcorn2.png")));
@@ -229,6 +242,7 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 				// TODO Auto-generated method stub
 				GD_MuaVe_SuatChieu gdSChieu = new GD_MuaVe_SuatChieu();
 				gdSChieu.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				gdSChieu.setLocationRelativeTo(null);
 				gdSChieu.setVisible(true);
 				dispose();
 			}
@@ -264,7 +278,7 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 		khachHangButton.setForeground(SystemColor.text);
 		khachHangButton.setRippleColor(new Color(255, 255, 255));
 		khachHangButton.setBackground(new Color(100, 100, 255));
-		khachHangButton.setIcon(new ImageIcon(GD_MuaVe_ThucAn.class.getResource("/imgs/bill.png")));
+		khachHangButton.setIcon(new ImageIcon(GD_MuaVe_ThucAn.class.getResource("/imgs/customer1.png")));
 		khachHangToolbar.add(khachHangButton);
 		khachHangToolbar.setBackground(customColor);
 		topPanel.add(khachHangToolbar);
@@ -289,18 +303,6 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 		lblNewLabel.setBounds(68, 102, 113, 20);
 		contentPane.add(lblNewLabel);
 
-//		JPanel panel12 = new JPanel();
-//		panel12.setBackground(new Color(255, 255, 0));
-//		panel12.setBounds(10, 464, 230, 37);
-//		panel12.setOpaque(false);
-//		contentPane.add(panel12);
-		
-//		// Add JTextField below JCheckBox
-//		JTextField txtTheoTenPhim = new JTextField();
-//		txtTheoTenPhim.setFont(new Font("Open Sans", 0, 16));
-//		txtTheoTenPhim.setColumns(16); // You can adjust the column count based on your requirement
-//		panel12.add(txtTheoTenPhim);
-
 		JPanel panel12_1 = new JPanel();
 		panel12_1.setOpaque(false);
 		panel12_1.setBackground(Color.YELLOW);
@@ -319,7 +321,7 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 		panel12_2.setLayout(new FlowLayout(FlowLayout.LEFT));
 		contentPane.add(panel12_2);
 
-		JLabel lbltungay = new JLabel("Ngày hiển thị:");
+		JLabel lbltungay = new JLabel("Theo tên:");
 		lbltungay.setFont(new Font("Open Sans", 0, 16));
 		panel12_2.add(lbltungay);
 
@@ -336,26 +338,20 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 		lbltungay_2.setFont(new Font("Open Sans", 0, 16));
 		panel12_2_2.add(lbltungay_2);
 
-		JRadioButton rdbtnSapChieu = new JRadioButton("Sắp chiếu");
-		rdbtnSapChieu.setFont(new Font("Open Sans", 0, 16));
-		rdbtnSapChieu.setBounds(14, 284, 103, 21);
-		contentPane.add(rdbtnSapChieu);
+		JRadioButton rdbtnDangBan = new JRadioButton("Đang được bán");
+		rdbtnDangBan.setFont(new Font("Open Sans", 0, 16));
+		rdbtnDangBan.setBounds(14, 284, 180, 21);
+		contentPane.add(rdbtnDangBan);
 
-		JRadioButton rdbtnDangChieu = new JRadioButton("Đang chiếu");
-		rdbtnDangChieu.setFont(new Font("Open Sans", 0, 16));
-		rdbtnDangChieu.setBounds(14, 314, 103, 21);
-		contentPane.add(rdbtnDangChieu);
-
-		JRadioButton rdbtnDaChieu = new JRadioButton("Đã chiếu");
-		rdbtnDaChieu.setFont(new Font("Open Sans", 0, 16));
-		rdbtnDaChieu.setBounds(14, 344, 103, 21);
-		contentPane.add(rdbtnDaChieu);
+		JRadioButton rdbtnNgungBan = new JRadioButton("Đang ngưng bán");
+		rdbtnNgungBan.setFont(new Font("Open Sans", 0, 16));
+		rdbtnNgungBan.setBounds(14, 314, 180, 21);
+		contentPane.add(rdbtnNgungBan);
 
 		// Thêm chúng vào ButtonGroup
 		ButtonGroup buttonGroup = new ButtonGroup();
-		buttonGroup.add(rdbtnSapChieu);
-		buttonGroup.add(rdbtnDangChieu);
-		buttonGroup.add(rdbtnDaChieu);
+		buttonGroup.add(rdbtnDangBan);
+		buttonGroup.add(rdbtnNgungBan);
 
 		JPanel panel12_2_2_1 = new JPanel();
 		panel12_2_2_1.setOpaque(false);
@@ -367,7 +363,7 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 		JLabel lbltungay_2_1 = new JLabel("Theo loại đồ ăn :");
 		lbltungay_2_1.setFont(new Font("Dialog", Font.PLAIN, 16));
 		panel12_2_2_1.add(lbltungay_2_1);
-		
+
 		String[] loaiDoAn = { "Nước uống", "Đồ ăn nhanh", "Bánh kẹo" };
 		loaiDoAnComboBox = new JComboBox<>(loaiDoAn);
 		panel12_2_2_1.add(loaiDoAnComboBox);
@@ -463,8 +459,9 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 	}
 
 	private void formWindowClosing(java.awt.event.WindowEvent evt) {// GEN-FIRST:event_formWindowClosing
-		GD_MuaVe_Phim gdmvphim = new GD_MuaVe_Phim();
-		gdmvphim.setVisible(true);
+		GD_MuaVe_ChonGhe gdmvcghe = new GD_MuaVe_ChonGhe();
+		gdmvcghe.setLocationRelativeTo(null);
+		gdmvcghe.setVisible(true);
 	}
 
 	@Override

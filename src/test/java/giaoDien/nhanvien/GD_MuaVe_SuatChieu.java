@@ -116,7 +116,7 @@ public class GD_MuaVe_SuatChieu extends JFrame implements ActionListener {
 	 * Create the frame.
 	 */
 	public GD_MuaVe_SuatChieu() {
-//		initComponents();
+		initComponents();
 		setResizable(false);
 		setBackground(Color.WHITE);
 		setTitle("Giao Diện Mua Vé - Suất Chiếu");
@@ -211,6 +211,7 @@ public class GD_MuaVe_SuatChieu extends JFrame implements ActionListener {
 				// TODO Auto-generated method stub
 				GD_MuaVe_Phim gdMuaVePhim = new GD_MuaVe_Phim();
 				gdMuaVePhim.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				gdMuaVePhim.setLocationRelativeTo(null);
 				gdMuaVePhim.setVisible(true);
 				dispose();
 			}
@@ -218,6 +219,18 @@ public class GD_MuaVe_SuatChieu extends JFrame implements ActionListener {
 		JButton btnGhe = new JButton("Chọn Ghế");
 		btnGhe.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnGhe.setIcon(new ImageIcon(GD_MuaVe_SuatChieu.class.getResource("/imgs/chair.png")));
+		btnGhe.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				GD_MuaVe_ChonGhe gdmGHE = new GD_MuaVe_ChonGhe();
+				gdmGHE.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				gdmGHE.setLocationRelativeTo(null);
+				gdmGHE.setVisible(true);
+				dispose();
+			}
+		});
 		JButton btnThucAn = new JButton("Thức Ăn");
 		btnThucAn.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnThucAn.setIcon(new ImageIcon(GD_MuaVe_SuatChieu.class.getResource("/imgs/popcorn2.png")));
@@ -228,6 +241,7 @@ public class GD_MuaVe_SuatChieu extends JFrame implements ActionListener {
 				// TODO Auto-generated method stub
 				GD_MuaVe_ThucAn gdmvthan = new GD_MuaVe_ThucAn();
 				gdmvthan.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				gdmvthan.setLocationRelativeTo(null);
 				gdmvthan.setVisible(true);
 				dispose();
 			}
@@ -266,7 +280,7 @@ public class GD_MuaVe_SuatChieu extends JFrame implements ActionListener {
 		khachHangButton.setForeground(SystemColor.text);
 		khachHangButton.setRippleColor(new Color(255, 255, 255));
 		khachHangButton.setBackground(new Color(100, 100, 255));
-		khachHangButton.setIcon(new ImageIcon(GD_MuaVe_SuatChieu.class.getResource("/imgs/bill.png")));
+		khachHangButton.setIcon(new ImageIcon(GD_MuaVe_SuatChieu.class.getResource("/imgs/customer1.png")));
 		khachHangToolbar.add(khachHangButton);
 		khachHangToolbar.setBackground(customColor);
 		topPanel.add(khachHangToolbar);
@@ -464,6 +478,7 @@ public class GD_MuaVe_SuatChieu extends JFrame implements ActionListener {
 
 	private void formWindowClosing(java.awt.event.WindowEvent evt) {// GEN-FIRST:event_formWindowClosing
 		GD_MuaVe_Phim gdmvphim = new GD_MuaVe_Phim();
+		gdmvphim.setLocationRelativeTo(null);
 		gdmvphim.setVisible(true);
 	}
 

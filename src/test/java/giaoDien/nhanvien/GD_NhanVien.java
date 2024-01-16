@@ -56,6 +56,7 @@ public class GD_NhanVien extends JFrame implements ActionListener {
 	Color customColor = new Color(0, 92, 111);
 	Color whiteColor = Color.WHITE;
     private JLabel lblNvIcon; // Thêm biến để lưu đối tượng JLabel chứa ảnh NV
+    private boolean daChonPhim = false; // Biến để kiểm tra xem đã chọn Phim hay chưa
 //	static String quanly;
 	/**
 	 * Launch the application.
@@ -186,19 +187,51 @@ public class GD_NhanVien extends JFrame implements ActionListener {
 				// TODO Auto-generated method stub
 				GD_MuaVe_Phim gdMuaVe = new GD_MuaVe_Phim();
 				gdMuaVe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				gdMuaVe.setLocationRelativeTo(null);
 				gdMuaVe.setVisible(true);
 				dispose();
+                daChonPhim = true; // Đặt biến flag khi chọn Phim
 			}
 		});
 		JButton btnGhe = new JButton("Chọn Ghế");
 		btnGhe.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnGhe.setIcon(new ImageIcon(GD_NhanVien.class.getResource("/imgs/chair.png")));
+		btnGhe.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!daChonPhim) {
+                    JOptionPane.showMessageDialog(GD_NhanVien.this, "Vui lòng Chọn Phim trước!");
+                    return; // Không thực hiện các thao tác khác nếu chưa chọn Phim
+                }
+                // Thực hiện các thao tác khi chọn Ghế
+            }
+        });
 		JButton btnThucAn = new JButton("Thức Ăn");
 		btnThucAn.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnThucAn.setIcon(new ImageIcon(GD_NhanVien.class.getResource("/imgs/popcorn2.png")));
+		btnThucAn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!daChonPhim) {
+                    JOptionPane.showMessageDialog(GD_NhanVien.this, "Vui lòng chọn Phim trước!");
+                    return;
+                }
+                // Thực hiện các thao tác khi chọn Thức ăn
+            }
+        });
 		JButton btnSuatChieu = new JButton("Suất Chiếu");
 		btnSuatChieu.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnSuatChieu.setIcon(new ImageIcon(GD_NhanVien.class.getResource("/imgs/clapperboard2.png")));
+		btnSuatChieu.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!daChonPhim) {
+                    JOptionPane.showMessageDialog(GD_NhanVien.this, "Vui lòng chọn Phim trước!");
+                    return;
+                }
+                // Thực hiện các thao tác khi chọn Thức ăn
+            }
+        });
 
 		panelChonVe.add(btnPhim);
 		panelChonVe.add(btnSuatChieu);
@@ -230,7 +263,7 @@ public class GD_NhanVien extends JFrame implements ActionListener {
 		khachHangButton.setForeground(SystemColor.text);
 		khachHangButton.setRippleColor(new Color(255, 255, 255));
 		khachHangButton.setBackground(new Color(100, 100, 255));
-		khachHangButton.setIcon(new ImageIcon(GD_NhanVien.class.getResource("/imgs/bill.png")));
+		khachHangButton.setIcon(new ImageIcon(GD_NhanVien.class.getResource("/imgs/customer1.png")));
 		khachHangToolbar.add(khachHangButton);
 		khachHangToolbar.setBackground(customColor);
 		topPanel.add(khachHangToolbar);
@@ -287,6 +320,7 @@ public class GD_NhanVien extends JFrame implements ActionListener {
 	
 	private void formWindowClosing(java.awt.event.WindowEvent evt) {// GEN-FIRST:event_formWindowClosing
 		Login login = new Login();
+		login.setLocationRelativeTo(null);
 		login.setVisible(true);
 	}
 	
