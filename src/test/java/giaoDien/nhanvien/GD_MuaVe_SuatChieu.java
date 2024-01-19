@@ -71,15 +71,15 @@ public class GD_MuaVe_SuatChieu extends JFrame implements ActionListener {
 	Connection con = null;
 	ResultSet rs = null;
 	PreparedStatement pst = null;
-	private JPanel panelChonVe;
+	private JPanel panelChonVe, panelThongKe, panelKhachHang;
 	Color customColor = new Color(0, 92, 111);
 	Color whiteColor = Color.WHITE;
 	private JLabel lblNvIcon; // Thêm biến để lưu đối tượng JLabel chứa ảnh NV
 	private JTable table;
 	private DefaultTableModel tableModel;
 	private JButton btnXacNhan, btnHuyBo, btnLamMoi;
-	private JTextField txtTuNgay;
-	private JDateChooser tuNgayDateChooser; // Thêm đối tượng JDateChooser cho từ ngày
+	private JTextField txtNgayHienThi;
+	private JDateChooser ngayHienThiDateChooser; // Thêm đối tượng JDateChooser cho từ ngày
 	private boolean isCalendarVisible = false;
 	private JComboBox<String> phongChieuComboBox; // Declare the JComboBox here
 //	static String quanly;
@@ -142,7 +142,7 @@ public class GD_MuaVe_SuatChieu extends JFrame implements ActionListener {
 		lblnhanvien.setForeground(Color.WHITE);
 		contentPane.add(lblnhanvien);
 
-		lbltennv = new JLabel("Mai Quoc Truong");
+		lbltennv = new JLabel("Trương Đại Lộc");
 		lbltennv.setForeground(Color.WHITE);
 		lbltennv.setFont(new Font("Tahoma", Font.BOLD, 16));
 		lbltennv.setBounds(832, 0, 238, 50);
@@ -179,6 +179,13 @@ public class GD_MuaVe_SuatChieu extends JFrame implements ActionListener {
 		muaVeButton.setIcon(new ImageIcon(GD_MuaVe_SuatChieu.class.getResource("/imgs/tickets1.png")));
 		muaVeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if (panelKhachHang.isVisible() || panelChonVe.isVisible() || panelThongKe.isVisible()) {
+					panelChonVe.setVisible(false);
+					panelThongKe.setVisible(false);
+					panelKhachHang.setVisible(false);
+				} else {
+					panelChonVe.setVisible(true);
+				}
 			}
 		});
 		muaVeToolbar.add(muaVeButton);
@@ -255,21 +262,64 @@ public class GD_MuaVe_SuatChieu extends JFrame implements ActionListener {
 		panelChonVe.add(btnGhe);
 		panelChonVe.add(btnThucAn);
 
-		// Thêm toolbar "Hóa đơn"
-		JToolBar hoaDonToolbar = new JToolBar();
-		hoaDonToolbar.setFloatable(false);
-		hoaDonToolbar.setMargin(new java.awt.Insets(-5, -5, 0, 0));
-		testbutton.Buttontest hoaDonButton = new Buttontest();
-		hoaDonButton.setText("Hóa Đơn");
-		hoaDonButton.setFont(new Font("Open Sans", Font.BOLD, 15));
-		hoaDonButton.setForeground(SystemColor.text);
-		hoaDonButton.setRippleColor(new Color(255, 255, 255));
-		hoaDonButton.setBackground(new Color(46, 139, 87));
-		hoaDonButton.setIcon(new ImageIcon(GD_MuaVe_SuatChieu.class.getResource("/imgs/bill.png")));
-		hoaDonToolbar.add(hoaDonButton);
-		hoaDonToolbar.setBackground(customColor); // Thay đổi ở đây
-		topPanel.add(hoaDonToolbar);
+		// Thêm toolbar "Thống kê"
+		JToolBar thongKeToolBar = new JToolBar();
+		thongKeToolBar.setFloatable(false);
+		thongKeToolBar.setMargin(new java.awt.Insets(-5, -5, 0, 0));
+		testbutton.Buttontest thongKeButton = new Buttontest();
+		thongKeButton.setText("Thống Kê");
+		thongKeButton.setFont(new Font("Open Sans", Font.BOLD, 15));
+		thongKeButton.setForeground(SystemColor.text);
+		thongKeButton.setRippleColor(new Color(255, 255, 255));
+		thongKeButton.setBackground(new Color(46, 139, 87));
+		thongKeButton.setIcon(new ImageIcon(GD_MuaVe_SuatChieu.class.getResource("/imgs/bill.png")));
+		thongKeToolBar.add(thongKeButton);
+		thongKeToolBar.setBackground(customColor); // Thay đổi ở đây
+		topPanel.add(thongKeToolBar);
 
+		panelThongKe = new JPanel() {
+			private static final long serialVersionUID = 1L;
+
+			protected void paintComponent(Graphics g) {
+				g.setColor(getBackground());
+				g.fillRect(0, 0, getWidth(), getHeight());
+				super.paintComponent(g);
+			}
+		};
+		panelThongKe.setBounds(0, 49, 1175, 47); // Điều chỉnh tọa độ và kích thước của panel thống kê
+		panelThongKe.setLayout(new FlowLayout(FlowLayout.LEFT));
+		panelThongKe.setVisible(false); // Ẩn panel thống kê ban đầu
+		panelThongKe.setBackground(whiteColor);
+		contentPane.add(panelThongKe);
+		
+		 // Thêm button thống kê vào panel thống kê
+		JButton btnThongKeHoaDon = new JButton("Thống Kê Hóa Đơn");
+		btnThongKeHoaDon.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btnThongKeHoaDon.setIcon(new ImageIcon(GD_MuaVe_Phim.class.getResource("/imgs/bill.png")));
+		JButton btnThongKeThucAn = new JButton("Thống Kê Thức Ăn"); 
+		btnThongKeThucAn.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btnThongKeThucAn.setIcon(new ImageIcon(GD_MuaVe_Phim.class.getResource("/imgs/popcorn2.png")));
+		JButton btnThongKeVePhim = new JButton("Thống Kê Vé Phim");
+		btnThongKeVePhim.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btnThongKeVePhim.setIcon(new ImageIcon(GD_MuaVe_Phim.class.getResource("/imgs/tickets2.png")));
+		
+		panelThongKe.add(btnThongKeHoaDon);
+	    panelThongKe.add(btnThongKeThucAn);
+	    panelThongKe.add(btnThongKeVePhim);
+
+	    // Thêm sự kiện cho button Hóa Đơn để hiển thị/ẩn panel thống kê
+	    thongKeButton.addActionListener(new ActionListener() {
+	        public void actionPerformed(ActionEvent e) {
+	            if (panelKhachHang.isVisible() || panelChonVe.isVisible() || panelThongKe.isVisible()) {
+	            	panelChonVe.setVisible(false);
+	                panelThongKe.setVisible(false);
+	                panelKhachHang.setVisible(false);
+	            } else {
+	                panelThongKe.setVisible(true);
+	            }
+	        }
+	    });
+		
 		// Thêm toolbar "Khach Hang"
 		JToolBar khachHangToolbar = new JToolBar();
 		khachHangToolbar.setFloatable(false);
@@ -281,14 +331,57 @@ public class GD_MuaVe_SuatChieu extends JFrame implements ActionListener {
 		khachHangButton.setRippleColor(new Color(255, 255, 255));
 		khachHangButton.setBackground(new Color(100, 100, 255));
 		khachHangButton.setIcon(new ImageIcon(GD_MuaVe_SuatChieu.class.getResource("/imgs/customer1.png")));
+		khachHangButton.addActionListener(new ActionListener() {
+	        public void actionPerformed(ActionEvent e) {
+	            if (panelKhachHang.isVisible() || panelChonVe.isVisible() || panelThongKe.isVisible()) {
+	            	panelChonVe.setVisible(false);
+	                panelThongKe.setVisible(false);
+	                panelKhachHang.setVisible(false);
+	            } else {
+	            	panelKhachHang.setVisible(true);
+	            }
+	        }
+	    });
 		khachHangToolbar.add(khachHangButton);
 		khachHangToolbar.setBackground(customColor);
 		topPanel.add(khachHangToolbar);
+		
+		panelKhachHang = new JPanel() {
+			private static final long serialVersionUID = 1L;
+
+			protected void paintComponent(Graphics g) {
+				g.setColor(getBackground());
+				g.fillRect(0, 0, getWidth(), getHeight());
+				super.paintComponent(g);
+			}
+		};
+		panelKhachHang.setBounds(0, 49, 1175, 47); // Điều chỉnh tọa độ và kích thước của panel thống kê
+		panelKhachHang.setLayout(new FlowLayout(FlowLayout.LEFT));
+		panelKhachHang.setVisible(false); // Ẩn panel thống kê ban đầu
+		panelKhachHang.setBackground(whiteColor);
+		contentPane.add(panelKhachHang);
+		
+		 // Thêm button thống kê vào panel thống kê
+		JButton btnQlyKH = new JButton("Quản Lý Khách Hàng");
+		btnQlyKH.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btnQlyKH.setIcon(new ImageIcon(GD_NhanVien.class.getResource("/imgs/khachhang1.png")));
+		btnQlyKH.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				GD_KhachHang gdkh = new GD_KhachHang();
+				gdkh.setVisible(true);
+				gdkh.setLocationRelativeTo(null);
+				dispose();
+			}
+		});
+		panelKhachHang.add(btnQlyKH);
 
 		// Create logout button
 		JToolBar logoutToolBar = new JToolBar();
 		logoutToolBar.setFloatable(false);
-		logoutToolBar.setMargin(new java.awt.Insets(-5, 636, 0, 0));
+		logoutToolBar.setMargin(new java.awt.Insets(-5, 631, 0, 0));
 		testbutton.Buttontest logoutButton = new Buttontest();
 		logoutButton.setText("Đăng Xuất");
 		logoutButton.setFont(new Font("Open Sans", Font.BOLD, 15));
@@ -300,86 +393,86 @@ public class GD_MuaVe_SuatChieu extends JFrame implements ActionListener {
 		logoutToolBar.setBackground(customColor);
 		topPanel.add(logoutToolBar);
 
-		JLabel lblNewLabel = new JLabel("Tra cứu suất chiếu");
-		lblNewLabel.setFont(new Font("Open Sans", 1, 16));
-		lblNewLabel.setBounds(45, 102, 152, 20);
-		contentPane.add(lblNewLabel);
+		JLabel lblTraCuuSuatChieu = new JLabel("Tra cứu suất chiếu");
+		lblTraCuuSuatChieu.setFont(new Font("Open Sans", 1, 16));
+		lblTraCuuSuatChieu.setBounds(45, 102, 152, 20);
+		contentPane.add(lblTraCuuSuatChieu);
 
-		JPanel panel12 = new JPanel();
-		panel12.setBackground(new Color(255, 255, 0));
-		panel12.setBounds(10, 464, 230, 37);
-		panel12.setOpaque(false);
-		contentPane.add(panel12);
+		JPanel pnlTheoTenPhim = new JPanel();
+		pnlTheoTenPhim.setBackground(new Color(255, 255, 0));
+		pnlTheoTenPhim.setBounds(10, 464, 230, 37);
+		pnlTheoTenPhim.setOpaque(false);
+		contentPane.add(pnlTheoTenPhim);
 		// Add JTextField below JCheckBox
-		JTextField textField = new JTextField();
-		textField.setFont(new Font("Open Sans", 0, 16));
-		textField.setColumns(16); // You can adjust the column count based on your requirement
-		panel12.add(textField);
+		JTextField txtTenPhim = new JTextField();
+		txtTenPhim.setFont(new Font("Open Sans", 0, 16));
+		txtTenPhim.setColumns(16); // You can adjust the column count based on your requirement
+		pnlTheoTenPhim.add(txtTenPhim);
 
-		JPanel panel12_1 = new JPanel();
-		panel12_1.setOpaque(false);
-		panel12_1.setBackground(Color.YELLOW);
-		panel12_1.setBounds(10, 187, 191, 37);
-		contentPane.add(panel12_1);
+		JPanel pnlNgayHienThi_1 = new JPanel();
+		pnlNgayHienThi_1.setOpaque(false);
+		pnlNgayHienThi_1.setBackground(Color.YELLOW);
+		pnlNgayHienThi_1.setBounds(10, 187, 191, 37);
+		contentPane.add(pnlNgayHienThi_1);
 
-		txtTuNgay = new JTextField();
-		txtTuNgay.setFont(new Font("Open Sans", Font.PLAIN, 16));
-		txtTuNgay.setColumns(13);
-		panel12_1.add(txtTuNgay);
+		txtNgayHienThi = new JTextField();
+		txtNgayHienThi.setFont(new Font("Open Sans", Font.PLAIN, 16));
+		txtNgayHienThi.setColumns(13);
+		pnlNgayHienThi_1.add(txtNgayHienThi);
 
 		// Khởi tạo JDateChooser cho từ ngày
-		tuNgayDateChooser = new JDateChooser();
-		tuNgayDateChooser.setBounds(140, 194, 100, 29);
-		tuNgayDateChooser.getDateEditor().getUiComponent().setVisible(isCalendarVisible);
-		contentPane.add(tuNgayDateChooser);
+		ngayHienThiDateChooser = new JDateChooser();
+		ngayHienThiDateChooser.setBounds(140, 194, 100, 29);
+		ngayHienThiDateChooser.getDateEditor().getUiComponent().setVisible(isCalendarVisible);
+		contentPane.add(ngayHienThiDateChooser);
 
 		// Thêm sự kiện cho JDateChooser để cập nhật giá trị vào textfield khi người
 		// dùng chọn ngày
-		tuNgayDateChooser.addPropertyChangeListener("date", new PropertyChangeListener() {
+		ngayHienThiDateChooser.addPropertyChangeListener("date", new PropertyChangeListener() {
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
-				Date selectedDate = tuNgayDateChooser.getDate();
+				Date selectedDate = ngayHienThiDateChooser.getDate();
 				SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-				txtTuNgay.setText(dateFormat.format(selectedDate));
+				txtNgayHienThi.setText(dateFormat.format(selectedDate));
 			}
 		});
 
-		JPanel panel12_2 = new JPanel();
-		panel12_2.setOpaque(false);
-		panel12_2.setBackground(Color.YELLOW);
-		panel12_2.setBounds(10, 140, 230, 37);
-		panel12_2.setLayout(new FlowLayout(FlowLayout.LEFT));
-		contentPane.add(panel12_2);
+		JPanel pnlNgayHienThi = new JPanel();
+		pnlNgayHienThi.setOpaque(false);
+		pnlNgayHienThi.setBackground(Color.YELLOW);
+		pnlNgayHienThi.setBounds(10, 140, 230, 37);
+		pnlNgayHienThi.setLayout(new FlowLayout(FlowLayout.LEFT));
+		contentPane.add(pnlNgayHienThi);
 
-		JLabel lbltungay = new JLabel("Ngày hiển thị:");
-		lbltungay.setFont(new Font("Open Sans", 0, 16));
-		panel12_2.add(lbltungay);
+		JLabel lblNgayHienThi = new JLabel("Ngày hiển thị:");
+		lblNgayHienThi.setFont(new Font("Open Sans", 0, 16));
+		pnlNgayHienThi.add(lblNgayHienThi);
 
-		JPanel panel12_2_1 = new JPanel();
-		panel12_2_1.setOpaque(false);
-		panel12_2_1.setBackground(Color.YELLOW);
-		panel12_2_1.setBounds(10, 234, 230, 37);
-		contentPane.add(panel12_2_1);
-		panel12_2_1.setLayout(new FlowLayout(FlowLayout.LEFT));
+		JPanel pnlPhongChieu = new JPanel();
+		pnlPhongChieu.setOpaque(false);
+		pnlPhongChieu.setBackground(Color.YELLOW);
+		pnlPhongChieu.setBounds(10, 234, 230, 37);
+		contentPane.add(pnlPhongChieu);
+		pnlPhongChieu.setLayout(new FlowLayout(FlowLayout.LEFT));
 
-		JLabel lbltungay_1 = new JLabel("Phòng chiếu:");
-		lbltungay_1.setFont(new Font("Open Sans", 0, 16));
-		panel12_2_1.add(lbltungay_1);
+		JLabel lblPhongChieu = new JLabel("Phòng chiếu:");
+		lblPhongChieu.setFont(new Font("Open Sans", 0, 16));
+		pnlPhongChieu.add(lblPhongChieu);
 
 		String[] phongChieuList = { "Phòng 1", "Phòng 2", "Phòng 3", "Phòng 4" };
 		phongChieuComboBox = new JComboBox<>(phongChieuList);
-		panel12_2_1.add(phongChieuComboBox);
+		pnlPhongChieu.add(phongChieuComboBox);
 
-		JPanel panel12_2_2 = new JPanel();
-		panel12_2_2.setOpaque(false);
-		panel12_2_2.setBackground(Color.YELLOW);
-		panel12_2_2.setBounds(10, 281, 230, 37);
-		contentPane.add(panel12_2_2);
-		panel12_2_2.setLayout(new FlowLayout(FlowLayout.LEFT));
+		JPanel pnlTrangThai = new JPanel();
+		pnlTrangThai.setOpaque(false);
+		pnlTrangThai.setBackground(Color.YELLOW);
+		pnlTrangThai.setBounds(10, 281, 230, 37);
+		contentPane.add(pnlTrangThai);
+		pnlTrangThai.setLayout(new FlowLayout(FlowLayout.LEFT));
 
-		JLabel lbltungay_2 = new JLabel("Theo trạng thái:");
-		lbltungay_2.setFont(new Font("Open Sans", 0, 16));
-		panel12_2_2.add(lbltungay_2);
+		JLabel lblTrangThai = new JLabel("Theo trạng thái:");
+		lblTrangThai.setFont(new Font("Open Sans", 0, 16));
+		pnlTrangThai.add(lblTrangThai);
 
 		JRadioButton rdbtnSapChieu = new JRadioButton("Sắp chiếu");
 		rdbtnSapChieu.setFont(new Font("Open Sans", 0, 16));
@@ -402,17 +495,17 @@ public class GD_MuaVe_SuatChieu extends JFrame implements ActionListener {
 		buttonGroup.add(rdbtnDangChieu);
 		buttonGroup.add(rdbtnDaChieu);
 
-		JPanel panel12_2_2_1 = new JPanel();
-		panel12_2_2_1.setOpaque(false);
-		panel12_2_2_1.setBackground(Color.YELLOW);
-		panel12_2_2_1.setBounds(10, 429, 230, 37);
-		contentPane.add(panel12_2_2_1);
-		panel12_2_2_1.setLayout(new FlowLayout(FlowLayout.LEFT));
+		JPanel pnlTenPhim = new JPanel();
+		pnlTenPhim.setOpaque(false);
+		pnlTenPhim.setBackground(Color.YELLOW);
+		pnlTenPhim.setBounds(10, 429, 230, 37);
+		contentPane.add(pnlTenPhim);
+		pnlTenPhim.setLayout(new FlowLayout(FlowLayout.LEFT));
 
-		JLabel lbltungay_2_1 = new JLabel("Theo tên phim:");
-		lbltungay_2_1.setFont(new Font("Dialog", Font.PLAIN, 16));
-		panel12_2_2_1.add(lbltungay_2_1);
-
+		JLabel lblTenPhim = new JLabel("Theo tên phim:");
+		lblTenPhim.setFont(new Font("Dialog", Font.PLAIN, 16));
+		pnlTenPhim.add(lblTenPhim);
+		
 		// Khởi tạo các nút
 		btnXacNhan = new JButton("Xác nhận");
 		btnHuyBo = new JButton("Hủy bỏ");
