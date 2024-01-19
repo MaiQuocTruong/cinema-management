@@ -114,7 +114,7 @@ public class GD_MuaVe_Phim extends JFrame implements ActionListener {
 	 * Create the frame.
 	 */
 	public GD_MuaVe_Phim() {
-		initComponents();
+//		initComponents();
 		setResizable(false);
 		setBackground(Color.WHITE);
 		setTitle("Giao Diện Mua Vé - Phim");
@@ -131,16 +131,16 @@ public class GD_MuaVe_Phim extends JFrame implements ActionListener {
 		denNgayDateChooser.setBounds(140, 437, 100, 29);
 		denNgayDateChooser.getDateEditor().getUiComponent().setVisible(isCalendarVisible);
 
-		JPanel panel12_1_1 = new JPanel();
-		panel12_1_1.setOpaque(false);
-		panel12_1_1.setBackground(Color.YELLOW);
-		panel12_1_1.setBounds(10, 430, 191, 37);
-		contentPane.add(panel12_1_1);
+		JPanel pnlDenNgay_1 = new JPanel();
+		pnlDenNgay_1.setOpaque(false);
+		pnlDenNgay_1.setBackground(Color.YELLOW);
+		pnlDenNgay_1.setBounds(10, 430, 191, 37);
+		contentPane.add(pnlDenNgay_1);
 
 		txtDenNgay = new JTextField();
 		txtDenNgay.setFont(new Font("Open Sans", 0, 16));
 		txtDenNgay.setColumns(13);
-		panel12_1_1.add(txtDenNgay);
+		pnlDenNgay_1.add(txtDenNgay);
 		contentPane.add(denNgayDateChooser);
 
 		// Thêm sự kiện cho JDateChooser để cập nhật giá trị vào textfield khi người
@@ -391,7 +391,7 @@ public class GD_MuaVe_Phim extends JFrame implements ActionListener {
 		 // Thêm button thống kê vào panel thống kê
 		JButton btnQlyKH = new JButton("Quản Lý Khách Hàng");
 		btnQlyKH.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnQlyKH.setIcon(new ImageIcon(GD_NhanVien.class.getResource("/imgs/khachhang1.png")));
+		btnQlyKH.setIcon(new ImageIcon(GD_MuaVe_Phim.class.getResource("/imgs/khachhang1.png")));
 		btnQlyKH.addActionListener(new ActionListener() {
 			
 			@Override
@@ -420,44 +420,43 @@ public class GD_MuaVe_Phim extends JFrame implements ActionListener {
 		logoutToolBar.setBackground(customColor);
 		topPanel.add(logoutToolBar);
 
-		JLabel lblNewLabel = new JLabel("Tra cứu phim");
-		lblNewLabel.setFont(new Font("Open Sans", 1, 16));
-		lblNewLabel.setBounds(70, 102, 108, 20);
-		contentPane.add(lblNewLabel);
+		JLabel lblTraCuuPhim = new JLabel("Tra cứu phim");
+		lblTraCuuPhim.setFont(new Font("Open Sans", 1, 16));
+		lblTraCuuPhim.setBounds(70, 102, 108, 20);
+		contentPane.add(lblTraCuuPhim);
 
-		JPanel panel = new JPanel();
-		panel.setBackground(new Color(255, 255, 0));
-		panel.setBounds(51, 140, 130, 30);
-		panel.setOpaque(false);
-		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS)); // Use vertical BoxLayout
-		contentPane.add(panel);
+		JPanel pnlTenPhim = new JPanel();
+		pnlTenPhim.setBackground(new Color(255, 255, 0));
+		pnlTenPhim.setBounds(51, 140, 130, 30);
+		pnlTenPhim.setOpaque(false);
+		pnlTenPhim.setLayout(new BoxLayout(pnlTenPhim, BoxLayout.Y_AXIS)); // Use vertical BoxLayout
+		contentPane.add(pnlTenPhim);
 		JCheckBox chkTenPhim = new JCheckBox();
 		chkTenPhim.setFont(new Font("Open Sans", 0, 16)); // NOI18N
 		chkTenPhim.setSelected(true);
 		chkTenPhim.setText("Theo tên phim");
 		chkTenPhim.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
-//                chkTenPhimActionPerformed(evt);
 			}
 		});
-		panel.add(chkTenPhim);
+		pnlTenPhim.add(chkTenPhim);
 
-		JPanel panel12 = new JPanel();
-		panel12.setBackground(new Color(255, 255, 0));
-		panel12.setBounds(10, 170, 230, 37);
-		panel12.setOpaque(false);
-		contentPane.add(panel12);
+		JPanel pnlTheoTenPhim = new JPanel();
+		pnlTheoTenPhim.setBackground(new Color(255, 255, 0));
+		pnlTheoTenPhim.setBounds(10, 170, 230, 37);
+		pnlTheoTenPhim.setOpaque(false);
+		contentPane.add(pnlTheoTenPhim);
 		// Add JTextField below JCheckBox
-		JTextField textField = new JTextField();
-		textField.setFont(new Font("Open Sans", 0, 16));
-		textField.setColumns(16); // You can adjust the column count based on your requirement
-		panel12.add(textField);
+		JTextField txtTenPhim = new JTextField();
+		txtTenPhim.setFont(new Font("Open Sans", 0, 16));
+		txtTenPhim.setColumns(16); // You can adjust the column count based on your requirement
+		pnlTheoTenPhim.add(txtTenPhim);
 
-		JPanel panel3 = new JPanel();
-		panel3.setBackground(new Color(255, 255, 0));
-		panel3.setBounds(32, 217, 182, 40);
-		panel3.setOpaque(false);
-		contentPane.add(panel3);
+		JPanel pnlNgayCongChieu = new JPanel();
+		pnlNgayCongChieu.setBackground(new Color(255, 255, 0));
+		pnlNgayCongChieu.setBounds(32, 217, 182, 40);
+		pnlNgayCongChieu.setOpaque(false);
+		contentPane.add(pnlNgayCongChieu);
 		JCheckBox chkNgayCongChieu = new JCheckBox();
 		chkNgayCongChieu.setFont(new Font("Open Sans", 0, 16));
 		chkNgayCongChieu.setText("Theo ngày công chiếu");
@@ -466,18 +465,18 @@ public class GD_MuaVe_Phim extends JFrame implements ActionListener {
 //                chkNgayCongChieuActionPerformed(evt);
 			}
 		});
-		panel3.add(chkNgayCongChieu);
+		pnlNgayCongChieu.add(chkNgayCongChieu);
 
-		JPanel panel12_1 = new JPanel();
-		panel12_1.setOpaque(false);
-		panel12_1.setBackground(Color.YELLOW);
-		panel12_1.setBounds(10, 313, 191, 37);
-		contentPane.add(panel12_1);
+		JPanel pnlTuNgay_1 = new JPanel();
+		pnlTuNgay_1.setOpaque(false);
+		pnlTuNgay_1.setBackground(Color.YELLOW);
+		pnlTuNgay_1.setBounds(10, 313, 191, 37);
+		contentPane.add(pnlTuNgay_1);
 
 		txtTuNgay = new JTextField();
 		txtTuNgay.setFont(new Font("Open Sans", Font.PLAIN, 16));
 		txtTuNgay.setColumns(13);
-		panel12_1.add(txtTuNgay);
+		pnlTuNgay_1.add(txtTuNgay);
 
 		// Khởi tạo JDateChooser cho từ ngày
 		tuNgayDateChooser = new JDateChooser();
@@ -496,27 +495,27 @@ public class GD_MuaVe_Phim extends JFrame implements ActionListener {
 			}
 		});
 
-		JPanel panel12_2 = new JPanel();
-		panel12_2.setOpaque(false);
-		panel12_2.setBackground(Color.YELLOW);
-		panel12_2.setBounds(10, 266, 222, 37);
-		panel12_2.setLayout(new FlowLayout(FlowLayout.LEFT));
-		contentPane.add(panel12_2);
+		JPanel pnlTuNgay = new JPanel();
+		pnlTuNgay.setOpaque(false);
+		pnlTuNgay.setBackground(Color.YELLOW);
+		pnlTuNgay.setBounds(10, 266, 222, 37);
+		pnlTuNgay.setLayout(new FlowLayout(FlowLayout.LEFT));
+		contentPane.add(pnlTuNgay);
 
 		JLabel lbltungay = new JLabel("Từ ngày:");
 		lbltungay.setFont(new Font("Open Sans", 0, 16));
-		panel12_2.add(lbltungay);
+		pnlTuNgay.add(lbltungay);
 
-		JPanel panel12_3 = new JPanel();
-		panel12_3.setOpaque(false);
-		panel12_3.setBackground(Color.YELLOW);
-		panel12_3.setBounds(10, 383, 230, 37);
-		panel12_3.setLayout(new FlowLayout(FlowLayout.LEFT));
-		contentPane.add(panel12_3);
+		JPanel pnlDenNgay = new JPanel();
+		pnlDenNgay.setOpaque(false);
+		pnlDenNgay.setBackground(Color.YELLOW);
+		pnlDenNgay.setBounds(10, 383, 230, 37);
+		pnlDenNgay.setLayout(new FlowLayout(FlowLayout.LEFT));
+		contentPane.add(pnlDenNgay);
 
 		JLabel lbldenngay = new JLabel("Đến ngày:");
 		lbldenngay.setFont(new Font("Open Sans", 0, 16));
-		panel12_3.add(lbldenngay);
+		pnlDenNgay.add(lbldenngay);
 		
 		// Khởi tạo các nút
 		btnXacNhan = new JButton("Xác nhận");
@@ -555,6 +554,7 @@ public class GD_MuaVe_Phim extends JFrame implements ActionListener {
 		Object[] rowData = { "1", "PH00001", "Thám Tử Conan: Kẻ hành pháp Zero", "120", "13", "01-01-2018",
 				"Tiếng Nhật", "Nhật Bản", "Đang Chiếu" }; // Thay đổi dữ liệu tùy ý
 		tableModel.addRow(rowData);
+		
 		JLabel background = new JLabel("");
 		background.setHorizontalAlignment(SwingConstants.CENTER);
 		background.setIcon(new ImageIcon(GD_NhanVien.class.getResource("/imgs/bggalaxy1.png")));

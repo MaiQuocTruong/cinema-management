@@ -75,8 +75,9 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 	private DefaultTableModel tableModel;
 	private JButton btnThem, btnXoa, btnSua, btnLamMoi;
 	private boolean isCalendarVisible = false;
-	private JTextField txtHoTen, txtSDT, txtCMND, txtEmail, txtNgaydky, txtTimKiem;
-	private JDateChooser ngayDkyDateChooser; // Thêm đối tượng JDateChooser cho từ ngày
+	private JTextField txtSDT, txtCMND, txtEmail, txtNgaydky, txtTimKiem;
+	private JDateChooser ngayDkyDateChooser, ngaySinhDateChooser; // Thêm đối tượng JDateChooser cho từ ngày
+	private JTextField txtNgaySinh;
 //	static String quanly;
 
 	/**
@@ -111,7 +112,7 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 	 * Create the frame.
 	 */
 	public GD_KhachHang() {
-		initComponents();
+//		initComponents();
 		setResizable(false);
 		setBackground(Color.WHITE);
 		setTitle("Giao Diện Khách Hàng");
@@ -394,32 +395,45 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 		lblQLKH.setBounds(43, 102, 170, 20);
 		contentPane.add(lblQLKH);
 
-		JLabel lblMaKH = new JLabel("Mã khách hàng:");
-		lblMaKH.setFont(new Font("Dialog", Font.PLAIN, 16));
-		lblMaKH.setBounds(17, 139, 130, 21);
-		contentPane.add(lblMaKH);
-
-		JPanel pnlMaKH = new JPanel();
-		pnlMaKH.setBackground(new Color(255, 255, 0));
-		pnlMaKH.setBounds(10, 161, 230, 37);
-		pnlMaKH.setOpaque(false);
-		contentPane.add(pnlMaKH);
-
 		JLabel lblHoTen = new JLabel("Nhập họ tên:");
 		lblHoTen.setFont(new Font("Dialog", Font.PLAIN, 16));
-		lblHoTen.setBounds(17, 208, 130, 21);
+		lblHoTen.setBounds(17, 139, 130, 21);
 		contentPane.add(lblHoTen);
 
 		JPanel pnlHoTen = new JPanel();
+		pnlHoTen.setBackground(new Color(255, 255, 0));
+		pnlHoTen.setBounds(10, 161, 230, 37);
 		pnlHoTen.setOpaque(false);
-		pnlHoTen.setBackground(Color.YELLOW);
-		pnlHoTen.setBounds(10, 230, 230, 37);
 		contentPane.add(pnlHoTen);
 
-		txtHoTen = new JTextField();
-		txtHoTen.setFont(new Font("Dialog", Font.PLAIN, 16));
-		txtHoTen.setColumns(16);
-		pnlHoTen.add(txtHoTen);
+		JLabel lblNgaySinh = new JLabel("Ngày sinh:");
+		lblNgaySinh.setFont(new Font("Dialog", Font.PLAIN, 16));
+		lblNgaySinh.setBounds(17, 208, 130, 21);
+		contentPane.add(lblNgaySinh);
+		
+		JPanel pnlNgaySinh = new JPanel();
+		pnlNgaySinh.setOpaque(false);
+		pnlNgaySinh.setBackground(Color.YELLOW);
+		pnlNgaySinh.setBounds(10, 230, 191, 37);
+		contentPane.add(pnlNgaySinh);
+		
+		txtNgaySinh = new JTextField();
+		txtNgaySinh.setFont(new Font("Dialog", Font.PLAIN, 16));
+		txtNgaySinh.setColumns(13);
+		pnlNgaySinh.add(txtNgaySinh);
+		
+		ngaySinhDateChooser = new JDateChooser();
+		ngaySinhDateChooser.setBounds(140, 237, 100, 29);
+		contentPane.add(ngaySinhDateChooser);
+		
+		ngaySinhDateChooser.addPropertyChangeListener("date", new PropertyChangeListener() {
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				Date selectedDate = ngaySinhDateChooser.getDate();
+				SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+				txtNgaySinh.setText(dateFormat.format(selectedDate));
+			}
+		});
 
 		JLabel lblSDT = new JLabel("Số điện thoại:");
 		lblSDT.setFont(new Font("Dialog", Font.PLAIN, 16));
@@ -518,10 +532,10 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 		buttonGroup.add(rdbtnNu);
 
 		// Add JTextField below JCheckBox
-		JTextField txtMaKH = new JTextField();
-		txtMaKH.setFont(new Font("Open Sans", 0, 16));
-		txtMaKH.setColumns(16); // You can adjust the column count based on your requirement
-		pnlMaKH.add(txtMaKH);
+		JTextField txtHoTen = new JTextField();
+		txtHoTen.setFont(new Font("Open Sans", 0, 16));
+		txtHoTen.setColumns(16); // You can adjust the column count based on your requirement
+		pnlHoTen.add(txtHoTen);
 
 		txtTimKiem = new JTextField();
 		txtTimKiem.setFont(new Font("Dialog", Font.PLAIN, 16));
@@ -552,14 +566,14 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 		contentPane.add(btnLamMoi);
 
 		// Khởi tạo DefaultTableModel với các cột
-		String[] columnNames = { "STT", "Mã khách hàng", "Họ và tên", "Số điện thoại", "Số CMND", "Email",
+		String[] columnNames = { "Mã khách hàng", "Họ và tên", "Ngày sinh", "Số điện thoại", "Số CMND", "Email",
 				"Ngày đăng ký", "Giới tính" }; // Thay đổi tên cột tùy ý
 		tableModel = new DefaultTableModel(columnNames, 0);
 
 		// Khởi tạo JTable với DefaultTableModel
 		table = new JTable(tableModel);
 		// Đặt chiều rộng cho cột "Tên phim"
-		table.getColumnModel().getColumn(2).setPreferredWidth(100); // Đặt giá trị 300 làm ví dụ, bạn có thể điều chỉnh
+		table.getColumnModel().getColumn(2).setPreferredWidth(50); // Đặt giá trị 300 làm ví dụ, bạn có thể điều chỉnh
 																	// theo ý muốn
 
 		// Tạo JScrollPane để thêm bảng vào để có thể cuộn
@@ -570,7 +584,7 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 		contentPane.add(scrollPane);
 
 		// Thêm dữ liệu vào bảng
-		Object[] rowData = { "1", "KH00001", "Trương Đại Lộc", "0123456789", "012345678910", "locshadow@gmail.com",
+		Object[] rowData = { "KH00001", "Trương Đại Lộc", "06-11-2003", "0123456789", "012345678910", "locshadow@gmail.com",
 				"09-01-2023", "Nam" }; // Thay đổi dữ liệu tùy ý
 		tableModel.addRow(rowData);
 		JLabel background = new JLabel("");
@@ -578,7 +592,7 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 		background.setIcon(new ImageIcon(GD_NhanVien.class.getResource("/imgs/bggalaxy1.png")));
 		background.setBounds(0, 0, 1162, 613);
 		contentPane.add(background);
-
+		
 	}
 
 	private void initComponents() {
