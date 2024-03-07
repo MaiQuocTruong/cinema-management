@@ -488,42 +488,42 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 		ngayDkyDateChooser.setBounds(140, 516, 100, 29);
 		ngayDkyDateChooser.getDateEditor().getUiComponent().setVisible(isCalendarVisible);
 
-		JLabel lblNgayDky = new JLabel("Ngày đăng ký:");
-		lblNgayDky.setFont(new Font("Dialog", Font.PLAIN, 16));
-		lblNgayDky.setBounds(17, 484, 130, 21);
-		contentPane.add(lblNgayDky);
+//		JLabel lblNgayDky = new JLabel("Ngày đăng ký:");
+//		lblNgayDky.setFont(new Font("Dialog", Font.PLAIN, 16));
+//		lblNgayDky.setBounds(17, 484, 130, 21);
+//		contentPane.add(lblNgayDky);
 
-		JPanel pnlNgayDky = new JPanel();
-		pnlNgayDky.setOpaque(false);
-		pnlNgayDky.setBackground(Color.YELLOW);
-		pnlNgayDky.setBounds(10, 509, 191, 37);
-		contentPane.add(pnlNgayDky);
-
-		txtNgaydky = new JTextField();
-		txtNgaydky.setFont(new Font("Dialog", Font.PLAIN, 16));
-		txtNgaydky.setColumns(13);
-		pnlNgayDky.add(txtNgaydky);
-		contentPane.add(ngayDkyDateChooser);
-
-		// Thêm sự kiện cho JDateChooser để cập nhật giá trị vào textfield khi người
-		// dùng chọn ngày
-		ngayDkyDateChooser.addPropertyChangeListener("date", new PropertyChangeListener() {
-			@Override
-			public void propertyChange(PropertyChangeEvent evt) {
-				Date selectedDate = ngayDkyDateChooser.getDate();
-				SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-				txtNgaydky.setText(dateFormat.format(selectedDate));
-			}
-		});
+//		JPanel pnlNgayDky = new JPanel();
+//		pnlNgayDky.setOpaque(false);
+//		pnlNgayDky.setBackground(Color.YELLOW);
+//		pnlNgayDky.setBounds(10, 509, 191, 37);
+//		contentPane.add(pnlNgayDky);
+//
+//		txtNgaydky = new JTextField();
+//		txtNgaydky.setFont(new Font("Dialog", Font.PLAIN, 16));
+//		txtNgaydky.setColumns(13);
+//		pnlNgayDky.add(txtNgaydky);
+//		contentPane.add(ngayDkyDateChooser);
+//
+//		// Thêm sự kiện cho JDateChooser để cập nhật giá trị vào textfield khi người
+//		// dùng chọn ngày
+//		ngayDkyDateChooser.addPropertyChangeListener("date", new PropertyChangeListener() {
+//			@Override
+//			public void propertyChange(PropertyChangeEvent evt) {
+//				Date selectedDate = ngayDkyDateChooser.getDate();
+//				SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+//				txtNgaydky.setText(dateFormat.format(selectedDate));
+//			}
+//		});
 
 		JRadioButton rdbtnNam = new JRadioButton("Nam");
 		rdbtnNam.setFont(new Font("Dialog", Font.PLAIN, 16));
-		rdbtnNam.setBounds(17, 575, 103, 21);
+		rdbtnNam.setBounds(17, 485, 103, 21);
 		contentPane.add(rdbtnNam);
 
 		JRadioButton rdbtnNu = new JRadioButton("Nữ");
 		rdbtnNu.setFont(new Font("Dialog", Font.PLAIN, 16));
-		rdbtnNu.setBounds(140, 575, 103, 21);
+		rdbtnNu.setBounds(140, 485, 103, 21);
 		contentPane.add(rdbtnNu);
 
 		// Thêm chúng vào ButtonGroup
@@ -566,8 +566,8 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 		contentPane.add(btnLamMoi);
 
 		// Khởi tạo DefaultTableModel với các cột
-		String[] columnNames = { "Mã khách hàng", "Họ và tên", "Ngày sinh", "Số điện thoại", "Số CMND", "Email",
-				"Ngày đăng ký", "Giới tính" }; // Thay đổi tên cột tùy ý
+		String[] columnNames = { "Mã KH", "Tên KH", "Ngày sinh", "SĐT", "Số CMND", "Email","Loại KH"
+				,"Giới tính", "Điểm hiện có", "Điểm đã dùng" }; // Thay đổi tên cột tùy ý
 		tableModel = new DefaultTableModel(columnNames, 0);
 
 		// Khởi tạo JTable với DefaultTableModel
@@ -585,7 +585,7 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 
 		// Thêm dữ liệu vào bảng
 		Object[] rowData = { "KH00001", "Trương Đại Lộc", "06-11-2003", "0123456789", "012345678910", "locshadow@gmail.com",
-				"09-01-2023", "Nam" }; // Thay đổi dữ liệu tùy ý
+				"Nghèo", "Nam", "1000", "600" }; // Thay đổi dữ liệu tùy ý
 		tableModel.addRow(rowData);
 		JLabel background = new JLabel("");
 		background.setHorizontalAlignment(SwingConstants.CENTER);

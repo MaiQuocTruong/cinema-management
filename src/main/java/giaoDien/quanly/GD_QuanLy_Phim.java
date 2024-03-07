@@ -113,7 +113,7 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 	 * Create the frame.
 	 */
 	public GD_QuanLy_Phim() {
-		initComponents();
+//		initComponents();
 		setResizable(false);
 		setBackground(Color.WHITE);
 		setTitle("Giao Diện Quản Lý");
@@ -453,12 +453,12 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
         
         JLabel lblTraCuuPhim = new JLabel("Tra cứu phim");
 		lblTraCuuPhim.setFont(new Font("Open Sans", 1, 16));
-		lblTraCuuPhim.setBounds(70, 102, 108, 20);
+		lblTraCuuPhim.setBounds(14, 106, 108, 20);
 		contentPane.add(lblTraCuuPhim);
 
 		JPanel pnlTenPhim = new JPanel();
 		pnlTenPhim.setBackground(new Color(255, 255, 0));
-		pnlTenPhim.setBounds(51, 140, 130, 30);
+		pnlTenPhim.setBounds(14, 140, 130, 30);
 		pnlTenPhim.setOpaque(false);
 		pnlTenPhim.setLayout(new BoxLayout(pnlTenPhim, BoxLayout.Y_AXIS)); // Use vertical BoxLayout
 		contentPane.add(pnlTenPhim);
@@ -474,18 +474,18 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 
 		JPanel pnlTheoTenPhim = new JPanel();
 		pnlTheoTenPhim.setBackground(new Color(255, 255, 0));
-		pnlTheoTenPhim.setBounds(10, 170, 230, 37);
+		pnlTheoTenPhim.setBounds(10, 170, 172, 37);
 		pnlTheoTenPhim.setOpaque(false);
 		contentPane.add(pnlTheoTenPhim);
 		// Add JTextField below JCheckBox
 		JTextField txtTenPhim = new JTextField();
 		txtTenPhim.setFont(new Font("Open Sans", 0, 16));
-		txtTenPhim.setColumns(16); // You can adjust the column count based on your requirement
+		txtTenPhim.setColumns(12); // You can adjust the column count based on your requirement
 		pnlTheoTenPhim.add(txtTenPhim);
 
 		JPanel pnlNgayCongChieu = new JPanel();
 		pnlNgayCongChieu.setBackground(new Color(255, 255, 0));
-		pnlNgayCongChieu.setBounds(32, 217, 182, 40);
+		pnlNgayCongChieu.setBounds(10, 217, 182, 40);
 		pnlNgayCongChieu.setOpaque(false);
 		contentPane.add(pnlNgayCongChieu);
 		JCheckBox chkNgayCongChieu = new JCheckBox();
@@ -501,17 +501,17 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 		JPanel pnlTuNgay_1 = new JPanel();
 		pnlTuNgay_1.setOpaque(false);
 		pnlTuNgay_1.setBackground(Color.YELLOW);
-		pnlTuNgay_1.setBounds(10, 313, 191, 37);
+		pnlTuNgay_1.setBounds(10, 313, 134, 37);
 		contentPane.add(pnlTuNgay_1);
 
 		txtTuNgay = new JTextField();
 		txtTuNgay.setFont(new Font("Open Sans", Font.PLAIN, 16));
-		txtTuNgay.setColumns(13);
+		txtTuNgay.setColumns(9);
 		pnlTuNgay_1.add(txtTuNgay);
 
 		// Khởi tạo JDateChooser cho từ ngày
 		tuNgayDateChooser = new JDateChooser();
-		tuNgayDateChooser.setBounds(140, 320, 100, 29);
+		tuNgayDateChooser.setBounds(85, 320, 100, 29);
 		tuNgayDateChooser.getDateEditor().getUiComponent().setVisible(isCalendarVisible);
 		contentPane.add(tuNgayDateChooser);
 
@@ -529,7 +529,7 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 		JPanel pnlTuNgay = new JPanel();
 		pnlTuNgay.setOpaque(false);
 		pnlTuNgay.setBackground(Color.YELLOW);
-		pnlTuNgay.setBounds(10, 266, 222, 37);
+		pnlTuNgay.setBounds(10, 266, 182, 37);
 		pnlTuNgay.setLayout(new FlowLayout(FlowLayout.LEFT));
 		contentPane.add(pnlTuNgay);
 
@@ -540,7 +540,7 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 		JPanel pnlDenNgay = new JPanel();
 		pnlDenNgay.setOpaque(false);
 		pnlDenNgay.setBackground(Color.YELLOW);
-		pnlDenNgay.setBounds(10, 383, 230, 37);
+		pnlDenNgay.setBounds(10, 383, 182, 37);
 		pnlDenNgay.setLayout(new FlowLayout(FlowLayout.LEFT));
 		contentPane.add(pnlDenNgay);
 
@@ -550,18 +550,18 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 		
 		// Khởi tạo JDateChooser cho từ ngày
 		denNgayDateChooser = new JDateChooser();
-		denNgayDateChooser.setBounds(140, 437, 100, 29);
+		denNgayDateChooser.setBounds(85, 437, 100, 29);
 		denNgayDateChooser.getDateEditor().getUiComponent().setVisible(isCalendarVisible);
 
 		JPanel pnlDenNgay_1 = new JPanel();
 		pnlDenNgay_1.setOpaque(false);
 		pnlDenNgay_1.setBackground(Color.YELLOW);
-		pnlDenNgay_1.setBounds(10, 430, 191, 37);
+		pnlDenNgay_1.setBounds(10, 430, 134, 37);
 		contentPane.add(pnlDenNgay_1);
 
 		txtDenNgay = new JTextField();
 		txtDenNgay.setFont(new Font("Open Sans", 0, 16));
-		txtDenNgay.setColumns(13);
+		txtDenNgay.setColumns(9);
 		pnlDenNgay_1.add(txtDenNgay);
 		contentPane.add(denNgayDateChooser);
 
@@ -582,9 +582,9 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 		btnLamMoi = new JButton("Làm mới");
 
 		// Đặt vị trí cho các nút
-		btnThem.setBounds(250, 99, 100, 30);
-		btnXoa.setBounds(360, 99, 100, 30);
-		btnLamMoi.setBounds(470, 99, 100, 30);
+		btnThem.setBounds(192, 99, 100, 30);
+		btnXoa.setBounds(302, 99, 100, 30);
+		btnLamMoi.setBounds(412, 99, 100, 30);
 		
 		// Thêm sự kiện các nút
 		btnThem.addActionListener(new ActionListener() {
@@ -605,26 +605,40 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 		contentPane.add(btnLamMoi);
 
 		// Khởi tạo DefaultTableModel với các cột
-		String[] columnNames = { "STT", "Mã phim", "Tên phim", "Thời lượng", "Giới hạn tuổi", "Ngày chiếu", "Ngôn ngữ",
-				"Quốc gia", "Trạng thái" }; // Thay đổi tên cột tùy ý
+		String[] columnNames = {"Mã phim", "Tên phim", "Loại phim", "Thời lượng", "Tuổi", "Ngày chiếu", "Ngày hết hạn", "Ngôn ngữ",
+				"Quốc gia", "Giá tiền", "SL vé", "Trạng thái"}; // Thay đổi tên cột tùy ý
 		tableModel = new DefaultTableModel(columnNames, 0);
 
 		// Khởi tạo JTable với DefaultTableModel
 		table = new JTable(tableModel);
 		// Đặt chiều rộng cho cột "Tên phim"
-		table.getColumnModel().getColumn(2).setPreferredWidth(230); // Đặt giá trị 300 làm ví dụ, bạn có thể điều chỉnh
-																	// theo ý muốn
-
+		table.getColumnModel().getColumn(0).setPreferredWidth(30); 
+		table.getColumnModel().getColumn(1).setPreferredWidth(150); 
+		table.getColumnModel().getColumn(2).setPreferredWidth(38); 
+		table.getColumnModel().getColumn(3).setPreferredWidth(41); 
+		table.getColumnModel().getColumn(4).setPreferredWidth(50);
+		
+		table.getColumnModel().getColumn(4).setMinWidth(20); // Đặt chiều rộng tối thiểu là 0 pixel
+		table.getColumnModel().getColumn(4).setMaxWidth(40); // Đặt chiều rộng tối đa là 0 pixel
+		
+		table.getColumnModel().getColumn(5).setPreferredWidth(50); 
+		table.getColumnModel().getColumn(6).setPreferredWidth(59);
+		table.getColumnModel().getColumn(7).setPreferredWidth(46);
+		table.getColumnModel().getColumn(8).setPreferredWidth(46);
+		table.getColumnModel().getColumn(9).setPreferredWidth(40);
+		
+		table.getColumnModel().getColumn(10).setMinWidth(20); // Đặt chiều rộng tối thiểu là 0 pixel
+		table.getColumnModel().getColumn(10).setMaxWidth(40); // Đặt chiều rộng tối đa là 0 pixel
 		// Tạo JScrollPane để thêm bảng vào để có thể cuộn
 		JScrollPane scrollPane = new JScrollPane(table);
-		scrollPane.setBounds(250, 140, 900, 469); // Điều chỉnh tọa độ và kích thước của bảng
+		scrollPane.setBounds(192, 140, 954, 469); // Điều chỉnh tọa độ và kích thước của bảng
 
 		// Thêm bảng và JScrollPane vào contentPane
 		contentPane.add(scrollPane);
 
 		// Thêm dữ liệu vào bảng
-		Object[] rowData = { "1", "PH00001", "Thám Tử Conan: Kẻ hành pháp Zero", "120", "13", "01-01-2018",
-				"Tiếng Nhật", "Nhật Bản", "Đang Chiếu" }; // Thay đổi dữ liệu tùy ý
+		Object[] rowData = {"PH00001", "Thám Tử Conan: Kẻ hành pháp Zero", "Trinh thám", "120 phút", "13", "01-01-2018","22-01-2018",
+				"Tiếng Nhật", "Nhật Bản", "55.000", "100", "Đang chiếu"}; // Thay đổi dữ liệu tùy ý
 		tableModel.addRow(rowData);
 
 		JLabel background = new JLabel("");

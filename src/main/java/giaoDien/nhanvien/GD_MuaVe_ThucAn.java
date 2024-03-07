@@ -480,7 +480,7 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 		contentPane.add(btnChonKichCo);
 
 		// Khai báo các cột cho bảng đầu tiên
-		String[] columnNames1 = { "STT", "Mã đồ ăn", "Tên đồ ăn", "Trạng thái", "Loại đồ ăn" };
+		String[] columnNames1 = { "STT", "Mã dịch vụ", "Tên dịch vụ", "Trạng thái", "Loại dịch vụ" };
 
 		// Khởi tạo DefaultTableModel cho bảng đầu tiên
 		DefaultTableModel tableModel1 = new DefaultTableModel(columnNames1, 0);
