@@ -51,11 +51,17 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import java.awt.Component;
 import javax.swing.JTextField;
+
+import com.mysql.cj.x.protobuf.MysqlxDatatypes.Object;
 import com.toedter.calendar.JDateChooser;
+
+import dao.KhachHang_dao;
+import enities.KhachHang;
 import runapp.Login;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 public class GD_KhachHang extends JFrame implements ActionListener {
 	/**
@@ -78,6 +84,8 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 	private JTextField txtSDT, txtCMND, txtEmail, txtNgaydky, txtTimKiem;
 	private JDateChooser ngayDkyDateChooser, ngaySinhDateChooser; // Thêm đối tượng JDateChooser cho từ ngày
 	private JTextField txtNgaySinh;
+	private KhachHang_dao kh_dao = new KhachHang_dao();
+	private List<KhachHang> listKH;
 //	static String quanly;
 
 	/**
@@ -112,6 +120,7 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 	 * Create the frame.
 	 */
 	public GD_KhachHang() {
+		this.setLocationRelativeTo(null);
 //		initComponents();
 		setResizable(false);
 		setBackground(Color.WHITE);
@@ -584,14 +593,54 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 		contentPane.add(scrollPane);
 
 		// Thêm dữ liệu vào bảng
-		Object[] rowData = { "KH00001", "Trương Đại Lộc", "06-11-2003", "0123456789", "012345678910", "locshadow@gmail.com",
-				"Nghèo", "Nam", "1000", "600" }; // Thay đổi dữ liệu tùy ý
-		tableModel.addRow(rowData);
+//		Object[] rowData = { "KH00001", "Trương Đại Lộc", "06-11-2003", "0123456789", "012345678910", "locshadow@gmail.com",
+//				"Nghèo", "Nam", "1000", "600" }; // Thay đổi dữ liệu tùy ý
+//		tableModel.addRow(rowData);
 		JLabel background = new JLabel("");
 		background.setHorizontalAlignment(SwingConstants.CENTER);
 		background.setIcon(new ImageIcon(GD_NhanVien.class.getResource("/imgs/bggalaxy1.png")));
 		background.setBounds(0, 0, 1162, 613);
 		contentPane.add(background);
+		
+		
+//		Load Du Lieu
+		try {
+			String ngaySinhTrongTable = "";
+			String gioiTinhTrongTable = "";
+			kh_dao.setUp();
+			listKH = kh_dao.getListKH();
+			for (KhachHang kh : listKH) {
+				String maKH = kh.getMaKH();
+				String tenKH = kh.getTenKH();
+				String email = kh.getEmail();
+				Date ngaySinh = kh.getNgaySinh();
+				
+				ngaySinhTrongTable = ngaySinh + "";
+				boolean gioiTinh = kh.isGioiTinh();
+				
+				if(gioiTinh) {
+					gioiTinhTrongTable = "Nam";
+				}else {
+					gioiTinhTrongTable = "Nu";
+				}
+				
+				String loaiKH = kh.getLoaiKH();
+				String SDT = kh.getSdt();
+				int diemHienCo = kh.getDiemHienCo();
+				String diemHienCoTrongTable = String.valueOf(diemHienCo);
+				
+				String cmnd = kh.getCmnd();
+				int diemDaDung = kh.getDiemDaDung();
+				String diemDaDungTrongTable = String.valueOf(diemDaDung);
+				
+				java.lang.Object [] rowData = {maKH , tenKH , email , ngaySinhTrongTable , gioiTinhTrongTable , loaiKH , SDT , diemHienCoTrongTable , cmnd , diemDaDungTrongTable };
+				tableModel.addRow(rowData);
+				
+			}
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 	}
 

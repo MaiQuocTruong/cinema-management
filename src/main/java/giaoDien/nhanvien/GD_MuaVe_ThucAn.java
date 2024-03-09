@@ -45,6 +45,7 @@ import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.Calendar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -53,10 +54,14 @@ import java.awt.Component;
 import javax.swing.JTextField;
 import com.toedter.calendar.JDateChooser;
 
+import dao.DichVuAnUong_dao;
+import enities.DichVuAnUong;
 import runapp.Login;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+
 import javax.swing.JComboBox;
 import javax.swing.ButtonGroup;
 
@@ -81,6 +86,11 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 	private JTextField txtTen;
 	private boolean isCalendarVisible = false;
 	private JComboBox<String> loaiDoAnComboBox; // Declare the JComboBox here
+	
+	
+	private DichVuAnUong_dao dichVuAnUong_dao = new DichVuAnUong_dao();
+	private List<DichVuAnUong> listServices = new ArrayList<DichVuAnUong>();
+	
 
 	/**
 	 * Launch the application.
@@ -126,6 +136,9 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout());
 
+
+		
+		
 		lblNvIcon = new JLabel("");
 		lblNvIcon.setIcon(new ImageIcon(GD_MuaVe_ThucAn.class.getResource("/imgs/avt.png"))); // Thay đổi đường dẫn
 
@@ -493,12 +506,12 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 		table1.getColumnModel().getColumn(2).setPreferredWidth(200);
 
 		// Thêm dữ liệu vào bảng đầu tiên
-		Object[] rowData1 = { "1", "BK001", "Bánh Snack Khoai Tây", "Đang được bán", "Bánh kẹo" };
-		Object[] rowData1_1 = { "2", "NC002", "Nước CocaCola", "Đang được bán", "Nước uống" };
-		Object[] rowData1_2 = { "3", "DA003", "Bắp rang bơ", "Đang được bán", "Đồ ăn nhanh" };
-		tableModel1.addRow(rowData1);
-		tableModel1.addRow(rowData1_1);
-		tableModel1.addRow(rowData1_2);
+//		Object[] rowData1 = { "1", "BK001", "Bánh Snack Khoai Tây", "Đang được bán", "Bánh kẹo" };
+//		Object[] rowData1_1 = { "2", "NC002", "Nước CocaCola", "Đang được bán", "Nước uống" };
+//		Object[] rowData1_2 = { "3", "DA003", "Bắp rang bơ", "Đang được bán", "Đồ ăn nhanh" };
+//		tableModel1.addRow(rowData1);
+//		tableModel1.addRow(rowData1_1);
+//		tableModel1.addRow(rowData1_2);
 
 		// Khai báo các cột cho bảng thứ hai
 		String[] columnNames2 = { "Kích cỡ", "Đơn giá", "Trạng thái" };
@@ -510,10 +523,10 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 		JTable table2 = new JTable(tableModel2);
 
 		// Thêm dữ liệu vào bảng thứ hai
-		Object[] rowData2 = { "Cỡ nhỏ", "20,000", "Đang được bán" };
-		Object[] rowData2_1 = { "Cỡ lớn", "25,000", "Đang được bán" };
-		tableModel2.addRow(rowData2);
-		tableModel2.addRow(rowData2_1);
+//		Object[] rowData2 = { "Cỡ nhỏ", "20,000", "Đang được bán" };
+//		Object[] rowData2_1 = { "Cỡ lớn", "25,000", "Đang được bán" };
+//		tableModel2.addRow(rowData2);
+//		tableModel2.addRow(rowData2_1);
 
 		// Đặt vị trí và kích thước cho bảng thứ nhất
 		JScrollPane scrollPane1 = new JScrollPane(table1);
@@ -530,6 +543,39 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 		background.setIcon(new ImageIcon(GD_NhanVien.class.getResource("/imgs/bggalaxy1.png")));
 		background.setBounds(0, 0, 1162, 613);
 		contentPane.add(background);
+		
+		
+//		Load Du Lieu Len Table
+		dichVuAnUong_dao.setUp();
+		try {
+			listServices = dichVuAnUong_dao.getServices();
+			int i = 0;
+			for (DichVuAnUong dichVuAnUong : listServices) {
+				String STT = i+1 + "" ;
+				String maDichVu = dichVuAnUong.getMaDichVu();
+				String tenDichVu = dichVuAnUong.getTenDichVu();
+				String trangThai = dichVuAnUong.getTrangThai();
+				String loaiDichVu = dichVuAnUong.getLoaiDichVu();
+				
+				
+				Object[] rowDataTable1 = {STT , maDichVu , tenDichVu , trangThai , loaiDichVu};
+				tableModel1.addRow(rowDataTable1);
+				
+				String kichCo = dichVuAnUong.getKichThuoc();
+				String donGia = String.valueOf(dichVuAnUong.getDonGia());
+				String trangThaiSize = dichVuAnUong.getTrangThaiSize();
+				System.out.println(donGia);
+				
+				Object[] rowDataTable2 = {kichCo , donGia , trangThaiSize};
+				tableModel2.addRow(rowDataTable2);
+				i++;
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 
 	}
 
