@@ -61,4 +61,10 @@ public class KhachHang_dao {
     }
 	
 	
+	public void addKH(KhachHang kh) throws Exception {
+		inTransaction(entitymanager -> {
+			entitymanager.persist(kh);
+		});
+	}
+	
 }

@@ -81,11 +81,13 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 	private DefaultTableModel tableModel;
 	private JButton btnThem, btnXoa, btnSua, btnLamMoi;
 	private boolean isCalendarVisible = false;
-	private JTextField txtSDT, txtCMND, txtEmail, txtNgaydky, txtTimKiem;
+	private JTextField txtSDT, txtCMND, txtEmail, txtNgaydky, txtTimKiem , txtHoTen;
 	private JDateChooser ngayDkyDateChooser, ngaySinhDateChooser; // Thêm đối tượng JDateChooser cho từ ngày
 	private JTextField txtNgaySinh;
 	private KhachHang_dao kh_dao = new KhachHang_dao();
 	private List<KhachHang> listKH;
+	private int idCust = 0;
+	private JRadioButton rdbtnNam , rdbtnNu;
 //	static String quanly;
 
 	/**
@@ -525,12 +527,12 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 //			}
 //		});
 
-		JRadioButton rdbtnNam = new JRadioButton("Nam");
+		 rdbtnNam = new JRadioButton("Nam");
 		rdbtnNam.setFont(new Font("Dialog", Font.PLAIN, 16));
 		rdbtnNam.setBounds(17, 485, 103, 21);
 		contentPane.add(rdbtnNam);
 
-		JRadioButton rdbtnNu = new JRadioButton("Nữ");
+		 rdbtnNu = new JRadioButton("Nữ");
 		rdbtnNu.setFont(new Font("Dialog", Font.PLAIN, 16));
 		rdbtnNu.setBounds(140, 485, 103, 21);
 		contentPane.add(rdbtnNu);
@@ -541,7 +543,7 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 		buttonGroup.add(rdbtnNu);
 
 		// Add JTextField below JCheckBox
-		JTextField txtHoTen = new JTextField();
+		txtHoTen = new JTextField();
 		txtHoTen.setFont(new Font("Open Sans", 0, 16));
 		txtHoTen.setColumns(16); // You can adjust the column count based on your requirement
 		pnlHoTen.add(txtHoTen);
@@ -633,16 +635,22 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 				int diemDaDung = kh.getDiemDaDung();
 				String diemDaDungTrongTable = String.valueOf(diemDaDung);
 				
-				java.lang.Object [] rowData = {maKH , tenKH , email , ngaySinhTrongTable , gioiTinhTrongTable , loaiKH , SDT , diemHienCoTrongTable , cmnd , diemDaDungTrongTable };
+				java.lang.Object [] rowData = {maKH , tenKH  , ngaySinhTrongTable ,  SDT ,  cmnd , email, loaiKH , gioiTinhTrongTable , diemHienCoTrongTable ,  diemDaDungTrongTable };
 				tableModel.addRow(rowData);
-				
+				idCust++;
 			}
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
+		System.out.println(idCust);
+		
+//		Add Su Kien
+		btnThem.addActionListener(this);
+		
 	}
+	
 
 	private void initComponents() {
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -670,5 +678,57 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		java.lang.Object o = e.getSource();
+		if(o.equals(btnThem)) {
+			try {
+				themKhachHang();
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+			
 	}
+	
+	public void themKhachHang() throws Exception {
+		int newIDKhachHang = idCust + 1;
+		String maKH = "KH00" + newIDKhachHang;
+		String tenKH = txtHoTen.getText();
+		Date ngaySinh = ngaySinhDateChooser.getDate();
+		
+		String ngaySinhTrongTable = txtNgaySinh.getText();
+		String sdt = txtSDT.getText();
+		String email = txtEmail.getText();
+		String loaiKH = "Thuong";
+		
+		boolean gender = true;
+		if(rdbtnNu.isSelected()) {
+			gender = false;
+		}else if(rdbtnNam.isSelected()) {
+			gender = true;
+		}
+		
+		String cmnd = txtCMND.getText();
+		
+		String gioiTinhTrongTable = "";
+		if(gender) {
+			gioiTinhTrongTable = "Nam";
+		}else {
+			gioiTinhTrongTable = "Nu";
+		}
+		
+		int diemHienCo = 0;
+		int diemDaSuDung = 0;
+		String diemHienCoTrongTable = "0";
+		String diemDaSuDungTrongTable = "0";
+		
+		KhachHang kh = new KhachHang(maKH, tenKH, email, ngaySinh, gender, loaiKH, sdt, diemHienCo, cmnd, diemDaSuDung, 0);
+		kh_dao.addKH(kh);
+		java.lang.Object [] rowData = {maKH , tenKH , ngaySinhTrongTable , sdt , cmnd , email , loaiKH , gioiTinhTrongTable , diemHienCoTrongTable , diemDaSuDungTrongTable}; 
+		
+		tableModel.addRow(rowData);
+		
+		
+	}
+	
 }
