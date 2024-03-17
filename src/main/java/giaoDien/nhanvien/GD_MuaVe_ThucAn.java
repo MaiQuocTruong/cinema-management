@@ -81,16 +81,14 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 	Color whiteColor = Color.WHITE;
 	private JLabel lblNvIcon; // Thêm biến để lưu đối tượng JLabel chứa ảnh NV
 	private JTable table;
-	private DefaultTableModel tableModel;
+	private DefaultTableModel tableModel1, tableModel2;
 	private JButton btnXacNhan, btnHuyBo, btnLamMoi, btnChonKichCo;
 	private JTextField txtTen;
 	private boolean isCalendarVisible = false;
 	private JComboBox<String> loaiDoAnComboBox; // Declare the JComboBox here
-	
-	
+
 	private DichVuAnUong_dao dichVuAnUong_dao = new DichVuAnUong_dao();
 	private List<DichVuAnUong> listServices = new ArrayList<DichVuAnUong>();
-	
 
 	/**
 	 * Launch the application.
@@ -136,9 +134,6 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout());
 
-
-		
-		
 		lblNvIcon = new JLabel("");
 		lblNvIcon.setIcon(new ImageIcon(GD_MuaVe_ThucAn.class.getResource("/imgs/avt.png"))); // Thay đổi đường dẫn
 
@@ -287,7 +282,7 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 		thongKeToolbar.add(thongKeButton);
 		thongKeToolbar.setBackground(customColor); // Thay đổi ở đây
 		topPanel.add(thongKeToolbar);
-		
+
 		panelThongKe = new JPanel() {
 			private static final long serialVersionUID = 1L;
 
@@ -302,34 +297,34 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 		panelThongKe.setVisible(false); // Ẩn panel thống kê ban đầu
 		panelThongKe.setBackground(whiteColor);
 		contentPane.add(panelThongKe);
-		
-		 // Thêm button thống kê vào panel thống kê
+
+		// Thêm button thống kê vào panel thống kê
 		JButton btnThongKeHoaDon = new JButton("Thống Kê Hóa Đơn");
 		btnThongKeHoaDon.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnThongKeHoaDon.setIcon(new ImageIcon(GD_MuaVe_Phim.class.getResource("/imgs/bill.png")));
-		JButton btnThongKeThucAn = new JButton("Thống Kê Thức Ăn"); 
+		JButton btnThongKeThucAn = new JButton("Thống Kê Thức Ăn");
 		btnThongKeThucAn.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnThongKeThucAn.setIcon(new ImageIcon(GD_MuaVe_Phim.class.getResource("/imgs/popcorn2.png")));
 		JButton btnThongKeVePhim = new JButton("Thống Kê Vé Phim");
 		btnThongKeVePhim.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnThongKeVePhim.setIcon(new ImageIcon(GD_MuaVe_Phim.class.getResource("/imgs/tickets2.png")));
-		
-		panelThongKe.add(btnThongKeHoaDon);
-	    panelThongKe.add(btnThongKeThucAn);
-	    panelThongKe.add(btnThongKeVePhim);
 
-	    // Thêm sự kiện cho button Hóa Đơn để hiển thị/ẩn panel thống kê
-	    thongKeButton.addActionListener(new ActionListener() {
-	        public void actionPerformed(ActionEvent e) {
-	            if (panelKhachHang.isVisible() || panelChonVe.isVisible() || panelThongKe.isVisible()) {
-	            	panelChonVe.setVisible(false);
-	                panelThongKe.setVisible(false);
-	                panelKhachHang.setVisible(false);
-	            } else {
-	                panelThongKe.setVisible(true);
-	            }
-	        }
-	    });
+		panelThongKe.add(btnThongKeHoaDon);
+		panelThongKe.add(btnThongKeThucAn);
+		panelThongKe.add(btnThongKeVePhim);
+
+		// Thêm sự kiện cho button Hóa Đơn để hiển thị/ẩn panel thống kê
+		thongKeButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (panelKhachHang.isVisible() || panelChonVe.isVisible() || panelThongKe.isVisible()) {
+					panelChonVe.setVisible(false);
+					panelThongKe.setVisible(false);
+					panelKhachHang.setVisible(false);
+				} else {
+					panelThongKe.setVisible(true);
+				}
+			}
+		});
 
 		// Thêm toolbar "Khach Hang"
 		JToolBar khachHangToolbar = new JToolBar();
@@ -343,16 +338,16 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 		khachHangButton.setBackground(new Color(100, 100, 255));
 		khachHangButton.setIcon(new ImageIcon(GD_MuaVe_ThucAn.class.getResource("/imgs/customer1.png")));
 		khachHangButton.addActionListener(new ActionListener() {
-	        public void actionPerformed(ActionEvent e) {
-	            if (panelKhachHang.isVisible() || panelChonVe.isVisible() || panelThongKe.isVisible()) {
-	            	panelChonVe.setVisible(false);
-	                panelThongKe.setVisible(false);
-	                panelKhachHang.setVisible(false);
-	            } else {
-	            	panelKhachHang.setVisible(true);
-	            }
-	        }
-	    });
+			public void actionPerformed(ActionEvent e) {
+				if (panelKhachHang.isVisible() || panelChonVe.isVisible() || panelThongKe.isVisible()) {
+					panelChonVe.setVisible(false);
+					panelThongKe.setVisible(false);
+					panelKhachHang.setVisible(false);
+				} else {
+					panelKhachHang.setVisible(true);
+				}
+			}
+		});
 		khachHangToolbar.add(khachHangButton);
 		khachHangToolbar.setBackground(customColor);
 		topPanel.add(khachHangToolbar);
@@ -371,13 +366,13 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 		panelKhachHang.setVisible(false); // Ẩn panel thống kê ban đầu
 		panelKhachHang.setBackground(whiteColor);
 		contentPane.add(panelKhachHang);
-		
-		 // Thêm button thống kê vào panel thống kê
+
+		// Thêm button thống kê vào panel thống kê
 		JButton btnQlyKH = new JButton("Quản Lý Khách Hàng");
 		btnQlyKH.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnQlyKH.setIcon(new ImageIcon(GD_NhanVien.class.getResource("/imgs/khachhang1.png")));
 		btnQlyKH.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
@@ -388,7 +383,7 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 			}
 		});
 		panelKhachHang.add(btnQlyKH);
-		
+
 		// Create logout button
 		JToolBar logoutToolBar = new JToolBar();
 		logoutToolBar.setFloatable(false);
@@ -462,16 +457,19 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 		JPanel pnlLoaiDoAn = new JPanel();
 		pnlLoaiDoAn.setOpaque(false);
 		pnlLoaiDoAn.setBackground(Color.YELLOW);
-		pnlLoaiDoAn.setBounds(10, 389, 230, 37);
+		pnlLoaiDoAn.setBounds(10, 389, 230, 67);
 		contentPane.add(pnlLoaiDoAn);
-		pnlLoaiDoAn.setLayout(new FlowLayout(FlowLayout.LEFT));
+		pnlLoaiDoAn.setLayout(null);
 
-		JLabel lblLoaiDoAn = new JLabel("Theo loại đồ ăn :");
+		JLabel lblLoaiDoAn = new JLabel("Loai dich vu:");
+		lblLoaiDoAn.setBounds(5, 5, 92, 21);
 		lblLoaiDoAn.setFont(new Font("Dialog", Font.PLAIN, 16));
 		pnlLoaiDoAn.add(lblLoaiDoAn);
 
-		String[] loaiDoAn = { "Nước uống", "Đồ ăn nhanh", "Bánh kẹo" };
-		loaiDoAnComboBox = new JComboBox<>(loaiDoAn);
+//		String[] loaiDoAn = { "Nước uống", "Đồ ăn nhanh", "Bánh kẹo" };
+		loaiDoAnComboBox = new JComboBox<>();
+		loaiDoAnComboBox.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		loaiDoAnComboBox.setBounds(94, 5, 126, 25);
 		pnlLoaiDoAn.add(loaiDoAnComboBox);
 
 		// Khởi tạo các nút
@@ -496,7 +494,7 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 		String[] columnNames1 = { "STT", "Mã dịch vụ", "Tên dịch vụ", "Trạng thái", "Loại dịch vụ" };
 
 		// Khởi tạo DefaultTableModel cho bảng đầu tiên
-		DefaultTableModel tableModel1 = new DefaultTableModel(columnNames1, 0);
+		tableModel1 = new DefaultTableModel(columnNames1, 0);
 
 		// Khởi tạo JTable cho bảng đầu tiên
 		JTable table1 = new JTable(tableModel1);
@@ -504,14 +502,6 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 		// Đặt chiều rộng cho các cột nếu cần
 		table1.getColumnModel().getColumn(0).setPreferredWidth(30);
 		table1.getColumnModel().getColumn(2).setPreferredWidth(200);
-
-		// Thêm dữ liệu vào bảng đầu tiên
-//		Object[] rowData1 = { "1", "BK001", "Bánh Snack Khoai Tây", "Đang được bán", "Bánh kẹo" };
-//		Object[] rowData1_1 = { "2", "NC002", "Nước CocaCola", "Đang được bán", "Nước uống" };
-//		Object[] rowData1_2 = { "3", "DA003", "Bắp rang bơ", "Đang được bán", "Đồ ăn nhanh" };
-//		tableModel1.addRow(rowData1);
-//		tableModel1.addRow(rowData1_1);
-//		tableModel1.addRow(rowData1_2);
 
 		// Khai báo các cột cho bảng thứ hai
 		String[] columnNames2 = { "Kích cỡ", "Đơn giá", "Trạng thái" };
@@ -521,12 +511,32 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 
 		// Khởi tạo JTable cho bảng thứ hai
 		JTable table2 = new JTable(tableModel2);
-
-		// Thêm dữ liệu vào bảng thứ hai
-//		Object[] rowData2 = { "Cỡ nhỏ", "20,000", "Đang được bán" };
-//		Object[] rowData2_1 = { "Cỡ lớn", "25,000", "Đang được bán" };
-//		tableModel2.addRow(rowData2);
-//		tableModel2.addRow(rowData2_1);
+		
+		// Thêm sự kiện lắng nghe khi nhấn phím enter trên bảng
+		table2.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
+				.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "Enter");
+		table2.getActionMap().put("Enter", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent ae) {
+				int selectedRow = table2.getSelectedRow();
+				if (selectedRow != -1) { // Kiểm tra xem có dòng nào được chọn không
+					if (selectedRow == JOptionPane.OK_OPTION) {
+						// Xử lý khi người dùng ấn OK
+						String quantityString = JOptionPane.showInputDialog(null, "Nhập số lượng:");
+						// Chuyển đổi chuỗi số lượng thành số nguyên
+						try {
+							int quantity = Integer.parseInt(quantityString);
+						} catch (NumberFormatException e) {
+							JOptionPane.showMessageDialog(null, "Vui lòng nhập số lượng hợp lệ!", "Lỗi",
+									JOptionPane.ERROR_MESSAGE);
+						}
+					}
+				} else {
+					JOptionPane.showMessageDialog(null, "Vui lòng chọn một dòng trước khi nhấn enter!", "Thông báo",
+							JOptionPane.INFORMATION_MESSAGE);
+				}
+			}
+		});
 
 		// Đặt vị trí và kích thước cho bảng thứ nhất
 		JScrollPane scrollPane1 = new JScrollPane(table1);
@@ -543,30 +553,30 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 		background.setIcon(new ImageIcon(GD_NhanVien.class.getResource("/imgs/bggalaxy1.png")));
 		background.setBounds(0, 0, 1162, 613);
 		contentPane.add(background);
-		
-		
+
 //		Load Du Lieu Len Table
 		dichVuAnUong_dao.setUp();
 		try {
 			listServices = dichVuAnUong_dao.getServices();
 			int i = 0;
 			for (DichVuAnUong dichVuAnUong : listServices) {
-				String STT = i+1 + "" ;
+				String STT = i + 1 + "";
 				String maDichVu = dichVuAnUong.getMaDichVu();
 				String tenDichVu = dichVuAnUong.getTenDichVu();
 				String trangThai = dichVuAnUong.getTrangThai();
 				String loaiDichVu = dichVuAnUong.getLoaiDichVu();
-				
-				
-				Object[] rowDataTable1 = {STT , maDichVu , tenDichVu , trangThai , loaiDichVu};
+
+				Object[] rowDataTable1 = { STT, maDichVu, tenDichVu, trangThai, loaiDichVu };
 				tableModel1.addRow(rowDataTable1);
-				
+
 				String kichCo = dichVuAnUong.getKichThuoc();
 				String donGia = String.valueOf(dichVuAnUong.getDonGia());
 				String trangThaiSize = dichVuAnUong.getTrangThaiSize();
 				System.out.println(donGia);
-				
-				Object[] rowDataTable2 = {kichCo , donGia , trangThaiSize};
+
+				loaiDoAnComboBox.addItem(dichVuAnUong.getLoaiDichVu());
+
+				Object[] rowDataTable2 = { kichCo, donGia, trangThaiSize };
 				tableModel2.addRow(rowDataTable2);
 				i++;
 			}
@@ -574,8 +584,6 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
 
 	}
 

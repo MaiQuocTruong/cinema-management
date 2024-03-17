@@ -2,6 +2,8 @@ package giaoDien.nhanvien;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 
 import javax.swing.JFrame;
@@ -80,6 +82,8 @@ public class GD_MuaVe_Phim extends JFrame implements ActionListener {
 	private JTextField txtDenNgay;
 	private JDateChooser tuNgayDateChooser, denNgayDateChooser; // Thêm đối tượng JDateChooser cho từ ngày
 	private boolean isCalendarVisible = false;
+	private JTextField textField;
+	private JTextField textField_1;
 
 //	static String quanly;
 	/**
@@ -128,13 +132,13 @@ public class GD_MuaVe_Phim extends JFrame implements ActionListener {
 
 		// Khởi tạo JDateChooser cho từ ngày
 		denNgayDateChooser = new JDateChooser();
-		denNgayDateChooser.setBounds(140, 437, 100, 29);
+		denNgayDateChooser.setBounds(140, 414, 100, 29);
 		denNgayDateChooser.getDateEditor().getUiComponent().setVisible(isCalendarVisible);
 
 		JPanel pnlDenNgay_1 = new JPanel();
 		pnlDenNgay_1.setOpaque(false);
 		pnlDenNgay_1.setBackground(Color.YELLOW);
-		pnlDenNgay_1.setBounds(10, 430, 191, 37);
+		pnlDenNgay_1.setBounds(10, 407, 191, 37);
 		contentPane.add(pnlDenNgay_1);
 
 		txtDenNgay = new JTextField();
@@ -446,26 +450,13 @@ public class GD_MuaVe_Phim extends JFrame implements ActionListener {
 		pnlTheoTenPhim.setBounds(10, 170, 230, 37);
 		pnlTheoTenPhim.setOpaque(false);
 		contentPane.add(pnlTheoTenPhim);
+		pnlTheoTenPhim.setLayout(null);
 		// Add JTextField below JCheckBox
 		JTextField txtTenPhim = new JTextField();
+		txtTenPhim.setBounds(8, 5, 222, 27);
 		txtTenPhim.setFont(new Font("Open Sans", 0, 16));
 		txtTenPhim.setColumns(16); // You can adjust the column count based on your requirement
 		pnlTheoTenPhim.add(txtTenPhim);
-
-		JPanel pnlNgayCongChieu = new JPanel();
-		pnlNgayCongChieu.setBackground(new Color(255, 255, 0));
-		pnlNgayCongChieu.setBounds(32, 217, 182, 40);
-		pnlNgayCongChieu.setOpaque(false);
-		contentPane.add(pnlNgayCongChieu);
-		JCheckBox chkNgayCongChieu = new JCheckBox();
-		chkNgayCongChieu.setFont(new Font("Open Sans", 0, 16));
-		chkNgayCongChieu.setText("Theo ngày công chiếu");
-		chkNgayCongChieu.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-//                chkNgayCongChieuActionPerformed(evt);
-			}
-		});
-		pnlNgayCongChieu.add(chkNgayCongChieu);
 
 		JPanel pnlTuNgay_1 = new JPanel();
 		pnlTuNgay_1.setOpaque(false);
@@ -499,23 +490,87 @@ public class GD_MuaVe_Phim extends JFrame implements ActionListener {
 		pnlTuNgay.setOpaque(false);
 		pnlTuNgay.setBackground(Color.YELLOW);
 		pnlTuNgay.setBounds(10, 266, 222, 37);
-		pnlTuNgay.setLayout(new FlowLayout(FlowLayout.LEFT));
 		contentPane.add(pnlTuNgay);
+		pnlTuNgay.setLayout(null);
 
 		JLabel lbltungay = new JLabel("Từ ngày:");
+		lbltungay.setBounds(5, 5, 63, 21);
 		lbltungay.setFont(new Font("Open Sans", 0, 16));
 		pnlTuNgay.add(lbltungay);
 
 		JPanel pnlDenNgay = new JPanel();
 		pnlDenNgay.setOpaque(false);
 		pnlDenNgay.setBackground(Color.YELLOW);
-		pnlDenNgay.setBounds(10, 383, 230, 37);
+		pnlDenNgay.setBounds(10, 360, 230, 37);
 		pnlDenNgay.setLayout(new FlowLayout(FlowLayout.LEFT));
 		contentPane.add(pnlDenNgay);
-
 		JLabel lbldenngay = new JLabel("Đến ngày:");
 		lbldenngay.setFont(new Font("Open Sans", 0, 16));
 		pnlDenNgay.add(lbldenngay);
+		
+		//
+		JPanel pnlSoLuong = new JPanel();
+		pnlSoLuong.setOpaque(false);
+		pnlSoLuong.setBackground(Color.YELLOW);
+		pnlSoLuong.setBounds(10, 477, 230, 37);
+		pnlSoLuong.setLayout(new FlowLayout(FlowLayout.LEFT));
+		contentPane.add(pnlSoLuong);
+		pnlSoLuong.setLayout(new FlowLayout(FlowLayout.LEFT));
+		JLabel lblsoluong = new JLabel("Tong SL:");
+		lblsoluong.setFont(new Font("Dialog", Font.PLAIN, 16));
+		pnlSoLuong.add(lblsoluong);
+		JPanel pnlTongSL = new JPanel();
+		pnlTongSL.setOpaque(false);
+		pnlTongSL.setBackground(Color.YELLOW);
+		pnlTongSL.setBounds(10, 500, 230, 37);
+		contentPane.add(pnlTongSL);
+		
+		textField = new JTextField();
+		textField.setEnabled(false);
+		textField.setFont(new Font("Dialog", Font.PLAIN, 16));
+		textField.setColumns(16);
+		pnlTongSL.add(textField);
+		//
+		JPanel pnlTheoTenPhim_1 = new JPanel();
+		pnlTheoTenPhim_1.setOpaque(false);
+		pnlTheoTenPhim_1.setBackground(Color.YELLOW);
+		pnlTheoTenPhim_1.setBounds(10, 222, 230, 37);
+		contentPane.add(pnlTheoTenPhim_1);
+		pnlTheoTenPhim_1.setLayout(null);
+		textField_1 = new JTextField();
+		textField_1.setBounds(8, 5, 169, 27);
+		// Đặt kích thước chữ placeholder là 8px
+        Font placeholderFont = new Font("Dialog", Font.PLAIN, 12);
+        textField_1.setFont(placeholderFont);
+		textField_1.setColumns(16);
+		pnlTheoTenPhim_1.add(textField_1);
+		// Thêm placeholder mờ
+        String placeholderText = "SĐT KH";
+        textField_1.setForeground(Color.GRAY);
+        textField_1.setText(placeholderText);
+
+        textField_1.addFocusListener(new FocusListener() {
+            public void focusGained(FocusEvent e) {
+                if (textField_1.getText().equals(placeholderText)) {
+                    textField_1.setText("");
+                    textField_1.setForeground(Color.BLACK);
+                    textField_1.setFont(new Font("Dialog", Font.PLAIN, 16));
+                }
+            }
+
+            public void focusLost(FocusEvent e) {
+                if (textField_1.getText().isEmpty()) {
+                    textField_1.setForeground(Color.GRAY);
+                    textField_1.setText(placeholderText);
+                    textField_1.setFont(placeholderFont);
+                }
+            }
+        });
+		
+		JButton btntimkiem = new JButton("");
+		btntimkiem.setIcon(new ImageIcon(GD_MuaVe_Phim.class.getResource("/Imgs/search.png")));
+		btntimkiem.setBounds(191, 227, 49, 29);
+		contentPane.add(btntimkiem);
 		
 		// Khởi tạo các nút
 		btnXacNhan = new JButton("Xác nhận");
@@ -554,6 +609,35 @@ public class GD_MuaVe_Phim extends JFrame implements ActionListener {
 		Object[] rowData = { "1", "PH00001", "Thám Tử Conan: Kẻ hành pháp Zero", "120", "13", "01-01-2018",
 				"Tiếng Nhật", "Nhật Bản", "Đang Chiếu" }; // Thay đổi dữ liệu tùy ý
 		tableModel.addRow(rowData);
+		
+		// Thêm sự kiện lắng nghe khi nhấn phím enter trên bảng
+		table.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "Enter");
+		table.getActionMap().put("Enter", new AbstractAction() {
+		    @Override
+		    public void actionPerformed(ActionEvent ae) {
+		        int selectedRow = table.getSelectedRow();
+		        if (selectedRow != -1) { // Kiểm tra xem có dòng nào được chọn không
+		            // Hiển thị modal popup để nhập số lượng
+		            String selectedMovie = (String) table.getValueAt(selectedRow, 2); // Lấy tên phim của dòng được chọn
+		            int option = JOptionPane.showConfirmDialog(null, "Bạn muốn mua bao nhiêu vé cho phim: " + selectedMovie + "?", "Nhập số lượng", JOptionPane.OK_CANCEL_OPTION);
+		            if (option == JOptionPane.OK_OPTION) {
+		                // Xử lý khi người dùng ấn OK
+		                String quantityString = JOptionPane.showInputDialog(null, "Nhập số lượng vé:");
+		                // Chuyển đổi chuỗi số lượng thành số nguyên
+		                try {
+		                    int quantity = Integer.parseInt(quantityString);
+		                    // Thực hiện công việc tiếp theo với số lượng vé đã nhập
+		                    // Ví dụ: cập nhật số lượng vé trong cơ sở dữ liệu, hiển thị thông báo thành công, v.v.
+		                } catch (NumberFormatException e) {
+		                    JOptionPane.showMessageDialog(null, "Vui lòng nhập số lượng vé hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+		                }
+		            }
+		        } else {
+		            JOptionPane.showMessageDialog(null, "Vui lòng chọn một dòng trước khi nhấn enter!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+		        }
+		    }
+		});
+
 		
 		JLabel background = new JLabel("");
 		background.setHorizontalAlignment(SwingConstants.CENTER);
