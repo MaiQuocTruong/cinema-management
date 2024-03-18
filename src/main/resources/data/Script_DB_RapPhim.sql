@@ -59,17 +59,20 @@ CREATE TABLE `cthoadonve` (
   `MaVe` varchar(100) NOT NULL,
   `MaGhe` varchar(30) NOT NULL,
   `MaPhongChieu` varchar(30) NOT NULL,
-  `SoLuong` int NOT NULL,
+  `MaXuat` varchar(30) NOT NULL,
   `GioChieu` time NOT NULL,
   `MaPhim` varchar(30) NOT NULL,
   `TenPhim` varchar(50) NOT NULL,
+  `DonGiaPhim` double NOT NULL,
   PRIMARY KEY (`MaVe`),
   KEY `MaHD` (`MaHD`),
   KEY `MaPhongChieu` (`MaPhongChieu`),
   KEY `MaPhim` (`MaPhim`),
+  KEY `MaXuat` (`MaXuat`),
   CONSTRAINT `cthoadonve_ibfk_1` FOREIGN KEY (`MaHD`) REFERENCES `hoadon` (`MaHD`),
   CONSTRAINT `cthoadonve_ibfk_2` FOREIGN KEY (`MaPhongChieu`) REFERENCES `phongchieuphim` (`MaPhongChieu`),
-  CONSTRAINT `cthoadonve_ibfk_3` FOREIGN KEY (`MaPhim`) REFERENCES `phim` (`MaPhim`)
+  CONSTRAINT `cthoadonve_ibfk_3` FOREIGN KEY (`MaPhim`) REFERENCES `phim` (`MaPhim`),
+  CONSTRAINT `cthoadonve_ibfk_4` FOREIGN KEY (`MaXuat`) REFERENCES `xuatchieu` (`MaXuat`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -79,7 +82,7 @@ CREATE TABLE `cthoadonve` (
 
 LOCK TABLES `cthoadonve` WRITE;
 /*!40000 ALTER TABLE `cthoadonve` DISABLE KEYS */;
-INSERT INTO `cthoadonve` VALUES ('HD001','V001','H7','PC001',3,'16:20:00','P001','Doraemon'),('HD001','V002','H7','PC002',5,'16:25:00','P002','Conan');
+INSERT INTO `cthoadonve` VALUES ('HD001','V001','H7','PC001','X001','16:20:00','P001','Doraemon',40000),('HD001','V002','H7','PC002','X002','16:25:00','P002','Conan',45000);
 /*!40000 ALTER TABLE `cthoadonve` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -263,6 +266,7 @@ DROP TABLE IF EXISTS `phim`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `phim` (
   `MaPhim` varchar(30) NOT NULL,
+  `MaXuat` varchar(30) NOT NULL,
   `TenPhim` varchar(30) NOT NULL,
   `LoaiPhim` varchar(20) NOT NULL,
   `NgayChieu` datetime NOT NULL,
@@ -275,7 +279,9 @@ CREATE TABLE `phim` (
   `NgonNgu` varchar(30) NOT NULL,
   `QuocGia` varchar(30) NOT NULL,
   `TrangThaiPhim` varchar(20) NOT NULL,
-  PRIMARY KEY (`MaPhim`)
+  PRIMARY KEY (`MaPhim`),
+  KEY `MaXuat` (`MaXuat`),
+  CONSTRAINT `phim_ibfk_1` FOREIGN KEY (`MaXuat`) REFERENCES `xuatchieu` (`MaXuat`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -285,7 +291,7 @@ CREATE TABLE `phim` (
 
 LOCK TABLES `phim` WRITE;
 /*!40000 ALTER TABLE `phim` DISABLE KEYS */;
-INSERT INTO `phim` VALUES ('P001','Conan','HoatHinh','2023-11-06 00:00:00','2023-12-12 00:00:00',400,300,_binary 'https://codex-themes.com/thegem/sites/shop-bakery',13,120,'TV','Japan','Đang Chiếu'),('P002','Avatar','HanhDong','2023-11-06 00:00:00','2023-12-12 00:00:00',400,300,_binary 'https://codex-themes.com/thegem/sites/shop-bakery',13,120,'TV','America','Đang Chiếu');
+INSERT INTO `phim` VALUES ('P001','X001','Conan','HoatHinh','2023-11-06 00:00:00','2023-12-12 00:00:00',400,300,_binary 'https://codex-themes.com/thegem/sites/shop-bakery',13,120,'TV','Japan','Đang Chiếu'),('P002','X001','Avatar','HanhDong','2023-11-06 00:00:00','2023-12-12 00:00:00',400,300,_binary 'https://codex-themes.com/thegem/sites/shop-bakery',13,120,'TV','America','Đang Chiếu');
 /*!40000 ALTER TABLE `phim` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -298,9 +304,12 @@ DROP TABLE IF EXISTS `phongchieuphim`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `phongchieuphim` (
   `MaPhongChieu` varchar(30) NOT NULL,
+  `MaXuat` varchar(30) NOT NULL,
   `TenPhongChieu` varchar(50) NOT NULL,
   `SucChua` int NOT NULL,
-  PRIMARY KEY (`MaPhongChieu`)
+  PRIMARY KEY (`MaPhongChieu`),
+  KEY `MaXuat` (`MaXuat`),
+  CONSTRAINT `phongchieuphim_ibfk_1` FOREIGN KEY (`MaXuat`) REFERENCES `xuatchieu` (`MaXuat`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -310,7 +319,7 @@ CREATE TABLE `phongchieuphim` (
 
 LOCK TABLES `phongchieuphim` WRITE;
 /*!40000 ALTER TABLE `phongchieuphim` DISABLE KEYS */;
-INSERT INTO `phongchieuphim` VALUES ('PC001','P1',30),('PC002','P2',30);
+INSERT INTO `phongchieuphim` VALUES ('PC001','X001','P1',30),('PC002','X001','P2',30);
 /*!40000 ALTER TABLE `phongchieuphim` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -350,18 +359,11 @@ DROP TABLE IF EXISTS `xuatchieu`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `xuatchieu` (
   `MaXuat` varchar(30) NOT NULL,
-  `MaPhim` varchar(30) NOT NULL,
-  `MaPhongChieu` varchar(30) NOT NULL,
-  `TenPhim` varchar(50) NOT NULL,
   `DinhDang` varchar(30) NOT NULL,
   `NgayChieu` datetime NOT NULL,
   `GioChieu` time NOT NULL,
   `TrangThai` varchar(30) CHARACTER SET utf8mb3 COLLATE utf8_general_ci NOT NULL,
-  PRIMARY KEY (`MaXuat`),
-  KEY `MaPhim` (`MaPhim`),
-  KEY `MaPhongChieu` (`MaPhongChieu`),
-  CONSTRAINT `xuatchieu_ibfk_1` FOREIGN KEY (`MaPhim`) REFERENCES `phim` (`MaPhim`),
-  CONSTRAINT `xuatchieu_ibfk_2` FOREIGN KEY (`MaPhongChieu`) REFERENCES `phongchieuphim` (`MaPhongChieu`)
+  PRIMARY KEY (`MaXuat`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -371,7 +373,7 @@ CREATE TABLE `xuatchieu` (
 
 LOCK TABLES `xuatchieu` WRITE;
 /*!40000 ALTER TABLE `xuatchieu` DISABLE KEYS */;
-INSERT INTO `xuatchieu` VALUES ('X001','P001','PC002','Connan','3D','2023-12-12 00:00:00','12:30:45','Dang Chiếu'),('X002','P001','PC002','Connan','3D','2023-12-12 00:00:00','12:30:45','Dang Chiếu');
+INSERT INTO `xuatchieu` VALUES ('X001','3D','2023-12-12 00:00:00','12:30:45','Dang Chiếu'),('X002','3D','2023-12-12 00:00:00','12:30:45','Dang Chiếu');
 /*!40000 ALTER TABLE `xuatchieu` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -392,4 +394,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-03-17 11:15:44
+-- Dump completed on 2024-03-18 19:01:40
