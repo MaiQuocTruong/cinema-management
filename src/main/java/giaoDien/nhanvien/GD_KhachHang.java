@@ -86,7 +86,6 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 	private JTextField txtNgaySinh;
 	private KhachHang_dao kh_dao = new KhachHang_dao();
 	private List<KhachHang> listKH;
-	private int idCust = 0;
 	private JRadioButton rdbtnNam, rdbtnNu;
 //	static String quanly;
 
@@ -605,14 +604,12 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 				java.lang.Object[] rowData = { maKH, tenKH, ngaySinhTrongTable, SDT, cmnd, email, loaiKH,
 						gioiTinhTrongTable, diemHienCoTrongTable, diemDaDungTrongTable };
 				tableModel.addRow(rowData);
-				idCust++;
 			}
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 
-		System.out.println(idCust);
 
 //		Add Su Kien
 		btnThem.addActionListener(this);
@@ -658,6 +655,10 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 	}
 
 	public void themKhachHang() throws Exception {
+		int idCust = 0;
+		for (KhachHang khachHang : kh_dao.getListKH()) {
+			idCust++;
+		}
 		int newIDKhachHang = idCust + 1;
 		String maKH = "KH00" + newIDKhachHang;
 		String tenKH = txtHoTen.getText();
