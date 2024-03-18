@@ -20,11 +20,4 @@
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>org.eclipse.m2e.core.maven2Nature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>Script_DB_RapPhim.sql</name>
-			<type>1</type>
-			<location>C:/Users/ACER/Desktop/Script_DB_RapPhim.sql</location>
-		</link>
-	</linkedResources>
 </projectDescription>
