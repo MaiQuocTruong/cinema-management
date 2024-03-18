@@ -9,7 +9,6 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 
-import enities.DichVuAnUong;
 import enities.KhachHang;
 
 public class KhachHang_dao {

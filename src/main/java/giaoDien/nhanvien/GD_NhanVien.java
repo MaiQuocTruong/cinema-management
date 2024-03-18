@@ -95,7 +95,7 @@ public class GD_NhanVien extends JFrame implements ActionListener {
 		setBackground(Color.WHITE);
 		setTitle("Giao Diện Nhân Viên");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setLocationRelativeTo(null);
+		this.setLocationRelativeTo(null);
 		setBounds(100, 100, 1168, 650);
 		contentPane = new JPanel();
 		contentPane.setBorder(null);

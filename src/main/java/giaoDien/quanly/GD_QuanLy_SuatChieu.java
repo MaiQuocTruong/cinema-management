@@ -117,12 +117,12 @@ public class GD_QuanLy_SuatChieu extends JFrame implements ActionListener {
 	 * Create the frame.
 	 */
 	public GD_QuanLy_SuatChieu() {
-//		initComponents();
+		initComponents();
 		setResizable(false);
 		setBackground(Color.WHITE);
 		setTitle("Giao Diện Quản Lý Suất Chiếu");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setLocationRelativeTo(null);
+		this.setLocationRelativeTo(null);
 		setBounds(100, 100, 1168, 650);
 		contentPane = new JPanel();
 		contentPane.setBorder(null);

@@ -55,8 +55,9 @@ import javax.swing.JTextField;
 import com.mysql.cj.x.protobuf.MysqlxDatatypes.Object;
 import com.toedter.calendar.JDateChooser;
 
-import dao.KhachHang_dao;
+import dao.NhanVien_dao;
 import enities.KhachHang;
+import enities.NhanVien;
 import runapp.Login;
 
 import java.text.SimpleDateFormat;
@@ -83,13 +84,15 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 	private DefaultTableModel tableModel;
 	private JButton btnThem, btnXoa, btnSua, btnLamMoi;
 	private boolean isCalendarVisible = false;
-	private JTextField txtSDT, txtCMND, txtEmail, txtNgaydky, txtTimKiem, txtHoTen;
+	private JTextField txtSDT, txtDiaChi, txtEmail, txtNgaydky, txtTimKiem, txtHoTen;
 	private JDateChooser ngaySinhDateChooser; // Thêm đối tượng JDateChooser cho từ ngày
 	private JTextField txtNgaySinh;
-//	private KhachHang_dao kh_dao = new KhachHang_dao();
-//	private List<KhachHang> listKH;
-//	private int idCust = 0;
+	private NhanVien_dao nv_dao = new NhanVien_dao();
+	private List<NhanVien> listNV;
+	private int idCust = 0;
 	private JRadioButton rdbtnNam, rdbtnNu;
+	private JComboBox<String> cboxChucVu,cboxTrangThai; // Declare the JComboBox here
+
 //	static String quanly;
 
 	/**
@@ -557,16 +560,16 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 		lbldiachi.setBounds(17, 346, 130, 21);
 		contentPane.add(lbldiachi);
 
-		JPanel pnlCMND = new JPanel();
-		pnlCMND.setOpaque(false);
-		pnlCMND.setBackground(Color.YELLOW);
-		pnlCMND.setBounds(10, 368, 230, 37);
-		contentPane.add(pnlCMND);
+		JPanel pnlDiaChi = new JPanel();
+		pnlDiaChi.setOpaque(false);
+		pnlDiaChi.setBackground(Color.YELLOW);
+		pnlDiaChi.setBounds(10, 368, 230, 37);
+		contentPane.add(pnlDiaChi);
 
-		txtCMND = new JTextField();
-		txtCMND.setFont(new Font("Dialog", Font.PLAIN, 16));
-		txtCMND.setColumns(16);
-		pnlCMND.add(txtCMND);
+		txtDiaChi = new JTextField();
+		txtDiaChi.setFont(new Font("Dialog", Font.PLAIN, 16));
+		txtDiaChi.setColumns(16);
+		pnlDiaChi.add(txtDiaChi);
 
 		JLabel lblEmail = new JLabel("Email:");
 		lblEmail.setFont(new Font("Dialog", Font.PLAIN, 16));
@@ -616,7 +619,7 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 		lblChucVu.setBounds(17, 520, 70, 21);
 		contentPane.add(lblChucVu);
 		
-		JComboBox cboxChucVu = new JComboBox();
+		cboxChucVu = new JComboBox();
 		cboxChucVu.setBounds(97, 522, 100, 22);
 		contentPane.add(cboxChucVu);
 		
@@ -625,7 +628,7 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 		lblTrangThai.setBounds(17, 560, 70, 21);
 		contentPane.add(lblTrangThai);
 		
-		JComboBox cboxTrangThai = new JComboBox();
+		cboxTrangThai = new JComboBox();
 		cboxTrangThai.setBounds(97, 562, 100, 22);
 		contentPane.add(cboxTrangThai);
 
@@ -678,46 +681,52 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 		contentPane.add(background);
 
 //		Load Du Lieu
-//		try {
-//			String ngaySinhTrongTable = "";
-//			String gioiTinhTrongTable = "";
-//			kh_dao.setUp();
-//			listKH = kh_dao.getListKH();
-//			for (KhachHang kh : listKH) {
-//				String maKH = kh.getMaKH();
-//				String tenKH = kh.getTenKH();
-//				String email = kh.getEmail();
-//				Date ngaySinh = kh.getNgaySinh();
-//
-//				ngaySinhTrongTable = ngaySinh + "";
-//				boolean gioiTinh = kh.isGioiTinh();
-//
-//				if (gioiTinh) {
-//					gioiTinhTrongTable = "Nam";
-//				} else {
-//					gioiTinhTrongTable = "Nu";
-//				}
-//
-//				String loaiKH = kh.getLoaiKH();
-//				String SDT = kh.getSdt();
-//				int diemHienCo = kh.getDiemHienCo();
-//				String diemHienCoTrongTable = String.valueOf(diemHienCo);
-//
-//				String cmnd = kh.getCmnd();
-//				int diemDaDung = kh.getDiemDaDung();
-//				String diemDaDungTrongTable = String.valueOf(diemDaDung);
-//
-//				java.lang.Object[] rowData = { maKH, tenKH, ngaySinhTrongTable, SDT, cmnd, email, loaiKH,
-//						gioiTinhTrongTable, diemHienCoTrongTable, diemDaDungTrongTable };
-//				tableModel.addRow(rowData);
-//				idCust++;
-//			}
-//		} catch (Exception e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		}
-//
-//		System.out.println(idCust);
+		try {
+			String ngaySinhTrongTable = "";
+			String gioiTinhTrongTable = "";
+			String trangThaiTrongTable = "";
+			nv_dao.setUp();
+			listNV = nv_dao.getListNV();
+			for (NhanVien nv : listNV) {
+				String maNV = nv.getMaNV();
+				String tenNV = nv.getTenNV();
+				String email = nv.getEmail();
+				String diaChi = nv.getDiaChi();
+				Date ngaySinh = nv.getNgaySinh();
+
+				ngaySinhTrongTable = ngaySinh + "";
+				boolean gioiTinh = nv.isGioiTinh();
+
+				if (gioiTinh) {
+					gioiTinhTrongTable = "Nam";
+				} else {
+					gioiTinhTrongTable = "Nu";
+				}
+				
+				boolean trangThai = nv.isTrangThai();
+				if (trangThai) {
+					trangThaiTrongTable = "Còn làm";
+				} else {
+					trangThaiTrongTable = "Ngưng làm";
+				}
+				cboxTrangThai.addItem(trangThaiTrongTable);
+				String SDT = nv.getSdt();
+				
+				String chucVu = nv.getChucVu();
+				cboxChucVu.addItem(nv.getChucVu());
+				
+
+				java.lang.Object[] rowData = {maNV, tenNV, ngaySinhTrongTable, SDT, diaChi, email, chucVu,
+						gioiTinhTrongTable, trangThaiTrongTable};
+				tableModel.addRow(rowData);
+				idCust++;
+			}
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		System.out.println(idCust);
 //
 ////		Add Su Kien
 //		btnThem.addActionListener(this);
@@ -750,15 +759,6 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-//		java.lang.Object o = e.getSource();
-//		if (o.equals(btnThem)) {
-//			try {
-//				themKhachHang();
-//			} catch (Exception e1) {
-//				// TODO Auto-generated catch block
-//				e1.printStackTrace();
-//			}
-//		}
 
 	}
 }

@@ -56,7 +56,7 @@ public class Login extends JFrame implements ActionListener{
 		setBounds(100, 100, 734, 505);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setLocationRelativeTo(null);
+		this.setLocationRelativeTo(null);
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);

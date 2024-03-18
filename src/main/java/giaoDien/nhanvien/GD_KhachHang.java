@@ -123,7 +123,7 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 	 */
 	public GD_KhachHang() {
 		this.setLocationRelativeTo(null);
-//		initComponents();
+		initComponents();
 		setResizable(false);
 		setBackground(Color.WHITE);
 		setTitle("Giao Diện Khách Hàng");

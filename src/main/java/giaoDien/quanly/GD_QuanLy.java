@@ -95,12 +95,12 @@ public class GD_QuanLy extends JFrame implements ActionListener {
 	 * Create the frame.
 	 */
 	public GD_QuanLy() {
-//		initComponents();
+		initComponents();
 		setResizable(false);
 		setBackground(Color.WHITE);
 		setTitle("Giao Diện Quản Lý");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setLocationRelativeTo(null);
+		this.setLocationRelativeTo(null);
 		setBounds(100, 100, 1168, 650);
 		contentPane = new JPanel();
 		contentPane.setBorder(null);

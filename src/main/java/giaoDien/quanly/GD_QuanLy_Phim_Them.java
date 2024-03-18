@@ -60,7 +60,7 @@ public class GD_QuanLy_Phim_Them extends JFrame {
 		setBackground(Color.WHITE);
 		setTitle("Giao Diện Quản Lý Phim - Thêm");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setLocationRelativeTo(null);
+		this.setLocationRelativeTo(null);
 		contentPane = new JPanel();
 		contentPane.setBorder(null);
 		setContentPane(contentPane);

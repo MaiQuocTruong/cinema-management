@@ -72,7 +72,7 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 		setBackground(Color.WHITE);
 		setTitle("Giao Diện Mua Vé - Chọn Ghế");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setLocationRelativeTo(null);
+		this.setLocationRelativeTo(null);
 		setBounds(100, 100, 1168, 650);
 		contentPane = new JPanel();
 		contentPane.setBorder(null);
