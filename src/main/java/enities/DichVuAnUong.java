@@ -23,32 +23,19 @@ public class DichVuAnUong {
 	
 	@Column (name =  " SoLuong")
 	private int soLuong;
-	
-	@Column (name = "DonGia")
-	private double donGia;
-	
-	@Column (name = "KichThuoc")
-	private String kichThuoc;
-	
-	@Column (name = "TrangThaiSize")
-	private String trangThaiSize;
 
 	public DichVuAnUong() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-
-	public DichVuAnUong(String maDichVu, String tenDichVu, String trangThai, String loaiDichVu, int soLuong,
-			double donGia, String kichThuoc, String trangThaiSize) {
+	
+	public DichVuAnUong(String maDichVu, String tenDichVu, String trangThai, String loaiDichVu, int soLuong) {
 		super();
 		this.maDichVu = maDichVu;
 		this.tenDichVu = tenDichVu;
 		this.trangThai = trangThai;
 		this.loaiDichVu = loaiDichVu;
 		this.soLuong = soLuong;
-		this.donGia = donGia;
-		this.kichThuoc = kichThuoc;
-		this.trangThaiSize = trangThaiSize;
 	}
 
 	public String getMaDichVu() {
@@ -91,37 +78,10 @@ public class DichVuAnUong {
 		this.soLuong = soLuong;
 	}
 
-	public double getDonGia() {
-		return donGia;
-	}
-
-	public void setDonGia(double donGia) {
-		this.donGia = donGia;
-	}
-
-	public String getKichThuoc() {
-		return kichThuoc;
-	}
-
-	public void setKichThuoc(String kichThuoc) {
-		this.kichThuoc = kichThuoc;
-	}
-
-	public String getTrangThaiSize() {
-		return trangThaiSize;
-	}
-
-	public void setTrangThaiSize(String trangThaiSize) {
-		this.trangThaiSize = trangThaiSize;
-	}
-
 	@Override
 	public String toString() {
 		return "DichVuAnUong [maDichVu=" + maDichVu + ", tenDichVu=" + tenDichVu + ", trangThai=" + trangThai
-				+ ", loaiDichVu=" + loaiDichVu + ", soLuong=" + soLuong + ", donGia=" + donGia + ", kichThuoc="
-				+ kichThuoc + ", trangThaiSize=" + trangThaiSize + "]";
+				+ ", loaiDichVu=" + loaiDichVu + ", soLuong=" + soLuong + "]";
 	}
-	
-	
 	
 }

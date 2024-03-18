@@ -41,6 +41,7 @@ import javax.swing.table.DefaultTableModel;
 
 import com.toedter.calendar.JDateChooser;
 
+import giaoDien.nhanvien.GD_NhanVien;
 import runapp.Login;
 import testbutton.Buttontest;
 
@@ -76,7 +77,7 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
     private boolean daChonPhim = false; // Biến để kiểm tra xem đã chọn Phim hay chưa
 	private JDateChooser tuNgayDateChooser, denNgayDateChooser; // Thêm đối tượng JDateChooser cho từ ngày
 	private boolean isCalendarVisible = false;
-	private JButton btnThem, btnXoa, btnLamMoi;	
+	private JButton btnThem, btnXoa, btnLamMoi, btnSua;
 	private JTable table;
 	private DefaultTableModel tableModel;
 
@@ -113,10 +114,10 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 	 * Create the frame.
 	 */
 	public GD_QuanLy_Phim() {
-//		initComponents();
+		initComponents();
 		setResizable(false);
 		setBackground(Color.WHITE);
-		setTitle("Giao Diện Quản Lý");
+		setTitle("Giao Diện Quản Lý Phim");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setLocationRelativeTo(null);
 		setBounds(100, 100, 1168, 650);
@@ -211,6 +212,18 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 		JButton btnSuatChieu = new JButton("Quản Lý Suất Chiếu");
 		btnSuatChieu.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnSuatChieu.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/clapperboard2.png")));
+		btnSuatChieu.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				GD_QuanLy_SuatChieu gdqlsc = new GD_QuanLy_SuatChieu();
+				gdqlsc.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				gdqlsc.setLocationRelativeTo(null);
+				gdqlsc.setVisible(true);
+				dispose();
+			}
+		});
 		JButton btnVe = new JButton("Quản Lý Vé Phim");
 		btnVe.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnVe.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/tickets2.png")));
@@ -262,10 +275,22 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 		panelDichVu.setBackground(whiteColor);
 		contentPane.add(panelDichVu);
 
-		JButton btnDoAn = new JButton("Quản Lý Thức Ăn");
-		btnDoAn.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnDoAn.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/popcorn2.png")));
-		panelDichVu.add(btnDoAn);
+		JButton btnqldv = new JButton("Quản Lý Dịch Vụ");
+		btnqldv.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btnqldv.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/popcorn2.png")));
+		btnqldv.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				GD_QuanLy_DichVu gdqldv = new GD_QuanLy_DichVu();
+				gdqldv.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				gdqldv.setLocationRelativeTo(null);
+				gdqldv.setVisible(true);
+				dispose();
+			}
+		});
+		panelDichVu.add(btnqldv);
 
 		// Thêm toolbar "nhân viên"
 		JToolBar nhanVienToolbar = new JToolBar();
@@ -417,14 +442,14 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 		JButton btnThongKePhim = new JButton("Thống Kê Phim");
 		btnThongKePhim.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnThongKePhim.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/clapperboard2.png")));
-		JButton btnThongKeThucAn = new JButton("Thống Kê Thức Ăn"); 
-		btnThongKeThucAn.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnThongKeThucAn.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/popcorn2.png")));
+		JButton btnThongKeDichVu = new JButton("Thống Kê Dịch Vụ"); 
+		btnThongKeDichVu.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btnThongKeDichVu.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/popcorn2.png")));
 		
 		panelThongKe.add(btnThongKeDThu);
 		panelThongKe.add(btnThongKeVe);
 		panelThongKe.add(btnThongKePhim);
-		panelThongKe.add(btnThongKeThucAn);
+		panelThongKe.add(btnThongKeDichVu);
 		
 		// Create logout button
 		JToolBar logoutToolBar = new JToolBar();
@@ -580,12 +605,14 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 		btnThem = new JButton("Thêm");
 		btnXoa = new JButton("Xóa");
 		btnLamMoi = new JButton("Làm mới");
+		btnSua = new JButton("Sửa");
 
 		// Đặt vị trí cho các nút
 		btnThem.setBounds(192, 99, 100, 30);
 		btnXoa.setBounds(302, 99, 100, 30);
 		btnLamMoi.setBounds(412, 99, 100, 30);
-		
+		btnSua.setBounds(522, 99, 100, 30);
+
 		// Thêm sự kiện các nút
 		btnThem.addActionListener(new ActionListener() {
 			
@@ -598,12 +625,23 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 				dispose();
 			}
 		});
+		btnSua.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				GD_QuanLy_Phim_Sua gdsuaphim = new GD_QuanLy_Phim_Sua();
+				gdsuaphim.setVisible(true);
+				gdsuaphim.setLocationRelativeTo(null);
+				dispose();
+			}
+		});
 
 		// Thêm các nút vào contentPane
 		contentPane.add(btnThem);
 		contentPane.add(btnXoa);
 		contentPane.add(btnLamMoi);
-
+		contentPane.add(btnSua);
 		// Khởi tạo DefaultTableModel với các cột
 		String[] columnNames = {"Mã phim", "Tên phim", "Loại phim", "Thời lượng", "Tuổi", "Ngày chiếu", "Ngày hết hạn", "Ngôn ngữ",
 				"Quốc gia", "Giá tiền", "SL vé", "Trạng thái"}; // Thay đổi tên cột tùy ý
@@ -667,9 +705,9 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 	}
 	
 	private void formWindowClosing(java.awt.event.WindowEvent evt) {// GEN-FIRST:event_formWindowClosing
-		Login login = new Login();
-		login.setLocationRelativeTo(null);
-		login.setVisible(true);
+		GD_QuanLy gdql = new GD_QuanLy();
+		gdql.setLocationRelativeTo(null);
+		gdql.setVisible(true);
 	}
 	
 	@Override

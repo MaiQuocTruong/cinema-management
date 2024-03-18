@@ -90,7 +90,7 @@ public class GD_NhanVien extends JFrame implements ActionListener {
 	 * Create the frame.
 	 */
 	public GD_NhanVien() {
-//		initComponents();
+		initComponents();
 		setResizable(false);
 		setBackground(Color.WHITE);
 		setTitle("Giao Diện Nhân Viên");

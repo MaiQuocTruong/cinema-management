@@ -118,7 +118,7 @@ public class GD_MuaVe_Phim extends JFrame implements ActionListener {
 	 * Create the frame.
 	 */
 	public GD_MuaVe_Phim() {
-//		initComponents();
+		initComponents();
 		setResizable(false);
 		setBackground(Color.WHITE);
 		setTitle("Giao Diện Mua Vé - Phim");

@@ -116,7 +116,7 @@ public class GD_MuaVe_SuatChieu extends JFrame implements ActionListener {
 	 * Create the frame.
 	 */
 	public GD_MuaVe_SuatChieu() {
-		initComponents();
+//		initComponents();
 		setResizable(false);
 		setBackground(Color.WHITE);
 		setTitle("Giao Diện Mua Vé - Suất Chiếu");

@@ -55,7 +55,9 @@ import javax.swing.JTextField;
 import com.toedter.calendar.JDateChooser;
 
 import dao.DichVuAnUong_dao;
+import dao.GiaDichVu_dao;
 import enities.DichVuAnUong;
+import enities.GiaDichVu;
 import runapp.Login;
 
 import java.text.SimpleDateFormat;
@@ -80,7 +82,7 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 	Color customColor = new Color(0, 92, 111);
 	Color whiteColor = Color.WHITE;
 	private JLabel lblNvIcon; // Thêm biến để lưu đối tượng JLabel chứa ảnh NV
-	private JTable table;
+	private JTable table1, table2;
 	private DefaultTableModel tableModel1, tableModel2;
 	private JButton btnXacNhan, btnHuyBo, btnLamMoi, btnChonKichCo;
 	private JTextField txtTen;
@@ -89,6 +91,9 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 
 	private DichVuAnUong_dao dichVuAnUong_dao = new DichVuAnUong_dao();
 	private List<DichVuAnUong> listServices = new ArrayList<DichVuAnUong>();
+
+	private GiaDichVu_dao giaDichVu_dao = new GiaDichVu_dao();
+	private List<GiaDichVu> listGia = new ArrayList<GiaDichVu>();
 
 	/**
 	 * Launch the application.
@@ -497,42 +502,115 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 		tableModel1 = new DefaultTableModel(columnNames1, 0);
 
 		// Khởi tạo JTable cho bảng đầu tiên
-		JTable table1 = new JTable(tableModel1);
+		table1 = new JTable(tableModel1);
 
 		// Đặt chiều rộng cho các cột nếu cần
 		table1.getColumnModel().getColumn(0).setPreferredWidth(30);
 		table1.getColumnModel().getColumn(2).setPreferredWidth(200);
+		// Thêm sự kiện lắng nghe khi nhấn phím Enter trên bảng thứ nhất
+		table1.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
+				.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "Enter");
+		table1.getActionMap().put("Enter", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent ae) {
+				if (table1.getSelectedRow() != -1) {
+					if (table2.getSelectedRow() != -1) {
+						// Hiển thị hộp thoại yêu cầu nhập số lượng
+						String quantityString;
+						int quantity = 0;
+						boolean validInput = false;
+						while (!validInput) {
+							quantityString = JOptionPane.showInputDialog(null, "Nhập số lượng:", "Nhập số lượng",
+									JOptionPane.QUESTION_MESSAGE);
+							// Kiểm tra nếu giá trị trả về là null (người dùng nhấn cancel)
+							if (quantityString != null) {
+								// Chuyển đổi chuỗi nhập thành số nguyên
+								try {
+									quantity = Integer.parseInt(quantityString);
+									if (quantity >= 0) {
+										validInput = true; // Kiểm tra số lượng nhập vào là số nguyên dương
+									} else {
+										JOptionPane.showMessageDialog(null, "Vui lòng nhập một số nguyên dương!", "Lỗi",
+												JOptionPane.ERROR_MESSAGE);
+									}
+								} catch (NumberFormatException e) {
+									// Xử lý nếu người dùng không nhập số nguyên hợp lệ
+									JOptionPane.showMessageDialog(null, "Vui lòng nhập một số nguyên dương!", "Lỗi",
+											JOptionPane.ERROR_MESSAGE);
+								}
+							} else {
+								break; // Người dùng nhấn cancel, thoát khỏi vòng lặp
+							}
+						}
+						if (validInput) {
+							// Thực hiện các hành động với số lượng nhập vào, ví dụ: lấy thông tin từ cả hai
+							// bảng và thực hiện xử lý
+						}
+					} else {
+						JOptionPane.showMessageDialog(null, "Vui lòng chọn size!", "Thông báo",
+								JOptionPane.INFORMATION_MESSAGE);
+					}
+				} else {
+					JOptionPane.showMessageDialog(null, "Vui lòng chọn dịch vụ!", "Thông báo",
+							JOptionPane.INFORMATION_MESSAGE);
+				}
+			}
+		});
 
 		// Khai báo các cột cho bảng thứ hai
 		String[] columnNames2 = { "Kích cỡ", "Đơn giá", "Trạng thái" };
 
 		// Khởi tạo DefaultTableModel cho bảng thứ hai
-		DefaultTableModel tableModel2 = new DefaultTableModel(columnNames2, 0);
+		tableModel2 = new DefaultTableModel(columnNames2, 0);
 
 		// Khởi tạo JTable cho bảng thứ hai
-		JTable table2 = new JTable(tableModel2);
-		
+		table2 = new JTable(tableModel2);
+
 		// Thêm sự kiện lắng nghe khi nhấn phím enter trên bảng
 		table2.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
 				.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "Enter");
 		table2.getActionMap().put("Enter", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
-				int selectedRow = table2.getSelectedRow();
-				if (selectedRow != -1) { // Kiểm tra xem có dòng nào được chọn không
-					if (selectedRow == JOptionPane.OK_OPTION) {
-						// Xử lý khi người dùng ấn OK
-						String quantityString = JOptionPane.showInputDialog(null, "Nhập số lượng:");
-						// Chuyển đổi chuỗi số lượng thành số nguyên
-						try {
-							int quantity = Integer.parseInt(quantityString);
-						} catch (NumberFormatException e) {
-							JOptionPane.showMessageDialog(null, "Vui lòng nhập số lượng hợp lệ!", "Lỗi",
-									JOptionPane.ERROR_MESSAGE);
+				if (table2.getSelectedRow() != -1) {
+					if (table1.getSelectedRow() != -1) {
+						// Hiển thị hộp thoại yêu cầu nhập số lượng
+						String quantityString;
+						int quantity = 0;
+						boolean validInput = false;
+						while (!validInput) {
+							quantityString = JOptionPane.showInputDialog(null, "Nhập số lượng:", "Nhập số lượng",
+									JOptionPane.QUESTION_MESSAGE);
+							// Kiểm tra nếu giá trị trả về là null (người dùng nhấn cancel)
+							if (quantityString != null) {
+								// Chuyển đổi chuỗi nhập thành số nguyên
+								try {
+									quantity = Integer.parseInt(quantityString);
+									if (quantity >= 0) {
+										validInput = true; // Kiểm tra số lượng nhập vào là số nguyên dương
+									} else {
+										JOptionPane.showMessageDialog(null, "Vui lòng nhập một số nguyên dương!", "Lỗi",
+												JOptionPane.ERROR_MESSAGE);
+									}
+								} catch (NumberFormatException e) {
+									// Xử lý nếu người dùng không nhập số nguyên hợp lệ
+									JOptionPane.showMessageDialog(null, "Vui lòng nhập một số nguyên dương!", "Lỗi",
+											JOptionPane.ERROR_MESSAGE);
+								}
+							} else {
+								break; // Người dùng nhấn cancel, thoát khỏi vòng lặp
+							}
 						}
+						if (validInput) {
+							// Thực hiện các hành động với số lượng nhập vào, ví dụ: lấy thông tin từ cả hai
+							// bảng và thực hiện xử lý
+						}
+					} else {
+						JOptionPane.showMessageDialog(null, "Vui lòng chọn dịch vụ!", "Thông báo",
+								JOptionPane.INFORMATION_MESSAGE);
 					}
 				} else {
-					JOptionPane.showMessageDialog(null, "Vui lòng chọn một dòng trước khi nhấn enter!", "Thông báo",
+					JOptionPane.showMessageDialog(null, "Vui lòng chọn size!", "Thông báo",
 							JOptionPane.INFORMATION_MESSAGE);
 				}
 			}
@@ -555,8 +633,8 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 		contentPane.add(background);
 
 //		Load Du Lieu Len Table
-		dichVuAnUong_dao.setUp();
 		try {
+			dichVuAnUong_dao.setUp();
 			listServices = dichVuAnUong_dao.getServices();
 			int i = 0;
 			for (DichVuAnUong dichVuAnUong : listServices) {
@@ -565,24 +643,31 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 				String tenDichVu = dichVuAnUong.getTenDichVu();
 				String trangThai = dichVuAnUong.getTrangThai();
 				String loaiDichVu = dichVuAnUong.getLoaiDichVu();
-
+				loaiDoAnComboBox.addItem(dichVuAnUong.getLoaiDichVu());
 				Object[] rowDataTable1 = { STT, maDichVu, tenDichVu, trangThai, loaiDichVu };
 				tableModel1.addRow(rowDataTable1);
-
-				String kichCo = dichVuAnUong.getKichThuoc();
-				String donGia = String.valueOf(dichVuAnUong.getDonGia());
-				String trangThaiSize = dichVuAnUong.getTrangThaiSize();
-				System.out.println(donGia);
-
-				loaiDoAnComboBox.addItem(dichVuAnUong.getLoaiDichVu());
-
-				Object[] rowDataTable2 = { kichCo, donGia, trangThaiSize };
-				tableModel2.addRow(rowDataTable2);
 				i++;
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+
+		try {
+			giaDichVu_dao.setUp();
+			listGia = giaDichVu_dao.getGiaDV();
+			for (GiaDichVu giaDichVu : listGia) {
+				Double donGia = giaDichVu.getDonGia();
+				String kichThuoc = giaDichVu.getKichThuoc();
+				String trangThaiSize = giaDichVu.getTrangThaiSize();
+
+				Object[] rowDataTable2 = { kichThuoc, donGia, trangThaiSize };
+				tableModel2.addRow(rowDataTable2);
+
+			}
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
 
 	}

@@ -6,6 +6,10 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 
@@ -19,8 +23,12 @@ import javax.swing.JOptionPane;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 
 import java.awt.Font;
@@ -32,21 +40,28 @@ import java.awt.SystemColor;
 
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
+import javax.swing.table.DefaultTableModel;
 
-import giaoDien.nhanvien.GD_MuaVe_ChonGhe;
+import com.toedter.calendar.JDateChooser;
+
+import giaoDien.nhanvien.GD_NhanVien;
 import runapp.Login;
 import testbutton.Buttontest;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
-public class GD_QuanLy extends JFrame implements ActionListener {
+public class GD_QuanLy_SuatChieu extends JFrame implements ActionListener {
 	/**
 	 * 
 	 */
@@ -60,8 +75,15 @@ public class GD_QuanLy extends JFrame implements ActionListener {
 	private JPanel panelPhim, panelDichVu, panelNhanVien, panelTaiKhoan, panelThongKe;
 	Color customColor = new Color(0, 92, 111);
 	Color whiteColor = Color.WHITE;
+	private JTextField txtNgayHienThi;
     private JLabel lblNvIcon; // Thêm biến để lưu đối tượng JLabel chứa ảnh NV
     private boolean daChonPhim = false; // Biến để kiểm tra xem đã chọn Phim hay chưa
+	private JDateChooser ngayHienThiDateChooser; // Thêm đối tượng JDateChooser cho từ ngày
+	private boolean isCalendarVisible = false;
+	private JButton btnThem, btnXoa, btnLamMoi, btnSua;
+	private JTable table;
+	private DefaultTableModel tableModel;
+	private JComboBox<String> phongChieuComboBox; // Declare the JComboBox here
 //	static String quanly;
 	/**
 	 * Launch the application.
@@ -75,30 +97,30 @@ public class GD_QuanLy extends JFrame implements ActionListener {
 				}
 			}
 		} catch (ClassNotFoundException ex) {
-			java.util.logging.Logger.getLogger(GD_QuanLy.class.getName()).log(java.util.logging.Level.SEVERE, null,
+			java.util.logging.Logger.getLogger(GD_QuanLy_SuatChieu.class.getName()).log(java.util.logging.Level.SEVERE, null,
 					ex);
 		} catch (InstantiationException ex) {
-			java.util.logging.Logger.getLogger(GD_QuanLy.class.getName()).log(java.util.logging.Level.SEVERE, null,
+			java.util.logging.Logger.getLogger(GD_QuanLy_SuatChieu.class.getName()).log(java.util.logging.Level.SEVERE, null,
 					ex);
 		} catch (IllegalAccessException ex) {
-			java.util.logging.Logger.getLogger(GD_QuanLy.class.getName()).log(java.util.logging.Level.SEVERE, null,
+			java.util.logging.Logger.getLogger(GD_QuanLy_SuatChieu.class.getName()).log(java.util.logging.Level.SEVERE, null,
 					ex);
 		} catch (javax.swing.UnsupportedLookAndFeelException ex) {
-			java.util.logging.Logger.getLogger(GD_QuanLy.class.getName()).log(java.util.logging.Level.SEVERE, null,
+			java.util.logging.Logger.getLogger(GD_QuanLy_SuatChieu.class.getName()).log(java.util.logging.Level.SEVERE, null,
 					ex);
 		}
-		GD_QuanLy run = new GD_QuanLy();
+		GD_QuanLy_SuatChieu run = new GD_QuanLy_SuatChieu();
 		run.setVisible(true);
 	}
 
 	/**
 	 * Create the frame.
 	 */
-	public GD_QuanLy() {
+	public GD_QuanLy_SuatChieu() {
 //		initComponents();
 		setResizable(false);
 		setBackground(Color.WHITE);
-		setTitle("Giao Diện Quản Lý");
+		setTitle("Giao Diện Quản Lý Suất Chiếu");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setLocationRelativeTo(null);
 		setBounds(100, 100, 1168, 650);
@@ -108,7 +130,7 @@ public class GD_QuanLy extends JFrame implements ActionListener {
 		contentPane.setLayout(null);
 		
 		lblNvIcon = new JLabel("");
-        lblNvIcon.setIcon(new ImageIcon(GD_QuanLy.class.getResource("/imgs/avt.png"))); // Thay đổi đường dẫn ảnh của bạn
+        lblNvIcon.setIcon(new ImageIcon(GD_QuanLy_SuatChieu.class.getResource("/imgs/avt.png"))); // Thay đổi đường dẫn ảnh của bạn
         lblNvIcon.setBounds(760, 5, 40, 40); // Điều chỉnh tọa độ và kích thước của ảnh
         contentPane.add(lblNvIcon);
       
@@ -153,7 +175,7 @@ public class GD_QuanLy extends JFrame implements ActionListener {
 		qlyPhimButton.setForeground(SystemColor.text);
 		qlyPhimButton.setRippleColor(new Color(255, 255, 255));
 		qlyPhimButton.setBackground(new Color(255, 128, 64));
-		qlyPhimButton.setIcon(new ImageIcon(GD_QuanLy.class.getResource("/imgs/video-camera12.png")));
+		qlyPhimButton.setIcon(new ImageIcon(GD_QuanLy_SuatChieu.class.getResource("/imgs/video-camera12.png")));
 		qlyPhimButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (panelThongKe.isVisible() || panelTaiKhoan.isVisible() || panelNhanVien.isVisible() 
@@ -183,13 +205,13 @@ public class GD_QuanLy extends JFrame implements ActionListener {
 		};
 		panelPhim.setBounds(0, 49, 1175, 47); // Điều chỉnh tọa độ và kích thước của panel theo ý muốn
 		panelPhim.setLayout(new FlowLayout(FlowLayout.LEFT)); // Thay đổi ở đây
-		panelPhim.setVisible(false); // tắt/ẩn panel
+		panelPhim.setVisible(true); // tắt/ẩn panel
 		panelPhim.setBackground(whiteColor);
 		contentPane.add(panelPhim);
 
 		JButton btnqlyPhim = new JButton("Quản Lý Phim");
 		btnqlyPhim.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnqlyPhim.setIcon(new ImageIcon(GD_QuanLy.class.getResource("/imgs/film-reel.png")));
+		btnqlyPhim.setIcon(new ImageIcon(GD_QuanLy_SuatChieu.class.getResource("/imgs/film-reel.png")));
 		btnqlyPhim.addActionListener(new ActionListener() {
 			
 			@Override
@@ -204,22 +226,10 @@ public class GD_QuanLy extends JFrame implements ActionListener {
 		});
 		JButton btnSuatChieu = new JButton("Quản Lý Suất Chiếu");
 		btnSuatChieu.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnSuatChieu.setIcon(new ImageIcon(GD_QuanLy.class.getResource("/imgs/clapperboard2.png")));
-		btnSuatChieu.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				GD_QuanLy_SuatChieu gdqlsc = new GD_QuanLy_SuatChieu();
-				gdqlsc.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				gdqlsc.setLocationRelativeTo(null);
-				gdqlsc.setVisible(true);
-				dispose();
-			}
-		});
+		btnSuatChieu.setIcon(new ImageIcon(GD_QuanLy_SuatChieu.class.getResource("/imgs/clapperboard2.png")));
 		JButton btnVe = new JButton("Quản Lý Vé Phim");
 		btnVe.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnVe.setIcon(new ImageIcon(GD_QuanLy.class.getResource("/imgs/tickets2.png")));
+		btnVe.setIcon(new ImageIcon(GD_QuanLy_SuatChieu.class.getResource("/imgs/tickets2.png")));
 
 		panelPhim.add(btnqlyPhim);
 		panelPhim.add(btnSuatChieu);
@@ -235,7 +245,7 @@ public class GD_QuanLy extends JFrame implements ActionListener {
 		dichVuButton.setForeground(SystemColor.text);
 		dichVuButton.setRippleColor(new Color(255, 255, 255));
 		dichVuButton.setBackground(new Color(46, 139, 87));
-		dichVuButton.setIcon(new ImageIcon(GD_QuanLy.class.getResource("/imgs/popcorn12.png")));
+		dichVuButton.setIcon(new ImageIcon(GD_QuanLy_SuatChieu.class.getResource("/imgs/popcorn12.png")));
 		dichVuButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (panelThongKe.isVisible() ||panelTaiKhoan.isVisible() || panelNhanVien.isVisible() || panelDichVu.isVisible() || panelPhim.isVisible()) {
@@ -268,10 +278,10 @@ public class GD_QuanLy extends JFrame implements ActionListener {
 		panelDichVu.setBackground(whiteColor);
 		contentPane.add(panelDichVu);
 
-		JButton btnDichVu = new JButton("Quản Lý Dịch Vụ");
-		btnDichVu.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnDichVu.setIcon(new ImageIcon(GD_QuanLy.class.getResource("/imgs/popcorn2.png")));
-		btnDichVu.addActionListener(new ActionListener() {
+		JButton btnqldv = new JButton("Quản Lý Dịch Vụ");
+		btnqldv.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btnqldv.setIcon(new ImageIcon(GD_QuanLy_SuatChieu.class.getResource("/imgs/popcorn2.png")));
+		btnqldv.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -283,7 +293,7 @@ public class GD_QuanLy extends JFrame implements ActionListener {
 				dispose();
 			}
 		});
-		panelDichVu.add(btnDichVu);
+		panelDichVu.add(btnqldv);
 
 		// Thêm toolbar "nhân viên"
 		JToolBar nhanVienToolbar = new JToolBar();
@@ -295,7 +305,7 @@ public class GD_QuanLy extends JFrame implements ActionListener {
 		nhanVienButton.setForeground(SystemColor.text);
 		nhanVienButton.setRippleColor(new Color(255, 255, 255));
 		nhanVienButton.setBackground(new Color(255, 0, 128));
-		nhanVienButton.setIcon(new ImageIcon(GD_QuanLy.class.getResource("/imgs/customer1.png")));
+		nhanVienButton.setIcon(new ImageIcon(GD_QuanLy_SuatChieu.class.getResource("/imgs/customer1.png")));
 		nhanVienButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (panelThongKe.isVisible() || panelTaiKhoan.isVisible() || panelNhanVien.isVisible() || panelDichVu.isVisible() || panelPhim.isVisible()) {
@@ -330,7 +340,7 @@ public class GD_QuanLy extends JFrame implements ActionListener {
 		
 		JButton btnNhanVien = new JButton("Quản Lý Nhân Viên");
 		btnNhanVien.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnNhanVien.setIcon(new ImageIcon(GD_QuanLy.class.getResource("/imgs/khachhang1.png")));
+		btnNhanVien.setIcon(new ImageIcon(GD_QuanLy_SuatChieu.class.getResource("/imgs/khachhang1.png")));
 		panelNhanVien.add(btnNhanVien);
 		
 		// Thêm toolbar "tài khoản"
@@ -343,7 +353,7 @@ public class GD_QuanLy extends JFrame implements ActionListener {
 		taiKhoanButton.setForeground(SystemColor.text);
 		taiKhoanButton.setRippleColor(new Color(255, 255, 255));
 		taiKhoanButton.setBackground(new Color(99, 176, 28));
-		taiKhoanButton.setIcon(new ImageIcon(GD_QuanLy.class.getResource("/imgs/employee1.png")));
+		taiKhoanButton.setIcon(new ImageIcon(GD_QuanLy_SuatChieu.class.getResource("/imgs/employee1.png")));
 		taiKhoanButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (panelThongKe.isVisible() || panelTaiKhoan.isVisible() || panelNhanVien.isVisible() 
@@ -379,7 +389,7 @@ public class GD_QuanLy extends JFrame implements ActionListener {
 		
 		JButton btnTaiKhoan = new JButton("Quản Lý Tài Khoản");
 		btnTaiKhoan.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnTaiKhoan.setIcon(new ImageIcon(GD_QuanLy.class.getResource("/imgs/av1.png")));
+		btnTaiKhoan.setIcon(new ImageIcon(GD_QuanLy_SuatChieu.class.getResource("/imgs/av1.png")));
 		panelTaiKhoan.add(btnTaiKhoan);
 		
 		// thêm toolbar "thống kê"
@@ -392,7 +402,7 @@ public class GD_QuanLy extends JFrame implements ActionListener {
 		thongKeButton.setForeground(SystemColor.text);
 		thongKeButton.setRippleColor(new Color(255, 255, 255));
 		thongKeButton.setBackground(new Color(100, 100, 255));
-		thongKeButton.setIcon(new ImageIcon(GD_QuanLy.class.getResource("/imgs/thongke1.png")));
+		thongKeButton.setIcon(new ImageIcon(GD_QuanLy_SuatChieu.class.getResource("/imgs/thongke1.png")));
 		thongKeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (panelThongKe.isVisible() || panelTaiKhoan.isVisible() || panelNhanVien.isVisible() 
@@ -428,16 +438,16 @@ public class GD_QuanLy extends JFrame implements ActionListener {
 		
 		JButton btnThongKeDThu = new JButton("Thống Kê Doanh Thu");
 		btnThongKeDThu.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnThongKeDThu.setIcon(new ImageIcon(GD_QuanLy.class.getResource("/imgs/thongke.png")));
+		btnThongKeDThu.setIcon(new ImageIcon(GD_QuanLy_SuatChieu.class.getResource("/imgs/thongke.png")));
 		JButton btnThongKeVe = new JButton("Thống Kê Vé Bán");
 		btnThongKeVe.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnThongKeVe.setIcon(new ImageIcon(GD_QuanLy.class.getResource("/imgs/tickets2.png")));
+		btnThongKeVe.setIcon(new ImageIcon(GD_QuanLy_SuatChieu.class.getResource("/imgs/tickets2.png")));
 		JButton btnThongKePhim = new JButton("Thống Kê Phim");
 		btnThongKePhim.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnThongKePhim.setIcon(new ImageIcon(GD_QuanLy.class.getResource("/imgs/clapperboard2.png")));
+		btnThongKePhim.setIcon(new ImageIcon(GD_QuanLy_SuatChieu.class.getResource("/imgs/clapperboard2.png")));
 		JButton btnThongKeDichVu = new JButton("Thống Kê Dịch Vụ"); 
 		btnThongKeDichVu.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnThongKeDichVu.setIcon(new ImageIcon(GD_QuanLy.class.getResource("/imgs/popcorn2.png")));
+		btnThongKeDichVu.setIcon(new ImageIcon(GD_QuanLy_SuatChieu.class.getResource("/imgs/popcorn2.png")));
 		
 		panelThongKe.add(btnThongKeDThu);
 		panelThongKe.add(btnThongKeVe);
@@ -454,7 +464,7 @@ public class GD_QuanLy extends JFrame implements ActionListener {
         logoutButton.setForeground(SystemColor.text);
         logoutButton.setRippleColor(new Color(255, 255, 255));
         logoutButton.setBackground(new Color(226, 110, 110));
-        logoutButton.setIcon(new ImageIcon(GD_QuanLy.class.getResource("/imgs/logout.png")));
+        logoutButton.setIcon(new ImageIcon(GD_QuanLy_SuatChieu.class.getResource("/imgs/logout.png")));
         logoutButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 		        if (JOptionPane.showConfirmDialog(null, "Bạn có muốn đăng xuất!", null, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
@@ -468,12 +478,166 @@ public class GD_QuanLy extends JFrame implements ActionListener {
         logoutToolBar.add(logoutButton);
         logoutToolBar.setBackground(customColor);
         topPanel.add(logoutToolBar);
+        
+        JLabel lblTraCuuSuatChieu = new JLabel("Tra cứu suất chiếu");
+		lblTraCuuSuatChieu.setFont(new Font("Open Sans", 1, 16));
+		lblTraCuuSuatChieu.setBounds(45, 102, 152, 20);
+		contentPane.add(lblTraCuuSuatChieu);
+
+		JPanel pnlTheoTenPhim = new JPanel();
+		pnlTheoTenPhim.setBackground(new Color(255, 255, 0));
+		pnlTheoTenPhim.setBounds(10, 464, 230, 37);
+		pnlTheoTenPhim.setOpaque(false);
+		contentPane.add(pnlTheoTenPhim);
+		// Add JTextField below JCheckBox
+		JTextField txtTenPhim = new JTextField();
+		txtTenPhim.setFont(new Font("Open Sans", 0, 16));
+		txtTenPhim.setColumns(16); // You can adjust the column count based on your requirement
+		pnlTheoTenPhim.add(txtTenPhim);
+
+		JPanel pnlNgayHienThi_1 = new JPanel();
+		pnlNgayHienThi_1.setOpaque(false);
+		pnlNgayHienThi_1.setBackground(Color.YELLOW);
+		pnlNgayHienThi_1.setBounds(10, 187, 191, 37);
+		contentPane.add(pnlNgayHienThi_1);
+
+		txtNgayHienThi = new JTextField();
+		txtNgayHienThi.setFont(new Font("Open Sans", Font.PLAIN, 16));
+		txtNgayHienThi.setColumns(13);
+		pnlNgayHienThi_1.add(txtNgayHienThi);
+
+		// Khởi tạo JDateChooser cho từ ngày
+		ngayHienThiDateChooser = new JDateChooser();
+		ngayHienThiDateChooser.setBounds(140, 194, 100, 29);
+		ngayHienThiDateChooser.getDateEditor().getUiComponent().setVisible(isCalendarVisible);
+		contentPane.add(ngayHienThiDateChooser);
+
+		// Thêm sự kiện cho JDateChooser để cập nhật giá trị vào textfield khi người
+		// dùng chọn ngày
+		ngayHienThiDateChooser.addPropertyChangeListener("date", new PropertyChangeListener() {
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				Date selectedDate = ngayHienThiDateChooser.getDate();
+				SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+				txtNgayHienThi.setText(dateFormat.format(selectedDate));
+			}
+		});
+
+		JPanel pnlNgayHienThi = new JPanel();
+		pnlNgayHienThi.setOpaque(false);
+		pnlNgayHienThi.setBackground(Color.YELLOW);
+		pnlNgayHienThi.setBounds(10, 140, 230, 37);
+		pnlNgayHienThi.setLayout(new FlowLayout(FlowLayout.LEFT));
+		contentPane.add(pnlNgayHienThi);
+
+		JLabel lblNgayHienThi = new JLabel("Ngày hiển thị:");
+		lblNgayHienThi.setFont(new Font("Open Sans", 0, 16));
+		pnlNgayHienThi.add(lblNgayHienThi);
+
+		JPanel pnlPhongChieu = new JPanel();
+		pnlPhongChieu.setOpaque(false);
+		pnlPhongChieu.setBackground(Color.YELLOW);
+		pnlPhongChieu.setBounds(10, 234, 230, 37);
+		contentPane.add(pnlPhongChieu);
+		pnlPhongChieu.setLayout(new FlowLayout(FlowLayout.LEFT));
+
+		JLabel lblPhongChieu = new JLabel("Phòng chiếu:");
+		lblPhongChieu.setFont(new Font("Open Sans", 0, 16));
+		pnlPhongChieu.add(lblPhongChieu);
+
+		String[] phongChieuList = { "Phòng 1", "Phòng 2", "Phòng 3", "Phòng 4" };
+		phongChieuComboBox = new JComboBox<>(phongChieuList);
+		pnlPhongChieu.add(phongChieuComboBox);
+
+		JPanel pnlTrangThai = new JPanel();
+		pnlTrangThai.setOpaque(false);
+		pnlTrangThai.setBackground(Color.YELLOW);
+		pnlTrangThai.setBounds(10, 281, 230, 37);
+		contentPane.add(pnlTrangThai);
+		pnlTrangThai.setLayout(new FlowLayout(FlowLayout.LEFT));
+
+		JLabel lblTrangThai = new JLabel("Theo trạng thái:");
+		lblTrangThai.setFont(new Font("Open Sans", 0, 16));
+		pnlTrangThai.add(lblTrangThai);
+
+		JRadioButton rdbtnSapChieu = new JRadioButton("Sắp chiếu");
+		rdbtnSapChieu.setFont(new Font("Open Sans", 0, 16));
+		rdbtnSapChieu.setBounds(14, 324, 103, 21);
+		contentPane.add(rdbtnSapChieu);
+
+		JRadioButton rdbtnDangChieu = new JRadioButton("Đang chiếu");
+		rdbtnDangChieu.setFont(new Font("Open Sans", 0, 16));
+		rdbtnDangChieu.setBounds(14, 358, 103, 21);
+		contentPane.add(rdbtnDangChieu);
+
+		JRadioButton rdbtnDaChieu = new JRadioButton("Đã chiếu");
+		rdbtnDaChieu.setFont(new Font("Open Sans", 0, 16));
+		rdbtnDaChieu.setBounds(14, 392, 103, 21);
+		contentPane.add(rdbtnDaChieu);
+
+		// Thêm chúng vào ButtonGroup
+		ButtonGroup buttonGroup = new ButtonGroup();
+		buttonGroup.add(rdbtnSapChieu);
+		buttonGroup.add(rdbtnDangChieu);
+		buttonGroup.add(rdbtnDaChieu);
+
+		JPanel pnlTenPhim = new JPanel();
+		pnlTenPhim.setOpaque(false);
+		pnlTenPhim.setBackground(Color.YELLOW);
+		pnlTenPhim.setBounds(10, 429, 230, 37);
+		contentPane.add(pnlTenPhim);
+		pnlTenPhim.setLayout(new FlowLayout(FlowLayout.LEFT));
+
+		JLabel lblTenPhim = new JLabel("Theo tên phim:");
+		lblTenPhim.setFont(new Font("Dialog", Font.PLAIN, 16));
+		pnlTenPhim.add(lblTenPhim);
+		
+		// Khởi tạo các nút
+		btnThem = new JButton("Thêm");
+		btnXoa = new JButton("Xóa");
+		btnLamMoi = new JButton("Làm mới");
+		btnSua = new JButton("Sửa");
+
+		// Đặt vị trí cho các nút
+		btnThem.setBounds(250, 99, 100, 30);
+		btnXoa.setBounds(360, 99, 100, 30);
+		btnLamMoi.setBounds(470, 99, 100, 30);
+		btnSua.setBounds(580, 99, 100, 30);
+
+		// Thêm các nút vào contentPane
+		contentPane.add(btnThem);
+		contentPane.add(btnXoa);
+		contentPane.add(btnLamMoi);
+		contentPane.add(btnSua);
+		// Khởi tạo DefaultTableModel với các cột
+		String[] columnNames = { "STT", "Mã suất chiếu", "Tên phim", "Ngày chiếu", "Giờ chiếu", "Định dạng", "Ngôn ngữ",
+				"Phòng chiếu", "Trạng thái" }; // Thay đổi tên cột tùy ý
+		tableModel = new DefaultTableModel(columnNames, 0);
+
+		// Khởi tạo JTable với DefaultTableModel
+		table = new JTable(tableModel);
+		// Đặt chiều rộng cho cột "Tên phim"
+		table.getColumnModel().getColumn(2).setPreferredWidth(200); // Đặt giá trị 300 làm ví dụ, bạn có thể điều chỉnh
+																	// theo ý muốn
+
+		// Tạo JScrollPane để thêm bảng vào để có thể cuộn
+		JScrollPane scrollPane = new JScrollPane(table);
+		scrollPane.setBounds(250, 140, 900, 469); // Điều chỉnh tọa độ và kích thước của bảng
+
+		// Thêm bảng và JScrollPane vào contentPane
+		contentPane.add(scrollPane);
+
+		// Thêm dữ liệu vào bảng
+		Object[] rowData = { "1", "SC00001", "Màn Sương Phủ Máu", "10-12-2019", "08:30 - 09:15", "3D", "Tiếng Anh",
+				"Phòng 1", "Đã Chiếu" }; // Thay đổi dữ liệu tùy ý
+		tableModel.addRow(rowData);
 
 		JLabel background = new JLabel("");
 		background.setHorizontalAlignment(SwingConstants.CENTER);
-		background.setIcon(new ImageIcon(GD_QuanLy.class.getResource("/imgs/bggalaxy.png")));
+		background.setIcon(new ImageIcon(GD_QuanLy_SuatChieu.class.getResource("/imgs/bggalaxy1.png")));
 		background.setBounds(0, 0, 1162, 613);
 		contentPane.add(background);
+		
 	}
 
 	private void initComponents() {
@@ -495,13 +659,12 @@ public class GD_QuanLy extends JFrame implements ActionListener {
 	}
 	
 	private void formWindowClosing(java.awt.event.WindowEvent evt) {// GEN-FIRST:event_formWindowClosing
-		Login login = new Login();
-		login.setLocationRelativeTo(null);
-		login.setVisible(true);
+		GD_QuanLy gdql = new GD_QuanLy();
+		gdql.setLocationRelativeTo(null);
+		gdql.setVisible(true);
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 	}
-	
 }

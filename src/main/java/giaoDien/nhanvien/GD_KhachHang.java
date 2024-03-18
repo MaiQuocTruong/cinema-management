@@ -81,13 +81,13 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 	private DefaultTableModel tableModel;
 	private JButton btnThem, btnXoa, btnSua, btnLamMoi;
 	private boolean isCalendarVisible = false;
-	private JTextField txtSDT, txtCMND, txtEmail, txtNgaydky, txtTimKiem , txtHoTen;
-	private JDateChooser ngayDkyDateChooser, ngaySinhDateChooser; // Thêm đối tượng JDateChooser cho từ ngày
+	private JTextField txtSDT, txtCMND, txtEmail, txtNgaydky, txtTimKiem, txtHoTen;
+	private JDateChooser ngaySinhDateChooser; // Thêm đối tượng JDateChooser cho từ ngày
 	private JTextField txtNgaySinh;
 	private KhachHang_dao kh_dao = new KhachHang_dao();
 	private List<KhachHang> listKH;
 	private int idCust = 0;
-	private JRadioButton rdbtnNam , rdbtnNu;
+	private JRadioButton rdbtnNam, rdbtnNu;
 //	static String quanly;
 
 	/**
@@ -421,22 +421,23 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 		lblNgaySinh.setFont(new Font("Dialog", Font.PLAIN, 16));
 		lblNgaySinh.setBounds(17, 208, 130, 21);
 		contentPane.add(lblNgaySinh);
-		
+
 		JPanel pnlNgaySinh = new JPanel();
 		pnlNgaySinh.setOpaque(false);
 		pnlNgaySinh.setBackground(Color.YELLOW);
 		pnlNgaySinh.setBounds(10, 230, 191, 37);
 		contentPane.add(pnlNgaySinh);
-		
+
 		txtNgaySinh = new JTextField();
 		txtNgaySinh.setFont(new Font("Dialog", Font.PLAIN, 16));
 		txtNgaySinh.setColumns(13);
 		pnlNgaySinh.add(txtNgaySinh);
-		
+
 		ngaySinhDateChooser = new JDateChooser();
 		ngaySinhDateChooser.setBounds(140, 237, 100, 29);
+		ngaySinhDateChooser.getDateEditor().getUiComponent().setVisible(isCalendarVisible);
 		contentPane.add(ngaySinhDateChooser);
-		
+
 		ngaySinhDateChooser.addPropertyChangeListener("date", new PropertyChangeListener() {
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
@@ -494,45 +495,12 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 		txtEmail.setColumns(16);
 		pnlEmail.add(txtEmail);
 
-		// Khởi tạo JDateChooser cho từ ngày
-		ngayDkyDateChooser = new JDateChooser();
-		ngayDkyDateChooser.setBounds(140, 516, 100, 29);
-		ngayDkyDateChooser.getDateEditor().getUiComponent().setVisible(isCalendarVisible);
-
-//		JLabel lblNgayDky = new JLabel("Ngày đăng ký:");
-//		lblNgayDky.setFont(new Font("Dialog", Font.PLAIN, 16));
-//		lblNgayDky.setBounds(17, 484, 130, 21);
-//		contentPane.add(lblNgayDky);
-
-//		JPanel pnlNgayDky = new JPanel();
-//		pnlNgayDky.setOpaque(false);
-//		pnlNgayDky.setBackground(Color.YELLOW);
-//		pnlNgayDky.setBounds(10, 509, 191, 37);
-//		contentPane.add(pnlNgayDky);
-//
-//		txtNgaydky = new JTextField();
-//		txtNgaydky.setFont(new Font("Dialog", Font.PLAIN, 16));
-//		txtNgaydky.setColumns(13);
-//		pnlNgayDky.add(txtNgaydky);
-//		contentPane.add(ngayDkyDateChooser);
-//
-//		// Thêm sự kiện cho JDateChooser để cập nhật giá trị vào textfield khi người
-//		// dùng chọn ngày
-//		ngayDkyDateChooser.addPropertyChangeListener("date", new PropertyChangeListener() {
-//			@Override
-//			public void propertyChange(PropertyChangeEvent evt) {
-//				Date selectedDate = ngayDkyDateChooser.getDate();
-//				SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-//				txtNgaydky.setText(dateFormat.format(selectedDate));
-//			}
-//		});
-
-		 rdbtnNam = new JRadioButton("Nam");
+		rdbtnNam = new JRadioButton("Nam");
 		rdbtnNam.setFont(new Font("Dialog", Font.PLAIN, 16));
 		rdbtnNam.setBounds(17, 485, 103, 21);
 		contentPane.add(rdbtnNam);
 
-		 rdbtnNu = new JRadioButton("Nữ");
+		rdbtnNu = new JRadioButton("Nữ");
 		rdbtnNu.setFont(new Font("Dialog", Font.PLAIN, 16));
 		rdbtnNu.setBounds(140, 485, 103, 21);
 		contentPane.add(rdbtnNu);
@@ -577,8 +545,8 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 		contentPane.add(btnLamMoi);
 
 		// Khởi tạo DefaultTableModel với các cột
-		String[] columnNames = { "Mã KH", "Tên KH", "Ngày sinh", "SĐT", "Số CMND", "Email","Loại KH"
-				,"Giới tính", "Điểm hiện có", "Điểm đã dùng" }; // Thay đổi tên cột tùy ý
+		String[] columnNames = { "Mã KH", "Tên KH", "Ngày sinh", "SĐT", "Số CMND", "Email", "Loại KH", "Giới tính",
+				"Điểm hiện có", "Điểm đã dùng" }; // Thay đổi tên cột tùy ý
 		tableModel = new DefaultTableModel(columnNames, 0);
 
 		// Khởi tạo JTable với DefaultTableModel
@@ -603,8 +571,7 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 		background.setIcon(new ImageIcon(GD_NhanVien.class.getResource("/imgs/bggalaxy1.png")));
 		background.setBounds(0, 0, 1162, 613);
 		contentPane.add(background);
-		
-		
+
 //		Load Du Lieu
 		try {
 			String ngaySinhTrongTable = "";
@@ -616,26 +583,27 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 				String tenKH = kh.getTenKH();
 				String email = kh.getEmail();
 				Date ngaySinh = kh.getNgaySinh();
-				
+
 				ngaySinhTrongTable = ngaySinh + "";
 				boolean gioiTinh = kh.isGioiTinh();
-				
-				if(gioiTinh) {
+
+				if (gioiTinh) {
 					gioiTinhTrongTable = "Nam";
-				}else {
+				} else {
 					gioiTinhTrongTable = "Nu";
 				}
-				
+
 				String loaiKH = kh.getLoaiKH();
 				String SDT = kh.getSdt();
 				int diemHienCo = kh.getDiemHienCo();
 				String diemHienCoTrongTable = String.valueOf(diemHienCo);
-				
+
 				String cmnd = kh.getCmnd();
 				int diemDaDung = kh.getDiemDaDung();
 				String diemDaDungTrongTable = String.valueOf(diemDaDung);
-				
-				java.lang.Object [] rowData = {maKH , tenKH  , ngaySinhTrongTable ,  SDT ,  cmnd , email, loaiKH , gioiTinhTrongTable , diemHienCoTrongTable ,  diemDaDungTrongTable };
+
+				java.lang.Object[] rowData = { maKH, tenKH, ngaySinhTrongTable, SDT, cmnd, email, loaiKH,
+						gioiTinhTrongTable, diemHienCoTrongTable, diemDaDungTrongTable };
 				tableModel.addRow(rowData);
 				idCust++;
 			}
@@ -643,14 +611,13 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
+
 		System.out.println(idCust);
-		
+
 //		Add Su Kien
 		btnThem.addActionListener(this);
-		
+
 	}
-	
 
 	private void initComponents() {
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -679,7 +646,7 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		java.lang.Object o = e.getSource();
-		if(o.equals(btnThem)) {
+		if (o.equals(btnThem)) {
 			try {
 				themKhachHang();
 			} catch (Exception e1) {
@@ -687,48 +654,49 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 				e1.printStackTrace();
 			}
 		}
-			
+
 	}
-	
+
 	public void themKhachHang() throws Exception {
 		int newIDKhachHang = idCust + 1;
 		String maKH = "KH00" + newIDKhachHang;
 		String tenKH = txtHoTen.getText();
 		Date ngaySinh = ngaySinhDateChooser.getDate();
-		
+
 		String ngaySinhTrongTable = txtNgaySinh.getText();
 		String sdt = txtSDT.getText();
 		String email = txtEmail.getText();
 		String loaiKH = "Thuong";
-		
+
 		boolean gender = true;
-		if(rdbtnNu.isSelected()) {
+		if (rdbtnNu.isSelected()) {
 			gender = false;
-		}else if(rdbtnNam.isSelected()) {
+		} else if (rdbtnNam.isSelected()) {
 			gender = true;
 		}
-		
+
 		String cmnd = txtCMND.getText();
-		
+
 		String gioiTinhTrongTable = "";
-		if(gender) {
+		if (gender) {
 			gioiTinhTrongTable = "Nam";
-		}else {
+		} else {
 			gioiTinhTrongTable = "Nu";
 		}
-		
+
 		int diemHienCo = 0;
 		int diemDaSuDung = 0;
 		String diemHienCoTrongTable = "0";
 		String diemDaSuDungTrongTable = "0";
-		
-		KhachHang kh = new KhachHang(maKH, tenKH, email, ngaySinh, gender, loaiKH, sdt, diemHienCo, cmnd, diemDaSuDung, 0);
+
+		KhachHang kh = new KhachHang(maKH, tenKH, email, ngaySinh, gender, loaiKH, sdt, diemHienCo, cmnd, diemDaSuDung,
+				0);
 		kh_dao.addKH(kh);
-		java.lang.Object [] rowData = {maKH , tenKH , ngaySinhTrongTable , sdt , cmnd , email , loaiKH , gioiTinhTrongTable , diemHienCoTrongTable , diemDaSuDungTrongTable}; 
-		
+		java.lang.Object[] rowData = { maKH, tenKH, ngaySinhTrongTable, sdt, cmnd, email, loaiKH, gioiTinhTrongTable,
+				diemHienCoTrongTable, diemDaSuDungTrongTable };
+
 		tableModel.addRow(rowData);
-		
-		
+
 	}
-	
+
 }
