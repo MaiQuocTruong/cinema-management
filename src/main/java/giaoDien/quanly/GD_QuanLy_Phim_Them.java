@@ -23,6 +23,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import java.awt.Font;
 import com.toedter.calendar.JDateChooser;
+import javax.swing.JComboBox;
 
 public class GD_QuanLy_Phim_Them extends JFrame {
 
@@ -85,29 +86,29 @@ public class GD_QuanLy_Phim_Them extends JFrame {
 			}
 		};
 		topPanel.setOpaque(false);
-		topPanel.setBounds(10, 10, 195, 195);
+		topPanel.setBounds(10, 10, 172, 195);
 		topPanel.setLayout(new FlowLayout(FlowLayout.LEFT)); // Sử dụng FlowLayout
 		contentPane.add(topPanel);
 		
 		lblThemPhim = new JLabel("Thêm phim mới");
 		lblThemPhim.setFont(new Font("Tahoma", Font.BOLD, 21));
 		lblThemPhim.setForeground(new Color(0, 0, 160));
-		lblThemPhim.setBounds(215, 103, 200, 30);
+		lblThemPhim.setBounds(192, 103, 200, 30);
 		contentPane.add(lblThemPhim);
 		
 		JLabel lblNewLabel = new JLabel("Vui lòng nhập đầy đủ thông tin");
 		lblNewLabel.setFont(new Font("Tahoma", Font.ITALIC, 16));
-		lblNewLabel.setBounds(215, 143, 228, 20);
+		lblNewLabel.setBounds(192, 143, 228, 20);
 		contentPane.add(lblNewLabel);
 
         // Tạo JButton "Upload File" và xử lý sự kiện khi nút được nhấn
         btnUploadFile = new JButton("Upload File");
-        btnUploadFile.setBounds(192, 454, 165, 30);
+        btnUploadFile.setBounds(192, 397, 165, 30);
         contentPane.add(btnUploadFile);
 
         // Tạo JLabel để hiển thị hình ảnh
         lblHinhAnh = new JLabel();
-        lblHinhAnh.setBounds(192, 232, 165, 212);
+        lblHinhAnh.setBounds(192, 175, 165, 212);
         lblHinhAnh.setBorder(BorderFactory.createLineBorder(Color.BLACK)); // Tạo đường viền đen xung quanh
         contentPane.add(lblHinhAnh);
         
@@ -273,5 +274,14 @@ public class GD_QuanLy_Phim_Them extends JFrame {
                 lblHinhAnh.setIcon(new ImageIcon(image));
             }
         });
+        
+        JLabel lblMaSC = new JLabel("Mã suất chiếu");
+        lblMaSC.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        lblMaSC.setBounds(23, 446, 100, 30);
+        contentPane.add(lblMaSC);
+        
+        JComboBox comboBox = new JComboBox();
+        comboBox.setBounds(135, 446, 288, 34);
+        contentPane.add(comboBox);
 	}
 }

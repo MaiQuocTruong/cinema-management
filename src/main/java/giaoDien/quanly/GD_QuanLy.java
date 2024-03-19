@@ -217,13 +217,13 @@ public class GD_QuanLy extends JFrame implements ActionListener {
 				dispose();
 			}
 		});
-		JButton btnVe = new JButton("Quản Lý Vé Phim");
-		btnVe.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnVe.setIcon(new ImageIcon(GD_QuanLy.class.getResource("/imgs/tickets2.png")));
+		JButton btnqlyphongchieu = new JButton("Quản Lý Phòng Chiếu");
+		btnqlyphongchieu.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btnqlyphongchieu.setIcon(new ImageIcon(GD_QuanLy.class.getResource("/imgs/tickets2.png")));
 
 		panelPhim.add(btnqlyPhim);
 		panelPhim.add(btnSuatChieu);
-		panelPhim.add(btnVe);
+		panelPhim.add(btnqlyphongchieu);
 
 		// Thêm toolbar "dịch vụ"
 		JToolBar dichVuToolbar = new JToolBar();

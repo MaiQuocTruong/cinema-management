@@ -83,7 +83,6 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 	private JDateChooser ngaySinhDateChooser; // Thêm đối tượng JDateChooser cho từ ngày
 	private NhanVien_dao nv_dao = new NhanVien_dao();
 	private List<NhanVien> listNV;
-	private int idCust = 0;
 	private JRadioButton rdbtnNam, rdbtnNu;
 	private JComboBox<String> cboxChucVu,cboxTrangThai; // Declare the JComboBox here
 
@@ -607,6 +606,8 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 		
 		cboxChucVu = new JComboBox();
 		cboxChucVu.setBounds(97, 522, 100, 22);
+		cboxChucVu.addItem("Nhân Viên");
+		cboxChucVu.addItem("Quản Lý");
 		contentPane.add(cboxChucVu);
 		
 		JLabel lblTrangThai = new JLabel("Tr.Thái:");
@@ -625,6 +626,8 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 
 		// Khởi tạo các nút
 		btnThem = new JButton("Thêm");
+		btnThem.addActionListener(this);
+
 		btnXoa = new JButton("Xóa");
 		btnSua = new JButton("Sửa");
 		btnLamMoi = new JButton("Làm mới");
@@ -664,7 +667,6 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 
 		// load dữ liệu
 		loadData();
-
 	}
 
 	private void loadData() {
@@ -688,7 +690,7 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 				if (gioiTinh) {
 					gioiTinhTrongTable = "Nam";
 				} else {
-					gioiTinhTrongTable = "Nu";
+					gioiTinhTrongTable = "Nữ";
 				}
 				
 				boolean trangThai = nv.isTrangThai();
@@ -701,20 +703,17 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 				String SDT = nv.getSdt();
 				
 				String chucVu = nv.getChucVu();
-				cboxChucVu.addItem(nv.getChucVu());
 				
 
 				java.lang.Object[] rowData = {maNV, tenNV, ngaySinhTrongTable, SDT, diaChi, email, chucVu,
 						gioiTinhTrongTable, trangThaiTrongTable};
 				tableModel.addRow(rowData);
-				idCust++;
 			}
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 
-		System.out.println(idCust);
 	}
 
 	private void initComponents() {
@@ -743,6 +742,63 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		java.lang.Object o = e.getSource();
+		if(o.equals(btnThem)) {
+			try {
+				themKhachHang();
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		
+		
+	}
 
+	private void themKhachHang() throws Exception {
+		nv_dao.setUp();
+		int idCust = 0;
+		for (NhanVien nhanVien : nv_dao.getListNV()) {
+			idCust++;
+		}
+		
+		int idNewCust = idCust + 1;
+		String maNV = "NV00" + idNewCust;
+		String hoTenNhanVien = txtHoTen.getText();
+		Date ngaySinh = ngaySinhDateChooser.getDate();
+		String sdt = txtSDT.getText();
+		String diaChi = txtDiaChi.getText();
+		String email = txtEmail.getText();
+		
+		boolean gender = false;
+		String gioiTinhTrongBang = "";
+		if(rdbtnNam.isSelected()) {
+			gender = true;
+			gioiTinhTrongBang = "Nam";
+		}else {
+			gender = false;
+			gioiTinhTrongBang = "Nữ";
+		}
+		
+		
+		
+		String chucVu = cboxChucVu.getSelectedItem().toString();
+		
+		
+		boolean statusQuit = false;
+		String trangThai = cboxTrangThai.getSelectedItem().toString();
+		if(!trangThai.trim().equals("Còn làm")) {
+			statusQuit = true;
+		}else {
+			statusQuit = false;
+		}
+		
+		
+		
+		NhanVien nv = new NhanVien(maNV, hoTenNhanVien, diaChi, ngaySinh, gender, email, sdt, chucVu, statusQuit);
+		java.lang.Object [] rowData = {maNV , hoTenNhanVien , ngaySinh , sdt , diaChi , email , chucVu , gioiTinhTrongBang , trangThai};
+		tableModel.addRow(rowData);
+		nv_dao.addNV(nv);
+		
 	}
 }

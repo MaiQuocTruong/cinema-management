@@ -14,7 +14,7 @@
             <!-- Database connection settings -->
              <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/rapPhim" />
             <property name="jakarta.persistence.jdbc.user" value="root" />
-            <property name="jakarta.persistence.jdbc.password" value="123456789" />
+            <property name="jakarta.persistence.jdbc.password" value="haipro456" />
 
             <!-- Automatically export the schema -->
             <property name="jakarta.persistence.schema-generation.database.action" value="none" />
