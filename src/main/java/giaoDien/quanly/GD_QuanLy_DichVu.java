@@ -574,6 +574,18 @@ public class GD_QuanLy_DichVu extends JFrame implements ActionListener {
 		btnLamMoi.setBounds(470, 99, 100, 30);
 		btnSua.setBounds(580, 99, 100, 30);
 		btnChonKichCo.setBounds(1050, 99, 100, 30);
+		
+		btnThem.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				GD_QuanLy_ThemDichVu gdThemDV = new GD_QuanLy_ThemDichVu();
+				gdThemDV.setVisible(true);
+				gdThemDV.setLocationRelativeTo(null);
+				dispose();
+			}
+		});
 
 		// Thêm các nút vào contentPane
 		contentPane.add(btnThem);

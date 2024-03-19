@@ -56,6 +56,7 @@ public class GD_QuanLy_Phim_Sua extends JFrame {
 	}
 
 	public GD_QuanLy_Phim_Sua() {
+		initComponents();
 		setBounds(100, 100, 787, 820);
 		setResizable(false);
 		setBackground(Color.WHITE);
@@ -286,5 +287,28 @@ public class GD_QuanLy_Phim_Sua extends JFrame {
         JComboBox comboBox = new JComboBox();
         comboBox.setBounds(135, 446, 288, 34);
         contentPane.add(comboBox);
+	}
+	private void initComponents() {
+		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+		addWindowListener(new java.awt.event.WindowAdapter() {
+			public void windowClosing(java.awt.event.WindowEvent evt) {
+				formWindowClosing(evt);
+			}
+		});
+
+		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+		getContentPane().setLayout(layout);
+		layout.setHorizontalGroup(
+				layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGap(0, 400, Short.MAX_VALUE));
+		layout.setVerticalGroup(
+				layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGap(0, 300, Short.MAX_VALUE));
+
+		pack();
+	}
+	
+	private void formWindowClosing(java.awt.event.WindowEvent evt) {// GEN-FIRST:event_formWindowClosing
+		GD_QuanLy_Phim gdqlphim = new GD_QuanLy_Phim();
+		gdqlphim.setLocationRelativeTo(null);
+		gdqlphim.setVisible(true);
 	}
 }
