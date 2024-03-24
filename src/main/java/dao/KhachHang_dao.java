@@ -12,6 +12,7 @@ import javax.persistence.TypedQuery;
 import enities.KhachHang;
 
 public class KhachHang_dao {
+	//
 	private EntityManagerFactory entityManergerfactory;
 	private List<KhachHang> listCust;
 	
