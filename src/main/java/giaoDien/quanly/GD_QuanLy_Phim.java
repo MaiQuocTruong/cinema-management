@@ -41,6 +41,8 @@ import javax.swing.table.DefaultTableModel;
 
 import com.toedter.calendar.JDateChooser;
 
+import dao.Phim_dao;
+import enities.Phim;
 import giaoDien.nhanvien.GD_NhanVien;
 import runapp.Login;
 import testbutton.Buttontest;
@@ -57,6 +59,7 @@ import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 	/**
@@ -80,6 +83,7 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 	private JButton btnThem, btnXoa, btnLamMoi, btnSua;
 	private JTable table;
 	private DefaultTableModel tableModel;
+	private Phim_dao dsPhim = new Phim_dao();
 
 //	static String quanly;
 	/**
@@ -673,11 +677,7 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 
 		// Thêm bảng và JScrollPane vào contentPane
 		contentPane.add(scrollPane);
-
-		// Thêm dữ liệu vào bảng
-		Object[] rowData = {"PH00001", "Thám Tử Conan: Kẻ hành pháp Zero", "Trinh thám", "120 phút", "13", "01-01-2018","22-01-2018",
-				"Tiếng Nhật", "Nhật Bản", "55.000", "100", "Đang chiếu"}; // Thay đổi dữ liệu tùy ý
-		tableModel.addRow(rowData);
+		loadTableData();
 
 		JLabel background = new JLabel("");
 		background.setHorizontalAlignment(SwingConstants.CENTER);
@@ -702,6 +702,21 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 				layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGap(0, 300, Short.MAX_VALUE));
 
 		pack();
+	}
+	
+	private void loadTableData() {
+		dsPhim = new Phim_dao();
+		try {
+			dsPhim.setUp();
+			List<Phim> dsph = dsPhim.getServices();
+			for(Phim ph : dsph) {
+				tableModel.addRow(new Object[]{ph.getMaPhim(),ph.getTenPhim(),ph.getLoaiPhim(),ph.getThoiLuong()
+						,ph.getGioiHanTuoi(),ph.getNgayChieu(),ph.getNgayHetHan(),ph.getNgonNgu(),ph.getQuocGia()
+						,ph.getGiaTien(),ph.getSoLuongVe(),ph.getTrangThaiPhim()});
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private void formWindowClosing(java.awt.event.WindowEvent evt) {// GEN-FIRST:event_formWindowClosing

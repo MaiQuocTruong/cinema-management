@@ -32,10 +32,6 @@ public class DichVuAnUong_dao {
 		this.entityManagerFactory = entityManagerFactory;
 	}
 
-
-
-	
-	
 	public void setUp() {
         entityManagerFactory = Persistence.createEntityManagerFactory("org.hibernate.tutorial.jpa");
     }
