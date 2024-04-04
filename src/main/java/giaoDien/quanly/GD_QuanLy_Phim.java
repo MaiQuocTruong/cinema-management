@@ -446,9 +446,35 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 		JButton btnThongKePhim = new JButton("Thống Kê Phim");
 		btnThongKePhim.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnThongKePhim.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/clapperboard2.png")));
+		btnThongKePhim.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				GD_QuanLy_ThongKePhim gdqlthongkephim = new GD_QuanLy_ThongKePhim();
+				gdqlthongkephim.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				gdqlthongkephim.setLocationRelativeTo(null);
+				gdqlthongkephim.setVisible(true);
+				dispose();
+			
+			}
+			});
 		JButton btnThongKeDichVu = new JButton("Thống Kê Dịch Vụ"); 
 		btnThongKeDichVu.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnThongKeDichVu.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/popcorn2.png")));
+		btnThongKeDichVu.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				GD_QuanLy_ThongKeDichVu gdqlthongDVu = new GD_QuanLy_ThongKeDichVu();
+				gdqlthongDVu.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				gdqlthongDVu.setLocationRelativeTo(null);
+				gdqlthongDVu.setVisible(true);
+				dispose();
+			
+			}
+			});
 		
 		panelThongKe.add(btnThongKeDThu);
 		panelThongKe.add(btnThongKeVe);
@@ -479,6 +505,11 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
         logoutToolBar.add(logoutButton);
         logoutToolBar.setBackground(customColor);
         topPanel.add(logoutToolBar);
+        
+        
+        
+        
+        
         
         JLabel lblTraCuuPhim = new JLabel("Tra cứu phim");
 		lblTraCuuPhim.setFont(new Font("Open Sans", 1, 16));

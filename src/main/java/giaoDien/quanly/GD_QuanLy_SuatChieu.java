@@ -455,11 +455,36 @@ public class GD_QuanLy_SuatChieu extends JFrame implements ActionListener {
 		btnThongKeVe.setIcon(new ImageIcon(GD_QuanLy_SuatChieu.class.getResource("/imgs/tickets2.png")));
 		JButton btnThongKePhim = new JButton("Thống Kê Phim");
 		btnThongKePhim.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btnThongKePhim.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				GD_QuanLy_ThongKePhim gdqlthongkephim = new GD_QuanLy_ThongKePhim();
+				gdqlthongkephim.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				gdqlthongkephim.setLocationRelativeTo(null);
+				gdqlthongkephim.setVisible(true);
+				dispose();
+
+			}
+		});
 		btnThongKePhim.setIcon(new ImageIcon(GD_QuanLy_SuatChieu.class.getResource("/imgs/clapperboard2.png")));
 		JButton btnThongKeDichVu = new JButton("Thống Kê Dịch Vụ");
 		btnThongKeDichVu.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnThongKeDichVu.setIcon(new ImageIcon(GD_QuanLy_SuatChieu.class.getResource("/imgs/popcorn2.png")));
+		btnThongKeDichVu.addActionListener(new ActionListener() {
 
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				GD_QuanLy_ThongKeDichVu gdqlthongDVu = new GD_QuanLy_ThongKeDichVu();
+				gdqlthongDVu.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				gdqlthongDVu.setLocationRelativeTo(null);
+				gdqlthongDVu.setVisible(true);
+				dispose();
+
+			}
+		});
 		panelThongKe.add(btnThongKeDThu);
 		panelThongKe.add(btnThongKeVe);
 		panelThongKe.add(btnThongKePhim);
@@ -673,20 +698,20 @@ public class GD_QuanLy_SuatChieu extends JFrame implements ActionListener {
 			List<XuatChieu> dsxc = xc_dao.getService();
 			List<Phim> dsph = phim_dao.getServices();
 			int i = 1;
-			
-			for(XuatChieu xc : dsxc) {
-				for(Phim ph : dsph) {
-					if(ph.getMaXuat().equals(xc.getMaXuat())) {
+
+			for (XuatChieu xc : dsxc) {
+				for (Phim ph : dsph) {
+					if (ph.getMaXuat().equals(xc.getMaXuat())) {
 						String tenPhim = ph.getTenPhim();
 						String ngonNgu = ph.getNgonNgu();
-						tableModel.addRow(new Object[]{i++,xc.getMaXuat(),tenPhim,xc.getNgayChieu()
-								,xc.getGioChieu(),xc.getGioKetThuc(),ngonNgu,xc.getTrangThai()});
+						tableModel.addRow(new Object[] { i++, xc.getMaXuat(), tenPhim, xc.getNgayChieu(),
+								xc.getGioChieu(), xc.getGioKetThuc(), ngonNgu, xc.getTrangThai() });
 					}
-					
+
 				}
-				
+
 			}
-		}catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

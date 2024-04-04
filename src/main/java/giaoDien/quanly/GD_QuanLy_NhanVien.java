@@ -442,10 +442,36 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 		btnThongKeVe.setIcon(new ImageIcon(GD_QuanLy_NhanVien.class.getResource("/imgs/tickets2.png")));
 		JButton btnThongKePhim = new JButton("Thống Kê Phim");
 		btnThongKePhim.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btnThongKePhim.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				GD_QuanLy_ThongKePhim gdqlthongkephim = new GD_QuanLy_ThongKePhim();
+				gdqlthongkephim.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				gdqlthongkephim.setLocationRelativeTo(null);
+				gdqlthongkephim.setVisible(true);
+				dispose();
+			
+			}
+			});
 		btnThongKePhim.setIcon(new ImageIcon(GD_QuanLy_NhanVien.class.getResource("/imgs/clapperboard2.png")));
 		JButton btnThongKeDichVu = new JButton("Thống Kê Dịch Vụ");
 		btnThongKeDichVu.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnThongKeDichVu.setIcon(new ImageIcon(GD_QuanLy_NhanVien.class.getResource("/imgs/popcorn2.png")));
+		btnThongKeDichVu.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				GD_QuanLy_ThongKeDichVu gdqlthongDVu = new GD_QuanLy_ThongKeDichVu();
+				gdqlthongDVu.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				gdqlthongDVu.setLocationRelativeTo(null);
+				gdqlthongDVu.setVisible(true);
+				dispose();
+			
+			}
+			});
 
 		panelThongKe.add(btnThongKeDThu);
 		panelThongKe.add(btnThongKeVe);

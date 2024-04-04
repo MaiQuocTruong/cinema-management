@@ -93,17 +93,17 @@ public class GD_QuanLy_TaiKhoan extends JFrame implements ActionListener {
 				}
 			}
 		} catch (ClassNotFoundException ex) {
-			java.util.logging.Logger.getLogger(GD_QuanLy_TaiKhoan.class.getName()).log(java.util.logging.Level.SEVERE, null,
-					ex);
+			java.util.logging.Logger.getLogger(GD_QuanLy_TaiKhoan.class.getName()).log(java.util.logging.Level.SEVERE,
+					null, ex);
 		} catch (InstantiationException ex) {
-			java.util.logging.Logger.getLogger(GD_QuanLy_TaiKhoan.class.getName()).log(java.util.logging.Level.SEVERE, null,
-					ex);
+			java.util.logging.Logger.getLogger(GD_QuanLy_TaiKhoan.class.getName()).log(java.util.logging.Level.SEVERE,
+					null, ex);
 		} catch (IllegalAccessException ex) {
-			java.util.logging.Logger.getLogger(GD_QuanLy_TaiKhoan.class.getName()).log(java.util.logging.Level.SEVERE, null,
-					ex);
+			java.util.logging.Logger.getLogger(GD_QuanLy_TaiKhoan.class.getName()).log(java.util.logging.Level.SEVERE,
+					null, ex);
 		} catch (javax.swing.UnsupportedLookAndFeelException ex) {
-			java.util.logging.Logger.getLogger(GD_QuanLy_TaiKhoan.class.getName()).log(java.util.logging.Level.SEVERE, null,
-					ex);
+			java.util.logging.Logger.getLogger(GD_QuanLy_TaiKhoan.class.getName()).log(java.util.logging.Level.SEVERE,
+					null, ex);
 		}
 		GD_QuanLy_TaiKhoan run = new GD_QuanLy_TaiKhoan();
 		run.setVisible(true);
@@ -124,17 +124,18 @@ public class GD_QuanLy_TaiKhoan extends JFrame implements ActionListener {
 		contentPane.setLayout(null);
 
 		lblNvIcon = new JLabel("");
-        lblNvIcon.setIcon(new ImageIcon(GD_QuanLy_TaiKhoan.class.getResource("/imgs/avt.png"))); // Thay đổi đường dẫn ảnh của bạn
-        lblNvIcon.setBounds(760, 5, 40, 40); // Điều chỉnh tọa độ và kích thước của ảnh
-        contentPane.add(lblNvIcon);
-      
+		lblNvIcon.setIcon(new ImageIcon(GD_QuanLy_TaiKhoan.class.getResource("/imgs/avt.png"))); // Thay đổi đường dẫn
+																									// ảnh của bạn
+		lblNvIcon.setBounds(760, 5, 40, 40); // Điều chỉnh tọa độ và kích thước của ảnh
+		contentPane.add(lblNvIcon);
+
 		JLabel lblnhanvien = new JLabel("QL:");
 		lblnhanvien.setForeground(Color.WHITE);
 		lblnhanvien.setFont(new Font("Tahoma", Font.BOLD, 16));
 		lblnhanvien.setBounds(801, 0, 39, 50);
 		lblnhanvien.setForeground(Color.WHITE);
 		contentPane.add(lblnhanvien);
-		
+
 		lbltennv = new JLabel("Mai Quốc Trưởng");
 		lbltennv.setForeground(Color.WHITE);
 		lbltennv.setFont(new Font("Tahoma", Font.BOLD, 16));
@@ -440,11 +441,36 @@ public class GD_QuanLy_TaiKhoan extends JFrame implements ActionListener {
 		btnThongKeVe.setIcon(new ImageIcon(GD_QuanLy_TaiKhoan.class.getResource("/imgs/tickets2.png")));
 		JButton btnThongKePhim = new JButton("Thống Kê Phim");
 		btnThongKePhim.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btnThongKePhim.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				GD_QuanLy_ThongKePhim gdqlthongkephim = new GD_QuanLy_ThongKePhim();
+				gdqlthongkephim.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				gdqlthongkephim.setLocationRelativeTo(null);
+				gdqlthongkephim.setVisible(true);
+				dispose();
+
+			}
+		});
 		btnThongKePhim.setIcon(new ImageIcon(GD_QuanLy_TaiKhoan.class.getResource("/imgs/clapperboard2.png")));
 		JButton btnThongKeDichVu = new JButton("Thống Kê Dịch Vụ");
 		btnThongKeDichVu.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnThongKeDichVu.setIcon(new ImageIcon(GD_QuanLy_TaiKhoan.class.getResource("/imgs/popcorn2.png")));
+		btnThongKeDichVu.addActionListener(new ActionListener() {
 
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				GD_QuanLy_ThongKeDichVu gdqlthongDVu = new GD_QuanLy_ThongKeDichVu();
+				gdqlthongDVu.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				gdqlthongDVu.setLocationRelativeTo(null);
+				gdqlthongDVu.setVisible(true);
+				dispose();
+
+			}
+		});
 		panelThongKe.add(btnThongKeDThu);
 		panelThongKe.add(btnThongKeVe);
 		panelThongKe.add(btnThongKePhim);
@@ -522,12 +548,12 @@ public class GD_QuanLy_TaiKhoan extends JFrame implements ActionListener {
 		txtTimKiem.setColumns(16);
 		txtTimKiem.setBounds(871, 99, 214, 30);
 		contentPane.add(txtTimKiem);
-		
+
 		JLabel lblTrangThai = new JLabel("Trạng thái:");
 		lblTrangThai.setFont(new Font("Dialog", Font.PLAIN, 16));
 		lblTrangThai.setBounds(17, 276, 130, 21);
 		contentPane.add(lblTrangThai);
-		
+
 		JComboBox cboxTrangThai = new JComboBox();
 		cboxTrangThai.setBounds(17, 313, 214, 30);
 		contentPane.add(cboxTrangThai);
@@ -555,19 +581,19 @@ public class GD_QuanLy_TaiKhoan extends JFrame implements ActionListener {
 		contentPane.add(btnLamMoi);
 
 		// Khởi tạo DefaultTableModel với các cột
-		String[] columnNames = { "Mã nhân viên", "Mật khẩu", "Email", "Trạng thái"}; // Thay đổi tên cột tùy ý
+		String[] columnNames = { "Mã nhân viên", "Mật khẩu", "Email", "Trạng thái" }; // Thay đổi tên cột tùy ý
 		tableModel = new DefaultTableModel(columnNames, 0);
 
 		// Khởi tạo JTable với DefaultTableModel
 		table = new JTable(tableModel);
-		
+
 		// Tạo JScrollPane để thêm bảng vào để có thể cuộn
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.setBounds(250, 140, 900, 469); // Điều chỉnh tọa độ và kích thước của bảng
 
 		// Thêm bảng và JScrollPane vào contentPane
 		contentPane.add(scrollPane);
-		
+
 		JLabel background = new JLabel("");
 		background.setHorizontalAlignment(SwingConstants.CENTER);
 		background.setIcon(new ImageIcon(GD_QuanLy.class.getResource("/imgs/bggalaxy1.png")));
