@@ -94,7 +94,7 @@ public class GD_QuanLy_ThongKeDichVu extends JFrame {
 	}
 
 	public GD_QuanLy_ThongKeDichVu()  {
-		//initComponents();
+		initComponents();
 		setResizable(false);
 		setBackground(Color.WHITE);
 		setTitle("Giao Diện Quản Lý Thống Kê Dịch Vụ");
@@ -182,13 +182,26 @@ public class GD_QuanLy_ThongKeDichVu extends JFrame {
 		};
 		panelPhim.setBounds(0, 49, 1175, 47);
 		panelPhim.setLayout(new FlowLayout(FlowLayout.LEFT)); // Thay đổi ở đây
-		panelPhim.setVisible(true); // tắt/ẩn panel
+		panelPhim.setVisible(false); // tắt/ẩn panel
 		panelPhim.setBackground(whiteColor);
 		contentPane.add(panelPhim);
 
 		JButton btnqlyPhim = new JButton("Quản Lý Phim");
 		btnqlyPhim.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnqlyPhim.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/film-reel.png")));
+		btnqlyPhim.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				GD_QuanLy_Phim gdqlphim = new GD_QuanLy_Phim();
+				gdqlphim.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				gdqlphim.setLocationRelativeTo(null);
+				gdqlphim.setVisible(true);
+				dispose();
+			}
+			
+		});
 		JButton btnSuatChieu = new JButton("Quản Lý Suất Chiếu");
 		btnSuatChieu.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnSuatChieu.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/clapperboard2.png")));
@@ -204,13 +217,26 @@ public class GD_QuanLy_ThongKeDichVu extends JFrame {
 				dispose();
 			}
 		});
-		JButton btnVe = new JButton("Quản Lý Vé Phim");
-		btnVe.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnVe.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/tickets2.png")));
+		JButton btnqlyphongchieu = new JButton("Quản Lý Phòng Chiếu");
+		btnqlyphongchieu.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btnqlyphongchieu.setIcon(new ImageIcon(GD_QuanLy.class.getResource("/imgs/tickets2.png")));
+		btnqlyphongchieu.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				GD_QuanLy_PhongChieu gdqlpc = new GD_QuanLy_PhongChieu();
+				gdqlpc.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				gdqlpc.setLocationRelativeTo(null);
+				gdqlpc.setVisible(true);
+				dispose();
+			}
+			
+		});
 
 		panelPhim.add(btnqlyPhim);
 		panelPhim.add(btnSuatChieu);
-		panelPhim.add(btnVe);
+		panelPhim.add(btnqlyphongchieu);
 
 		// Thêm toolbar "dịch vụ"
 		JToolBar dichVuToolbar = new JToolBar();
@@ -318,6 +344,19 @@ public class GD_QuanLy_ThongKeDichVu extends JFrame {
 		JButton btnNhanVien = new JButton("Quản Lý Nhân Viên");
 		btnNhanVien.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnNhanVien.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/khachhang1.png")));
+		btnNhanVien.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				GD_QuanLy_NhanVien gdqldv = new GD_QuanLy_NhanVien();
+				gdqldv.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				gdqldv.setLocationRelativeTo(null);
+				gdqldv.setVisible(true);
+				dispose();
+			}
+			
+		});
 		panelNhanVien.add(btnNhanVien);
 		
 		// Thêm toolbar "tài khoản"
@@ -367,6 +406,19 @@ public class GD_QuanLy_ThongKeDichVu extends JFrame {
 		JButton btnTaiKhoan = new JButton("Quản Lý Tài Khoản");
 		btnTaiKhoan.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnTaiKhoan.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/av1.png")));
+		btnTaiKhoan.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				GD_QuanLy_TaiKhoan gdqltk = new GD_QuanLy_TaiKhoan();
+				gdqltk.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				gdqltk.setLocationRelativeTo(null);
+				gdqltk.setVisible(true);
+				dispose();
+			}
+			
+		});
 		panelTaiKhoan.add(btnTaiKhoan);
 		
 		// thêm toolbar "thống kê"
@@ -409,25 +461,36 @@ public class GD_QuanLy_ThongKeDichVu extends JFrame {
 		};
 		panelThongKe.setBounds(0, 49, 1175, 47);
 		panelThongKe.setLayout(new FlowLayout(FlowLayout.LEFT)); // Thay đổi ở đây
-		panelThongKe.setVisible(false); // tắt/ẩn panel
+		panelThongKe.setVisible(true); // tắt/ẩn panel
 		panelThongKe.setBackground(whiteColor);
 		contentPane.add(panelThongKe);
 		
-		JButton btnThongKeDThu = new JButton("Thống Kê Doanh Thu");
-		btnThongKeDThu.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnThongKeDThu.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/thongke.png")));
-		JButton btnThongKeVe = new JButton("Thống Kê Vé Bán");
-		btnThongKeVe.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnThongKeVe.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/tickets2.png")));
+//		JButton btnThongKeDThu = new JButton("Thống Kê Doanh Thu");
+//		btnThongKeDThu.setFont(new Font("Tahoma", Font.PLAIN, 14));
+//		btnThongKeDThu.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/thongke.png")));
+//		JButton btnThongKeVe = new JButton("Thống Kê Vé Bán");
+//		btnThongKeVe.setFont(new Font("Tahoma", Font.PLAIN, 14));
+//		btnThongKeVe.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/tickets2.png")));
 		JButton btnThongKePhim = new JButton("Thống Kê Phim");
 		btnThongKePhim.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnThongKePhim.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/clapperboard2.png")));
+		btnThongKePhim.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				GD_QuanLy_ThongKePhim gdqlthongkephim = new GD_QuanLy_ThongKePhim();
+				gdqlthongkephim.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				gdqlthongkephim.setLocationRelativeTo(null);
+				gdqlthongkephim.setVisible(true);
+				dispose();
+
+			}
+		});
 		JButton btnThongKeDichVu = new JButton("Thống Kê Dịch Vụ"); 
 		btnThongKeDichVu.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnThongKeDichVu.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/popcorn2.png")));
 		
-		panelThongKe.add(btnThongKeDThu);
-		panelThongKe.add(btnThongKeVe);
 		panelThongKe.add(btnThongKePhim);
 		panelThongKe.add(btnThongKeDichVu);
 		
@@ -454,22 +517,12 @@ public class GD_QuanLy_ThongKeDichVu extends JFrame {
 		});
         logoutToolBar.add(logoutButton);
         logoutToolBar.setBackground(customColor);
-        topPanel.add(logoutToolBar);
-		
-		
-        
-        
-        
-        
-        
-        
-        
-        
+        topPanel.add(logoutToolBar);       
 		
 		//Body
         JLabel lblBoLoc = new JLabel("Bộ Lọc Thống Kê");
-        lblBoLoc.setBounds(14, 106, 108, 20);
-        lblBoLoc.setFont(new Font("Open Sans", 1, 12));
+        lblBoLoc.setBounds(14, 106, 152, 20);
+        lblBoLoc.setFont(new Font("Dialog", Font.BOLD, 16));
 		contentPane.add(lblBoLoc);
 
 		JPanel pnlThoiGian = new JPanel();
@@ -480,10 +533,9 @@ public class GD_QuanLy_ThongKeDichVu extends JFrame {
 		contentPane.add(pnlThoiGian);
 		
 		JLabel lblTG = new JLabel("Thời gian");
-		lblTG.setFont(new Font("Open Sans", 1, 12));
+		lblTG.setFont(new Font("Dialog", Font.PLAIN, 14));
 		lblTG.setBounds(20, 50, 20, 30);
 		pnlThoiGian.add(lblTG);
-		
 		
 		JPanel pnlChonNgay_1 = new JPanel();
 		pnlChonNgay_1.setBounds(10, 160, 134, 37);
@@ -510,18 +562,18 @@ public class GD_QuanLy_ThongKeDichVu extends JFrame {
 						txtTuNgay.setText(dateFormat.format(selectedDate));
 					}
 				});
+				
+		JButton btnBieuDoThongKe = new JButton("Biểu đồ thống kê");
+		btnBieuDoThongKe.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		btnBieuDoThongKe.setBounds(14, 202, 171, 40);
+		btnBieuDoThongKe.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/thongke.png")));
+		contentPane.add(btnBieuDoThongKe);	
 		
-		//Tạo nút biểu đồ:
-		JPanel Nut=new JPanel();
-		Nut.setBounds(10, 200, 140, 37);
-		Nut.setBackground(new Color(255, 255, 0));
-		Nut.setOpaque(false);
-		Nut.setLayout(new BoxLayout(Nut, BoxLayout.Y_AXIS));
-		contentPane.add(Nut);
-		JButton btnThongKeBieuDo=new JButton("Biểu Đồ Thống Kê");
-		Nut.add(btnThongKeBieuDo);
-				
-				
+		JLabel lblTongDoanhThuDV = new JLabel("Dịch vụ có doanh thu cao nhất: ");
+		lblTongDoanhThuDV.setForeground(Color.RED);
+		lblTongDoanhThuDV.setFont(new Font("Dialog", Font.BOLD, 16));
+		lblTongDoanhThuDV.setBounds(275, 106, 471, 20);
+		contentPane.add(lblTongDoanhThuDV);
 		
 		// Khởi tạo DefaultTableModel với các cột
 		String[] columnNames = {"STT", "Thời Gian", "Dịch Vụ", "Tổng Doanh Thu"}; // Thay đổi tên cột tùy ý
@@ -533,14 +585,8 @@ public class GD_QuanLy_ThongKeDichVu extends JFrame {
 		table.getColumnModel().getColumn(0).setPreferredWidth(30); 
 		table.getColumnModel().getColumn(1).setPreferredWidth(30); 
 		table.getColumnModel().getColumn(2).setPreferredWidth(30); 
-		table.getColumnModel().getColumn(3).setPreferredWidth(30); 
-		
-		
-		
-		
-		
-		
-		
+		table.getColumnModel().getColumn(3).setPreferredWidth(30); 	
+			
 		// Tạo JScrollPane để thêm bảng vào để có thể cuộn
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.setBounds(275, 140, 871, 469);
@@ -581,18 +627,5 @@ public class GD_QuanLy_ThongKeDichVu extends JFrame {
 		gdql.setLocationRelativeTo(null);
 		gdql.setVisible(true);
 	}
-	
-	
-	
-
-	/**
-	 * Create the frame.
-	 */
-	
-	
-	
-	
-	
-
 }
 

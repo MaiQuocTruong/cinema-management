@@ -111,7 +111,7 @@ public class GD_QuanLy_TaiKhoan extends JFrame implements ActionListener {
 
 	public GD_QuanLy_TaiKhoan() {
 		this.setLocationRelativeTo(null);
-//		initComponents();
+		initComponents();
 		setResizable(false);
 		setBackground(Color.WHITE);
 		setTitle("Giao Diện Quản Lý Tài Khoản");
@@ -207,6 +207,19 @@ public class GD_QuanLy_TaiKhoan extends JFrame implements ActionListener {
 		JButton btnqlyPhim = new JButton("Quản Lý Phim");
 		btnqlyPhim.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnqlyPhim.setIcon(new ImageIcon(GD_QuanLy_TaiKhoan.class.getResource("/imgs/film-reel.png")));
+		btnqlyPhim.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				GD_QuanLy_Phim gdqlphim = new GD_QuanLy_Phim();
+				gdqlphim.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				gdqlphim.setLocationRelativeTo(null);
+				gdqlphim.setVisible(true);
+				dispose();
+			}
+			
+		});
 		JButton btnSuatChieu = new JButton("Quản Lý Suất Chiếu");
 		btnSuatChieu.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnSuatChieu.setIcon(new ImageIcon(GD_QuanLy_TaiKhoan.class.getResource("/imgs/clapperboard2.png")));
@@ -222,13 +235,25 @@ public class GD_QuanLy_TaiKhoan extends JFrame implements ActionListener {
 				dispose();
 			}
 		});
-		JButton btnVe = new JButton("Quản Lý Vé Phim");
-		btnVe.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnVe.setIcon(new ImageIcon(GD_QuanLy_TaiKhoan.class.getResource("/imgs/tickets2.png")));
+		JButton btnqlyphongchieu = new JButton("Quản Lý Phòng Chiếu");
+		btnqlyphongchieu.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btnqlyphongchieu.setIcon(new ImageIcon(GD_QuanLy.class.getResource("/imgs/tickets2.png")));
+		btnqlyphongchieu.addActionListener(new ActionListener() {
 
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				GD_QuanLy_PhongChieu gdqlpc = new GD_QuanLy_PhongChieu();
+				gdqlpc.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				gdqlpc.setLocationRelativeTo(null);
+				gdqlpc.setVisible(true);
+				dispose();
+			}
+			
+		});
 		panelPhim.add(btnqlyPhim);
 		panelPhim.add(btnSuatChieu);
-		panelPhim.add(btnVe);
+		panelPhim.add(btnqlyphongchieu);
 
 		// Thêm toolbar "dịch vụ"
 		JToolBar dichVuToolbar = new JToolBar();
@@ -338,6 +363,19 @@ public class GD_QuanLy_TaiKhoan extends JFrame implements ActionListener {
 		JButton btnNhanVien = new JButton("Quản Lý Nhân Viên");
 		btnNhanVien.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnNhanVien.setIcon(new ImageIcon(GD_QuanLy_TaiKhoan.class.getResource("/imgs/khachhang1.png")));
+		btnNhanVien.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				GD_QuanLy_NhanVien gdqlnv = new GD_QuanLy_NhanVien();
+				gdqlnv.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				gdqlnv.setLocationRelativeTo(null);
+				gdqlnv.setVisible(true);
+				dispose();
+			}
+			
+		});
 		panelNhanVien.add(btnNhanVien);
 
 		// Thêm toolbar "tài khoản"
@@ -433,12 +471,6 @@ public class GD_QuanLy_TaiKhoan extends JFrame implements ActionListener {
 		panelThongKe.setBackground(whiteColor);
 		contentPane.add(panelThongKe);
 
-		JButton btnThongKeDThu = new JButton("Thống Kê Doanh Thu");
-		btnThongKeDThu.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnThongKeDThu.setIcon(new ImageIcon(GD_QuanLy_TaiKhoan.class.getResource("/imgs/thongke.png")));
-		JButton btnThongKeVe = new JButton("Thống Kê Vé Bán");
-		btnThongKeVe.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnThongKeVe.setIcon(new ImageIcon(GD_QuanLy_TaiKhoan.class.getResource("/imgs/tickets2.png")));
 		JButton btnThongKePhim = new JButton("Thống Kê Phim");
 		btnThongKePhim.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnThongKePhim.addActionListener(new ActionListener() {
@@ -471,8 +503,6 @@ public class GD_QuanLy_TaiKhoan extends JFrame implements ActionListener {
 
 			}
 		});
-		panelThongKe.add(btnThongKeDThu);
-		panelThongKe.add(btnThongKeVe);
 		panelThongKe.add(btnThongKePhim);
 		panelThongKe.add(btnThongKeDichVu);
 
@@ -674,9 +704,9 @@ public class GD_QuanLy_TaiKhoan extends JFrame implements ActionListener {
 	}
 
 	private void formWindowClosing(java.awt.event.WindowEvent evt) {// GEN-FIRST:event_formWindowClosing
-//		GD_NhanVien gdnv = new GD_NhanVien();
-//		gdnv.setLocationRelativeTo(null);
-//		gdnv.setVisible(true);
+		GD_QuanLy gdql = new GD_QuanLy();
+		gdql.setLocationRelativeTo(null);
+		gdql.setVisible(true);
 	}
 
 	@Override

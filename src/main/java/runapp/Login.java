@@ -5,6 +5,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import giaoDien.nhanvien.GD_NhanVien;
+import giaoDien.quanly.GD_QuanLy;
 
 import javax.swing.JLabel;
 import javax.swing.ImageIcon;
@@ -97,9 +98,9 @@ public class Login extends JFrame implements ActionListener{
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 //				dangNhap();
-	            GD_NhanVien gdNvien = new GD_NhanVien();
-	            gdNvien.setVisible(true);
-	            gdNvien.setLocationRelativeTo(null);
+	            GD_QuanLy gdqly = new GD_QuanLy();
+	            gdqly.setVisible(true);
+	            gdqly.setLocationRelativeTo(null);
 	            dispose();
 			}
 		});

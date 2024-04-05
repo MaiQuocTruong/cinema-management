@@ -41,16 +41,28 @@ public class GD_QuanLy_SuatChieu_Them extends JFrame {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					GD_QuanLy_SuatChieu_Them frame = new GD_QuanLy_SuatChieu_Them();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
+		try {
+			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+				if ("Nimbus".equals(info.getName())) {
+					javax.swing.UIManager.setLookAndFeel(info.getClassName());
+					break;
 				}
 			}
-		});
+		} catch (ClassNotFoundException ex) {
+			java.util.logging.Logger.getLogger(GD_QuanLy_SuatChieu.class.getName()).log(java.util.logging.Level.SEVERE,
+					null, ex);
+		} catch (InstantiationException ex) {
+			java.util.logging.Logger.getLogger(GD_QuanLy_SuatChieu.class.getName()).log(java.util.logging.Level.SEVERE,
+					null, ex);
+		} catch (IllegalAccessException ex) {
+			java.util.logging.Logger.getLogger(GD_QuanLy_SuatChieu.class.getName()).log(java.util.logging.Level.SEVERE,
+					null, ex);
+		} catch (javax.swing.UnsupportedLookAndFeelException ex) {
+			java.util.logging.Logger.getLogger(GD_QuanLy_SuatChieu.class.getName()).log(java.util.logging.Level.SEVERE,
+					null, ex);
+		}
+		GD_QuanLy_SuatChieu_Them run = new GD_QuanLy_SuatChieu_Them();
+		run.setVisible(true);
 	}
 
 	/**
@@ -64,6 +76,29 @@ public class GD_QuanLy_SuatChieu_Them extends JFrame {
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
+		
+		JPanel topPanel = new JPanel() {
+			private static final long serialVersionUID = 1L;
+
+			protected void paintComponent(Graphics g) {
+				g.setColor(getBackground());
+				g.fillRect(0, 0, getWidth(), getHeight());
+				super.paintComponent(g);
+
+				// Đường dẫn đến hình ảnh
+				String imagePath = "/imgs/video-camera.png";
+				ImageIcon imageIcon = new ImageIcon(getClass().getResource(imagePath));
+				Image image = imageIcon.getImage();
+
+				// Vẽ hình ảnh lên panel
+				g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+			}
+		};
+		topPanel.setOpaque(false);
+		topPanel.setBounds(477, 10, 191, 195);
+		topPanel.setLayout(new FlowLayout(FlowLayout.LEFT)); // Sử dụng FlowLayout
+		contentPane.add(topPanel);
 		
 		JPanel pnl_danhSachSuatChieu = new JPanel();
 		pnl_danhSachSuatChieu.setBackground(new Color(192, 192, 192));
@@ -96,22 +131,7 @@ public class GD_QuanLy_SuatChieu_Them extends JFrame {
 		
 		JLabel lbl_icon = new JLabel();
 		lbl_icon.setBounds(490, 26, 193, 224);
-		
-		
-        
-        // Load hình ảnh từ file
-        ImageIcon imageIcon = new ImageIcon("C:\\loc-projects\\cinema-management\\src\\main\\resources\\imgs\\video-camera.png");
-        Image image = imageIcon.getImage(); // Lấy hình ảnh từ ImageIcon
-        Image scaledImage = image.getScaledInstance(150, 150, Image.SCALE_SMOOTH);
-        // Đặt hình ảnh cho nhãn
-        lbl_icon.setIcon(imageIcon);
-
-        // Căn giữa hình ảnh trong nhãn
-        lbl_icon.setHorizontalAlignment(JLabel.CENTER);
-        lbl_icon.setVerticalAlignment(JLabel.CENTER);
-        imageIcon.setImage(scaledImage);
-        contentPane.add(lbl_icon);
-        
+               
         JLabel lblNewLabel = new JLabel("Cập nhật xuất chiếu ");
         lblNewLabel.setForeground(new Color(0, 50, 100));
         lblNewLabel.setFont(new Font("Segoe UI", Font.BOLD, 26));

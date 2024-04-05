@@ -118,7 +118,7 @@ public class GD_QuanLy_PhongChieu extends JFrame implements ActionListener {
 	 * Create the frame.
 	 */
 	public GD_QuanLy_PhongChieu() {
-//		initComponents();
+		initComponents();
 		setResizable(false);
 		setBackground(Color.WHITE);
 		setTitle("Giao Diện Quản Lý Phòng Chiếu");
@@ -229,6 +229,19 @@ public class GD_QuanLy_PhongChieu extends JFrame implements ActionListener {
 		JButton btnSuatChieu = new JButton("Quản Lý Suất Chiếu");
 		btnSuatChieu.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnSuatChieu.setIcon(new ImageIcon(GD_QuanLy_PhongChieu.class.getResource("/imgs/clapperboard2.png")));
+		btnSuatChieu.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				GD_QuanLy_SuatChieu gdqlsc = new GD_QuanLy_SuatChieu();
+				gdqlsc.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				gdqlsc.setLocationRelativeTo(null);
+				gdqlsc.setVisible(true);
+				dispose();
+			}
+			
+		});
 		JButton btnQLPC = new JButton("Quản Lý Phòng Chiếu");
 		btnQLPC.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnQLPC.setIcon(new ImageIcon(GD_QuanLy_PhongChieu.class.getResource("/imgs/tickets2.png")));
@@ -345,6 +358,19 @@ public class GD_QuanLy_PhongChieu extends JFrame implements ActionListener {
 		JButton btnNhanVien = new JButton("Quản Lý Nhân Viên");
 		btnNhanVien.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnNhanVien.setIcon(new ImageIcon(GD_QuanLy_PhongChieu.class.getResource("/imgs/khachhang1.png")));
+		btnNhanVien.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				GD_QuanLy_NhanVien gdqlnv = new GD_QuanLy_NhanVien();
+				gdqlnv.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				gdqlnv.setLocationRelativeTo(null);
+				gdqlnv.setVisible(true);
+				dispose();
+			}
+			
+		});
 		panelNhanVien.add(btnNhanVien);
 
 		// Thêm toolbar "tài khoản"
@@ -394,6 +420,19 @@ public class GD_QuanLy_PhongChieu extends JFrame implements ActionListener {
 		JButton btnTaiKhoan = new JButton("Quản Lý Tài Khoản");
 		btnTaiKhoan.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnTaiKhoan.setIcon(new ImageIcon(GD_QuanLy_PhongChieu.class.getResource("/imgs/av1.png")));
+		btnTaiKhoan.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				GD_QuanLy_TaiKhoan gdqlytk = new GD_QuanLy_TaiKhoan();
+				gdqlytk.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				gdqlytk.setLocationRelativeTo(null);
+				gdqlytk.setVisible(true);
+				dispose();
+			}
+			
+		});
 		panelTaiKhoan.add(btnTaiKhoan);
 
 		// thêm toolbar "thống kê"
@@ -440,12 +479,6 @@ public class GD_QuanLy_PhongChieu extends JFrame implements ActionListener {
 		panelThongKe.setBackground(whiteColor);
 		contentPane.add(panelThongKe);
 
-		JButton btnThongKeDThu = new JButton("Thống Kê Doanh Thu");
-		btnThongKeDThu.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnThongKeDThu.setIcon(new ImageIcon(GD_QuanLy_PhongChieu.class.getResource("/imgs/thongke.png")));
-		JButton btnThongKeVe = new JButton("Thống Kê Vé Bán");
-		btnThongKeVe.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnThongKeVe.setIcon(new ImageIcon(GD_QuanLy_PhongChieu.class.getResource("/imgs/tickets2.png")));
 		JButton btnThongKePhim = new JButton("Thống Kê Phim");
 		btnThongKePhim.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnThongKePhim.addActionListener(new ActionListener() {
@@ -478,8 +511,6 @@ public class GD_QuanLy_PhongChieu extends JFrame implements ActionListener {
 
 			}
 		});
-		panelThongKe.add(btnThongKeDThu);
-		panelThongKe.add(btnThongKeVe);
 		panelThongKe.add(btnThongKePhim);
 		panelThongKe.add(btnThongKeDichVu);
 

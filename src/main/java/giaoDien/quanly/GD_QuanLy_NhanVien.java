@@ -84,7 +84,7 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 	private NhanVien_dao nv_dao = new NhanVien_dao();
 	private List<NhanVien> listNV;
 	private JRadioButton rdbtnNam, rdbtnNu;
-	private JComboBox<String> cboxChucVu,cboxTrangThai; // Declare the JComboBox here
+	private JComboBox<String> cboxChucVu, cboxTrangThai; // Declare the JComboBox here
 
 	public static void main(String[] args) {
 		try {
@@ -95,30 +95,29 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 				}
 			}
 		} catch (ClassNotFoundException ex) {
-			java.util.logging.Logger.getLogger(GD_QuanLy_NhanVien.class.getName()).log(java.util.logging.Level.SEVERE, null,
-					ex);
+			java.util.logging.Logger.getLogger(GD_QuanLy_NhanVien.class.getName()).log(java.util.logging.Level.SEVERE,
+					null, ex);
 		} catch (InstantiationException ex) {
-			java.util.logging.Logger.getLogger(GD_QuanLy_NhanVien.class.getName()).log(java.util.logging.Level.SEVERE, null,
-					ex);
+			java.util.logging.Logger.getLogger(GD_QuanLy_NhanVien.class.getName()).log(java.util.logging.Level.SEVERE,
+					null, ex);
 		} catch (IllegalAccessException ex) {
-			java.util.logging.Logger.getLogger(GD_QuanLy_NhanVien.class.getName()).log(java.util.logging.Level.SEVERE, null,
-					ex);
+			java.util.logging.Logger.getLogger(GD_QuanLy_NhanVien.class.getName()).log(java.util.logging.Level.SEVERE,
+					null, ex);
 		} catch (javax.swing.UnsupportedLookAndFeelException ex) {
-			java.util.logging.Logger.getLogger(GD_QuanLy_NhanVien.class.getName()).log(java.util.logging.Level.SEVERE, null,
-					ex);
+			java.util.logging.Logger.getLogger(GD_QuanLy_NhanVien.class.getName()).log(java.util.logging.Level.SEVERE,
+					null, ex);
 		}
 		GD_QuanLy_NhanVien run = new GD_QuanLy_NhanVien();
 		run.setVisible(true);
 	}
 
 	public GD_QuanLy_NhanVien() {
+		initComponents();
 		this.setLocationRelativeTo(null);
-//		initComponents();
 		setResizable(false);
 		setBackground(Color.WHITE);
 		setTitle("Giao Diện Quản Lý Nhân Viên");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setLocationRelativeTo(null);
 		setBounds(100, 100, 1168, 650);
 		contentPane = new JPanel();
 		contentPane.setBorder(null);
@@ -126,17 +125,18 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 		contentPane.setLayout(null);
 
 		lblNvIcon = new JLabel("");
-        lblNvIcon.setIcon(new ImageIcon(GD_QuanLy_NhanVien.class.getResource("/imgs/avt.png"))); // Thay đổi đường dẫn ảnh của bạn
-        lblNvIcon.setBounds(760, 5, 40, 40); // Điều chỉnh tọa độ và kích thước của ảnh
-        contentPane.add(lblNvIcon);
-      
+		lblNvIcon.setIcon(new ImageIcon(GD_QuanLy_NhanVien.class.getResource("/imgs/avt.png"))); // Thay đổi đường dẫn
+																									// ảnh của bạn
+		lblNvIcon.setBounds(760, 5, 40, 40); // Điều chỉnh tọa độ và kích thước của ảnh
+		contentPane.add(lblNvIcon);
+
 		JLabel lblnhanvien = new JLabel("QL:");
 		lblnhanvien.setForeground(Color.WHITE);
 		lblnhanvien.setFont(new Font("Tahoma", Font.BOLD, 16));
 		lblnhanvien.setBounds(801, 0, 39, 50);
 		lblnhanvien.setForeground(Color.WHITE);
 		contentPane.add(lblnhanvien);
-		
+
 		lbltennv = new JLabel("Mai Quốc Trưởng");
 		lbltennv.setForeground(Color.WHITE);
 		lbltennv.setFont(new Font("Tahoma", Font.BOLD, 16));
@@ -208,6 +208,19 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 		JButton btnqlyPhim = new JButton("Quản Lý Phim");
 		btnqlyPhim.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnqlyPhim.setIcon(new ImageIcon(GD_QuanLy_NhanVien.class.getResource("/imgs/film-reel.png")));
+		btnqlyPhim.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				GD_QuanLy_Phim gdqlphim = new GD_QuanLy_Phim();
+				gdqlphim.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				gdqlphim.setLocationRelativeTo(null);
+				gdqlphim.setVisible(true);
+				dispose();
+			}
+
+		});
 		JButton btnSuatChieu = new JButton("Quản Lý Suất Chiếu");
 		btnSuatChieu.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnSuatChieu.setIcon(new ImageIcon(GD_QuanLy_NhanVien.class.getResource("/imgs/clapperboard2.png")));
@@ -223,13 +236,25 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 				dispose();
 			}
 		});
-		JButton btnVe = new JButton("Quản Lý Vé Phim");
-		btnVe.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnVe.setIcon(new ImageIcon(GD_QuanLy_NhanVien.class.getResource("/imgs/tickets2.png")));
+		JButton btnqlyphongchieu = new JButton("Quản Lý Phòng Chiếu");
+		btnqlyphongchieu.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btnqlyphongchieu.setIcon(new ImageIcon(GD_QuanLy.class.getResource("/imgs/tickets2.png")));
+		btnqlyphongchieu.addActionListener(new ActionListener() {
 
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				GD_QuanLy_PhongChieu gdqlpc = new GD_QuanLy_PhongChieu();
+				gdqlpc.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				gdqlpc.setLocationRelativeTo(null);
+				gdqlpc.setVisible(true);
+				dispose();
+			}
+			
+		});
 		panelPhim.add(btnqlyPhim);
 		panelPhim.add(btnSuatChieu);
-		panelPhim.add(btnVe);
+		panelPhim.add(btnqlyphongchieu);
 
 		// Thêm toolbar "dịch vụ"
 		JToolBar dichVuToolbar = new JToolBar();
@@ -388,6 +413,19 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 		JButton btnTaiKhoan = new JButton("Quản Lý Tài Khoản");
 		btnTaiKhoan.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnTaiKhoan.setIcon(new ImageIcon(GD_QuanLy_NhanVien.class.getResource("/imgs/av1.png")));
+		btnTaiKhoan.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				GD_QuanLy_TaiKhoan gdqlytk = new GD_QuanLy_TaiKhoan();
+				gdqlytk.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				gdqlytk.setLocationRelativeTo(null);
+				gdqlytk.setVisible(true);
+				dispose();
+			}
+
+		});
 		panelTaiKhoan.add(btnTaiKhoan);
 
 		// thêm toolbar "thống kê"
@@ -434,16 +472,10 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 		panelThongKe.setBackground(whiteColor);
 		contentPane.add(panelThongKe);
 
-		JButton btnThongKeDThu = new JButton("Thống Kê Doanh Thu");
-		btnThongKeDThu.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnThongKeDThu.setIcon(new ImageIcon(GD_QuanLy_NhanVien.class.getResource("/imgs/thongke.png")));
-		JButton btnThongKeVe = new JButton("Thống Kê Vé Bán");
-		btnThongKeVe.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnThongKeVe.setIcon(new ImageIcon(GD_QuanLy_NhanVien.class.getResource("/imgs/tickets2.png")));
 		JButton btnThongKePhim = new JButton("Thống Kê Phim");
 		btnThongKePhim.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnThongKePhim.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
@@ -452,15 +484,15 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 				gdqlthongkephim.setLocationRelativeTo(null);
 				gdqlthongkephim.setVisible(true);
 				dispose();
-			
+
 			}
-			});
+		});
 		btnThongKePhim.setIcon(new ImageIcon(GD_QuanLy_NhanVien.class.getResource("/imgs/clapperboard2.png")));
 		JButton btnThongKeDichVu = new JButton("Thống Kê Dịch Vụ");
 		btnThongKeDichVu.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnThongKeDichVu.setIcon(new ImageIcon(GD_QuanLy_NhanVien.class.getResource("/imgs/popcorn2.png")));
 		btnThongKeDichVu.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
@@ -469,12 +501,9 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 				gdqlthongDVu.setLocationRelativeTo(null);
 				gdqlthongDVu.setVisible(true);
 				dispose();
-			
-			}
-			});
 
-		panelThongKe.add(btnThongKeDThu);
-		panelThongKe.add(btnThongKeVe);
+			}
+		});
 		panelThongKe.add(btnThongKePhim);
 		panelThongKe.add(btnThongKeDichVu);
 
@@ -624,24 +653,24 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 		txtTimKiem.setColumns(16);
 		txtTimKiem.setBounds(871, 99, 214, 30);
 		contentPane.add(txtTimKiem);
-		
+
 		JLabel lblChucVu = new JLabel("Chức vụ:");
 		lblChucVu.setFont(new Font("Dialog", Font.PLAIN, 16));
 		lblChucVu.setBounds(17, 520, 70, 21);
 		contentPane.add(lblChucVu);
-		
+
 		cboxChucVu = new JComboBox();
 		cboxChucVu.setBounds(97, 522, 100, 22);
 		cboxChucVu.addItem("Nhân Viên");
 		cboxChucVu.addItem("Quản Lý");
 		contentPane.add(cboxChucVu);
-		
+
 		JLabel lblTrangThai = new JLabel("Tr.Thái:");
 		lblTrangThai.setFont(new Font("Dialog", Font.PLAIN, 16));
 		lblTrangThai.setBounds(17, 560, 70, 21);
 		contentPane.add(lblTrangThai);
-		
-		cboxTrangThai = new JComboBox<>(new String[]{"Còn làm", "Ngưng làm"});
+
+		cboxTrangThai = new JComboBox<>(new String[] { "Còn làm", "Ngưng làm" });
 		cboxTrangThai.setBounds(97, 562, 100, 22);
 		contentPane.add(cboxTrangThai);
 
@@ -671,12 +700,13 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 
 		// Khởi tạo DefaultTableModel với các cột
 		String[] columnNames = { "Mã NV", "Tên NV", "Ngày sinh", "SĐT", "Địa chỉ", "Email", "ChucVu", "Giới tính",
-				"Trạng thái"}; // Thay đổi tên cột tùy ý
+				"Trạng thái" }; // Thay đổi tên cột tùy ý
 		tableModel = new DefaultTableModel(columnNames, 0);
 
 		// Khởi tạo JTable với DefaultTableModel
 		table = new JTable(tableModel);
-		table.getColumnModel().getColumn(4).setPreferredWidth(50); // Đặt giá trị 300 làm ví dụ, bạn có thể điều chỉnh theo ý muốn
+		table.getColumnModel().getColumn(4).setPreferredWidth(50); // Đặt giá trị 300 làm ví dụ, bạn có thể điều chỉnh
+																	// theo ý muốn
 
 		// Tạo JScrollPane để thêm bảng vào để có thể cuộn
 		JScrollPane scrollPane = new JScrollPane(table);
@@ -684,7 +714,7 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 
 		// Thêm bảng và JScrollPane vào contentPane
 		contentPane.add(scrollPane);
-		
+
 		JLabel background = new JLabel("");
 		background.setHorizontalAlignment(SwingConstants.CENTER);
 		background.setIcon(new ImageIcon(GD_QuanLy.class.getResource("/imgs/bggalaxy1.png")));
@@ -718,7 +748,7 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 				} else {
 					gioiTinhTrongTable = "Nữ";
 				}
-				
+
 				boolean trangThai = nv.isTrangThai();
 				if (trangThai) {
 					trangThaiTrongTable = "Còn làm";
@@ -727,12 +757,11 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 				}
 //				cboxTrangThai.addItem(trangThaiTrongTable);
 				String SDT = nv.getSdt();
-				
-				String chucVu = nv.getChucVu();
-				
 
-				java.lang.Object[] rowData = {maNV, tenNV, ngaySinhTrongTable, SDT, diaChi, email, chucVu,
-						gioiTinhTrongTable, trangThaiTrongTable};
+				String chucVu = nv.getChucVu();
+
+				java.lang.Object[] rowData = { maNV, tenNV, ngaySinhTrongTable, SDT, diaChi, email, chucVu,
+						gioiTinhTrongTable, trangThaiTrongTable };
 				tableModel.addRow(rowData);
 			}
 		} catch (Exception e1) {
@@ -761,15 +790,15 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 	}
 
 	private void formWindowClosing(java.awt.event.WindowEvent evt) {// GEN-FIRST:event_formWindowClosing
-//		GD_NhanVien gdnv = new GD_NhanVien();
-//		gdnv.setLocationRelativeTo(null);
-//		gdnv.setVisible(true);
+		GD_QuanLy gdql = new GD_QuanLy();
+		gdql.setLocationRelativeTo(null);
+		gdql.setVisible(true);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		java.lang.Object o = e.getSource();
-		if(o.equals(btnThem)) {
+		if (o.equals(btnThem)) {
 			try {
 				themKhachHang();
 			} catch (Exception e1) {
@@ -777,8 +806,7 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 				e1.printStackTrace();
 			}
 		}
-		
-		
+
 	}
 
 	private void themKhachHang() throws Exception {
@@ -787,7 +815,7 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 		for (NhanVien nhanVien : nv_dao.getListNV()) {
 			idCust++;
 		}
-		
+
 		int idNewCust = idCust + 1;
 		String maNV = "NV00" + idNewCust;
 		String hoTenNhanVien = txtHoTen.getText();
@@ -795,36 +823,32 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 		String sdt = txtSDT.getText();
 		String diaChi = txtDiaChi.getText();
 		String email = txtEmail.getText();
-		
+
 		boolean gender = false;
 		String gioiTinhTrongBang = "";
-		if(rdbtnNam.isSelected()) {
+		if (rdbtnNam.isSelected()) {
 			gender = true;
 			gioiTinhTrongBang = "Nam";
-		}else {
+		} else {
 			gender = false;
 			gioiTinhTrongBang = "Nữ";
 		}
-		
-		
-		
+
 		String chucVu = cboxChucVu.getSelectedItem().toString();
-		
-		
+
 		boolean statusQuit = false;
 		String trangThai = cboxTrangThai.getSelectedItem().toString();
-		if(!trangThai.trim().equals("Còn làm")) {
+		if (!trangThai.trim().equals("Còn làm")) {
 			statusQuit = true;
-		}else {
+		} else {
 			statusQuit = false;
 		}
-		
-		
-		
+
 		NhanVien nv = new NhanVien(maNV, hoTenNhanVien, diaChi, ngaySinh, gender, email, sdt, chucVu, statusQuit);
-		java.lang.Object [] rowData = {maNV , hoTenNhanVien , ngaySinh , sdt , diaChi , email , chucVu , gioiTinhTrongBang , trangThai};
+		java.lang.Object[] rowData = { maNV, hoTenNhanVien, ngaySinh, sdt, diaChi, email, chucVu, gioiTinhTrongBang,
+				trangThai };
 		tableModel.addRow(rowData);
 		nv_dao.addNV(nv);
-		
+
 	}
 }

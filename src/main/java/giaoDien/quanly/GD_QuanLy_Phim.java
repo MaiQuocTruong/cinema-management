@@ -228,13 +228,26 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 				dispose();
 			}
 		});
-		JButton btnVe = new JButton("Quản Lý Vé Phim");
-		btnVe.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnVe.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/tickets2.png")));
+		JButton btnqlyphongchieu = new JButton("Quản Lý Phòng Chiếu");
+		btnqlyphongchieu.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btnqlyphongchieu.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/tickets2.png")));
+		btnqlyphongchieu.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				GD_QuanLy_PhongChieu gdqlpc = new GD_QuanLy_PhongChieu();
+				gdqlpc.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				gdqlpc.setLocationRelativeTo(null);
+				gdqlpc.setVisible(true);
+				dispose();
+			}
+			
+		});
 
 		panelPhim.add(btnqlyPhim);
 		panelPhim.add(btnSuatChieu);
-		panelPhim.add(btnVe);
+		panelPhim.add(btnqlyphongchieu);
 
 		// Thêm toolbar "dịch vụ"
 		JToolBar dichVuToolbar = new JToolBar();
@@ -342,6 +355,20 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 		JButton btnNhanVien = new JButton("Quản Lý Nhân Viên");
 		btnNhanVien.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnNhanVien.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/khachhang1.png")));
+		btnNhanVien.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				GD_QuanLy_NhanVien gdqlnv = new GD_QuanLy_NhanVien();
+				gdqlnv.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				gdqlnv.setLocationRelativeTo(null);
+				gdqlnv.setVisible(true);
+				dispose();
+	
+			}
+			
+		});
 		panelNhanVien.add(btnNhanVien);
 		
 		// Thêm toolbar "tài khoản"
@@ -391,6 +418,19 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 		JButton btnTaiKhoan = new JButton("Quản Lý Tài Khoản");
 		btnTaiKhoan.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnTaiKhoan.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/av1.png")));
+		btnTaiKhoan.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				GD_QuanLy_TaiKhoan gdqlytk = new GD_QuanLy_TaiKhoan();
+				gdqlytk.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				gdqlytk.setLocationRelativeTo(null);
+				gdqlytk.setVisible(true);
+				dispose();
+			}
+			
+		});
 		panelTaiKhoan.add(btnTaiKhoan);
 		
 		// thêm toolbar "thống kê"
@@ -437,12 +477,6 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 		panelThongKe.setBackground(whiteColor);
 		contentPane.add(panelThongKe);
 		
-		JButton btnThongKeDThu = new JButton("Thống Kê Doanh Thu");
-		btnThongKeDThu.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnThongKeDThu.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/thongke.png")));
-		JButton btnThongKeVe = new JButton("Thống Kê Vé Bán");
-		btnThongKeVe.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnThongKeVe.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/tickets2.png")));
 		JButton btnThongKePhim = new JButton("Thống Kê Phim");
 		btnThongKePhim.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnThongKePhim.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/clapperboard2.png")));
@@ -475,9 +509,7 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 			
 			}
 			});
-		
-		panelThongKe.add(btnThongKeDThu);
-		panelThongKe.add(btnThongKeVe);
+
 		panelThongKe.add(btnThongKePhim);
 		panelThongKe.add(btnThongKeDichVu);
 		
@@ -734,7 +766,11 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 
 		pack();
 	}
-	
+	private void formWindowClosing(java.awt.event.WindowEvent evt) {// GEN-FIRST:event_formWindowClosing
+		GD_QuanLy gdql = new GD_QuanLy();
+		gdql.setLocationRelativeTo(null);
+		gdql.setVisible(true);
+	}
 	private void loadTableData() {
 		dsPhim = new Phim_dao();
 		try {
@@ -748,12 +784,6 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-	}
-	
-	private void formWindowClosing(java.awt.event.WindowEvent evt) {// GEN-FIRST:event_formWindowClosing
-		GD_QuanLy gdql = new GD_QuanLy();
-		gdql.setLocationRelativeTo(null);
-		gdql.setVisible(true);
 	}
 	
 	@Override
