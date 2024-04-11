@@ -70,6 +70,7 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
@@ -597,7 +598,82 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 		clientKH = new ClientKhachHang_dao(socket);
 		
 		listKH = clientKH.getListKH();
+		loadDataToTable(listKH);
 		
+		
+
+//		Add Su Kien
+		btnThem.addActionListener(this);
+		btnSua.addActionListener(this);
+		btnXoa.addActionListener(this);
+		
+//		KhachHang kh = clientKH.findCustomerOnPhoneNumber("123123");
+//		System.out.println(kh);
+		table.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+  				loadDataToTextFlied();
+  			}
+			
+		});
+		
+		
+	}
+	
+	
+	
+
+	private void initComponents() {
+		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+		addWindowListener(new java.awt.event.WindowAdapter() {
+			public void windowClosing(java.awt.event.WindowEvent evt) {
+				formWindowClosing(evt);
+			}
+		});
+
+		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+		getContentPane().setLayout(layout);
+		layout.setHorizontalGroup(
+				layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGap(0, 400, Short.MAX_VALUE));
+		layout.setVerticalGroup(
+				layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGap(0, 300, Short.MAX_VALUE));
+
+		pack();
+	}
+
+	private void formWindowClosing(java.awt.event.WindowEvent evt) {// GEN-FIRST:event_formWindowClosing
+		GD_NhanVien gdnv = new GD_NhanVien();
+		gdnv.setLocationRelativeTo(null);
+		gdnv.setVisible(true);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		java.lang.Object o = e.getSource();
+		if (o.equals(btnThem)) {
+			try {
+				themKhachHang();
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}else if(o.equals(btnSua)) {
+				try {
+					updateKhachHang();
+				} catch (ClassNotFoundException | IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+		}else if(o.equals(btnXoa)) {
+			try {
+				deleteKhachHang();
+			}catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+
+	}
+	
+	private void loadDataToTable(List<KhachHang> listKH) {
 		try {
 			String ngaySinhTrongTable = "";
 			String gioiTinhTrongTable = "";
@@ -634,53 +710,24 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
-
-//		Add Su Kien
-		btnThem.addActionListener(this);
-		
-
-		
-
 	}
-
-	private void initComponents() {
-		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-		addWindowListener(new java.awt.event.WindowAdapter() {
-			public void windowClosing(java.awt.event.WindowEvent evt) {
-				formWindowClosing(evt);
-			}
-		});
-
-		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-		getContentPane().setLayout(layout);
-		layout.setHorizontalGroup(
-				layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGap(0, 400, Short.MAX_VALUE));
-		layout.setVerticalGroup(
-				layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGap(0, 300, Short.MAX_VALUE));
-
-		pack();
+	
+	private void xoaTrangTF() {
+		txtHoTen.setText("");
+		txtNgaySinh.setText("");
+		txtSDT.setText("");
+		txtCMND.setText("");
+		txtEmail.setText("");
+		rdbtnNam.setSelected(false);
+		rdbtnNu.setSelected(false);
 	}
-
-	private void formWindowClosing(java.awt.event.WindowEvent evt) {// GEN-FIRST:event_formWindowClosing
-		GD_NhanVien gdnv = new GD_NhanVien();
-		gdnv.setLocationRelativeTo(null);
-		gdnv.setVisible(true);
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		java.lang.Object o = e.getSource();
-		if (o.equals(btnThem)) {
-			try {
-				themKhachHang();
-			} catch (Exception e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		}
-
-	}
+	
+	private void xoaBang() {
+  		for (int j = 0; j < table.getRowCount(); j++) {
+  			tableModel.removeRow(j);
+  			j--;
+  		}
+  	}
 
 	public void themKhachHang() throws Exception {
 		int idCust = 0;
@@ -730,7 +777,89 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 				diemHienCoTrongTable, diemDaSuDungTrongTable };
 
 		tableModel.addRow(rowData);
+		xoaTrangTF();
 
+	}
+	
+	private void loadDataToTextFlied() {
+		int row = table.getSelectedRow();
+		if(row >= 0) {
+			String tenKH = (String) table.getValueAt(row, 1);
+			String ngaySinh = (String) table.getValueAt(row, 2);
+			String sdt = (String) table.getValueAt(row, 3);
+			String cmnd = (String) table.getValueAt(row, 4);
+			String email = (String) table.getValueAt(row,5);
+			String gioiTinh = (String) table.getValueAt(row, 7);
+			
+			txtHoTen.setText(tenKH);
+			txtNgaySinh.setText(ngaySinh);
+			txtSDT.setText(sdt);
+			txtCMND.setText(cmnd);
+			txtEmail.setText(email);
+			
+			if(gioiTinh.trim().equalsIgnoreCase("Nam")) {
+				rdbtnNam.setSelected(true);
+			}else {
+				rdbtnNu.setSelected(true);
+			}
+			
+		}
+	}
+	
+	private void updateKhachHang() throws ClassNotFoundException, IOException {
+		int row = table.getSelectedRow();
+		String sdtCanTim = (String) table.getValueAt(row, 3);
+		
+		String tenKH = txtHoTen.getText();
+		System.out.println(tenKH);
+		Date ngaySinhTrenGD = ngaySinhDateChooser.getDate();
+		
+		
+		String sdtMoi = txtSDT.getText();
+		String cmnd = txtCMND.getText();
+		String email = txtEmail.getText();
+		
+		LocalDate ngaySinh;
+		
+		// Định nghĩa định dạng của chuỗi ngày tháng
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		
+		if(ngaySinhTrenGD == null) {
+			String ngaySinhGD = txtNgaySinh.getText();
+			ngaySinh = LocalDate.parse(ngaySinhGD, dateFormatter);
+		}else {
+			Instant instant = ngaySinhTrenGD.toInstant();
+			ngaySinh = instant.atZone(ZoneId.systemDefault()).toLocalDate();
+		}
+
+		
+		System.out.println(ngaySinh);
+		
+		KhachHang khNeedUpdate = clientKH.findCustomerOnPhoneNumber(sdtCanTim);
+		khNeedUpdate.setTenKH(tenKH);
+		khNeedUpdate.setNgaySinh(ngaySinh);
+		khNeedUpdate.setSdt(sdtMoi);
+		khNeedUpdate.setCmnd(cmnd);
+		khNeedUpdate.setEmail(email);
+		
+		System.out.println(khNeedUpdate);
+		
+		clientKH.updateKhachHang(khNeedUpdate);
+		
+		
+		
+		List<KhachHang> listKHUpdate = clientKH.getListKH();
+		xoaBang();
+		loadDataToTable(listKHUpdate);
+		xoaTrangTF();
+	}
+	
+	public void deleteKhachHang() throws ClassNotFoundException, IOException {
+		int row = table.getSelectedRow();
+		String sdtCanTim = (String) table.getValueAt(row, 3);
+		KhachHang kh_needRemove = clientKH.findCustomerOnPhoneNumber(sdtCanTim);
+		clientKH.deleteKhachHang(kh_needRemove);
+		tableModel.removeRow(row);
 	}
 
 }

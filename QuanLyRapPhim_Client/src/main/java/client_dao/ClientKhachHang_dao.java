@@ -37,4 +37,31 @@ public class ClientKhachHang_dao {
 		
 	}
 	
+	public KhachHang findCustomerOnPhoneNumber(String phoneNumber) throws IOException, ClassNotFoundException {
+		out.writeUTF("FindCustomerOnPhoneNumber");
+		out.flush();
+		
+		out.writeUTF(phoneNumber);
+		out.flush();
+		
+		KhachHang kh = (KhachHang) in.readObject();
+		return kh;
+	}
+	
+	public void updateKhachHang(KhachHang kh) throws IOException {
+		out.writeUTF("UpdateCustomer");
+		out.flush();
+		
+		out.writeObject(kh);
+		out.flush();
+	}
+	
+	public void deleteKhachHang(KhachHang kh) throws IOException {
+		out.writeUTF("DeleteCustomer");
+		out.flush();
+		
+		out.writeObject(kh);
+		out.flush();
+	}
+	
 }

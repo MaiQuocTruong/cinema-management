@@ -8,8 +8,8 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 
 import dao.EntityManagerFactoryUtil;
 import dao.KhachHang_dao;
@@ -53,7 +53,22 @@ public class ClientHandler implements Runnable {
 					KhachHang kh = (KhachHang) in.readObject();
 					kh_dao.addKhachHang(kh);
 					break;
+				case "FindCustomerOnPhoneNumber":
+					String phoneNumber = in.readUTF();
+					KhachHang resultFindKH = kh_dao.findCustomerOnPhoneNumber(phoneNumber);
+					out.writeObject(resultFindKH);
+					out.flush();
+					break;
+				case "UpdateCustomer":
+					KhachHang kh_needUpdate = (KhachHang) in.readObject();
+					kh_dao.updateKhachHang(kh_needUpdate);
 					
+					break;
+					
+				case "DeleteCustomer":
+					KhachHang kh_remove = (KhachHang) in.readObject();
+					kh_dao.deleteKhachHang(kh_remove.getMaKH());
+					break;
 				default:
 					break;
 				}
