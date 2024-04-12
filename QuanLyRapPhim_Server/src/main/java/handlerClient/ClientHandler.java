@@ -13,7 +13,9 @@ import jakarta.persistence.EntityManagerFactory;
 
 import dao.EntityManagerFactoryUtil;
 import dao.KhachHang_dao;
+import dao.NhanVien_dao;
 import enities.KhachHang;
+import enities.NhanVien;
 
 public class ClientHandler implements Runnable {
 	private Socket socketClient;
@@ -22,6 +24,7 @@ public class ClientHandler implements Runnable {
 	private EntityManagerFactoryUtil emfUtil;
 	private EntityManager em;
 	private KhachHang_dao kh_dao;
+	private NhanVien_dao nv_dao;
 	
 
 	public ClientHandler(Socket socketClient)  {
@@ -30,6 +33,7 @@ public class ClientHandler implements Runnable {
 		emfUtil = new EntityManagerFactoryUtil();
 		em = emfUtil.getEm();
 		kh_dao = new KhachHang_dao(em);
+		nv_dao = new NhanVien_dao(em);
 	}
 	
 
@@ -44,7 +48,6 @@ public class ClientHandler implements Runnable {
 				
 				switch (clientRequest) {
 				case "GetListCustomer":
-					
 					List<KhachHang> listKH = kh_dao.getListCustomer();
 					out.writeObject(listKH);
 					out.flush();
@@ -62,12 +65,33 @@ public class ClientHandler implements Runnable {
 				case "UpdateCustomer":
 					KhachHang kh_needUpdate = (KhachHang) in.readObject();
 					kh_dao.updateKhachHang(kh_needUpdate);
-					
-					break;
-					
+					break;	
 				case "DeleteCustomer":
 					KhachHang kh_remove = (KhachHang) in.readObject();
 					kh_dao.deleteKhachHang(kh_remove.getMaKH());
+					break;
+				case "GetListEmployee":
+					List<NhanVien> listNV = nv_dao.getListNhanVien();
+					out.writeObject(listNV);
+					out.flush();
+					break;
+				case "AddEmployee":
+					NhanVien nv = (NhanVien) in.readObject();
+					nv_dao.addNhanVien(nv);
+					break;
+				case "FindEmployeeOnPhoneNumber":
+					String sdt = in.readUTF();
+					NhanVien resultFindNV = nv_dao.findEmployeeOnPhoneNumber(sdt);
+					out.writeObject(resultFindNV);
+					out.flush();
+					break;
+				case "DeleteEmployee":
+					NhanVien nv_remove = (NhanVien) in.readObject();
+					nv_dao.deleteNV(nv_remove.getMaNV());
+					break;
+				case "UpdateEmployee":
+					NhanVien nv_needUpdate = (NhanVien) in.readObject();
+					nv_dao.updateNV(nv_needUpdate);
 					break;
 				default:
 					break;

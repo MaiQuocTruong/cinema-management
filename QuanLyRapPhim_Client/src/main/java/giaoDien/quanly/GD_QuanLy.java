@@ -40,6 +40,7 @@ import testbutton.Buttontest;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -349,11 +350,20 @@ public class GD_QuanLy extends JFrame implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				GD_QuanLy_NhanVien gdqlnv = new GD_QuanLy_NhanVien();
-				gdqlnv.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				gdqlnv.setLocationRelativeTo(null);
-				gdqlnv.setVisible(true);
-				dispose();
+				GD_QuanLy_NhanVien gdqlnv;
+				try {
+					gdqlnv = new GD_QuanLy_NhanVien();
+					gdqlnv.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					gdqlnv.setLocationRelativeTo(null);
+					gdqlnv.setVisible(true);
+					dispose();
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 			
 		});

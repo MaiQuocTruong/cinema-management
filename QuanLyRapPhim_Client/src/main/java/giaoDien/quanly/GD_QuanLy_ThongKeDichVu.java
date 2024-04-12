@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -348,11 +349,20 @@ public class GD_QuanLy_ThongKeDichVu extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				GD_QuanLy_NhanVien gdqldv = new GD_QuanLy_NhanVien();
-				gdqldv.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				gdqldv.setLocationRelativeTo(null);
-				gdqldv.setVisible(true);
-				dispose();
+				GD_QuanLy_NhanVien gdqldv;
+				try {
+					gdqldv = new GD_QuanLy_NhanVien();
+					gdqldv.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					gdqldv.setLocationRelativeTo(null);
+					gdqldv.setVisible(true);
+					dispose();
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 			
 		});

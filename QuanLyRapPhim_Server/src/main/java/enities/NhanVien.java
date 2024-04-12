@@ -2,6 +2,8 @@ package enities;
 
 
 
+import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 
 import jakarta.persistence.Column;
@@ -10,7 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-public class NhanVien {
+public class NhanVien implements Serializable {
 	@Id
 	@Column(name = "MaNhanVien")
 	private String maNV;
@@ -22,7 +24,7 @@ public class NhanVien {
 	private String diaChi;
 	
 	@Column (name = "NgaySinh")
-	private Date ngaySinh;
+	private LocalDate ngaySinh;
 	
 	@Column (name = "GioiTinh")
 	private boolean gioiTinh;
@@ -44,8 +46,8 @@ public class NhanVien {
 		// TODO Auto-generated constructor stub
 	}
 
-	public NhanVien(String maNV, String tenNV, String diaChi, Date ngaySinh, boolean gioiTinh, String email, String sdt,
-			String chucVu, boolean trangThai) {
+	public NhanVien(String maNV, String tenNV, String diaChi, LocalDate ngaySinh, boolean gioiTinh, String email,
+			String sdt, String chucVu, boolean trangThai) {
 		super();
 		this.maNV = maNV;
 		this.tenNV = tenNV;
@@ -82,11 +84,11 @@ public class NhanVien {
 		this.diaChi = diaChi;
 	}
 
-	public Date getNgaySinh() {
+	public LocalDate getNgaySinh() {
 		return ngaySinh;
 	}
 
-	public void setNgaySinh(Date ngaySinh) {
+	public void setNgaySinh(LocalDate ngaySinh) {
 		this.ngaySinh = ngaySinh;
 	}
 
@@ -136,5 +138,7 @@ public class NhanVien {
 				+ ", gioiTinh=" + gioiTinh + ", email=" + email + ", sdt=" + sdt + ", chucVu=" + chucVu + ", trangThai="
 				+ trangThai + "]";
 	}
+
+	
 	
 }

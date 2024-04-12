@@ -7,8 +7,6 @@ import java.util.concurrent.Executors;
 
 import handlerClient.ClientHandler;
 
-
-
 public class Run {
 	public static void main(String[] args) {
 		try {
@@ -22,9 +20,7 @@ public class Run {
 				System.out.println(clientSocket.getInetAddress());
 				ClientHandler clientHandler = new ClientHandler(clientSocket);
 				execute.execute(clientHandler);
-			}
-			
-			
+			}		
 		}catch (Exception e) {
 			e.printStackTrace();
 		}

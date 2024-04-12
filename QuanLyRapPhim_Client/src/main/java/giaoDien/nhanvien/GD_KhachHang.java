@@ -51,6 +51,7 @@ import java.net.UnknownHostException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.Calendar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -90,12 +91,12 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 	private JLabel lblNvIcon; // Thêm biến để lưu đối tượng JLabel chứa ảnh NV
 	private JTable table;
 	private DefaultTableModel tableModel;
-	private JButton btnThem, btnXoa, btnSua, btnLamMoi;
+	private JButton btnThem, btnXoa, btnSua, btnLamMoi, btntimkiem;
 	private boolean isCalendarVisible = false;
 	private JTextField txtSDT, txtCMND, txtEmail, txtNgaydky, txtTimKiem, txtHoTen;
 	private JDateChooser ngaySinhDateChooser; // Thêm đối tượng JDateChooser cho từ ngày
 	private JTextField txtNgaySinh;
-	
+
 	private List<KhachHang> listKH;
 	private JRadioButton rdbtnNam, rdbtnNu;
 	private ClientKhachHang_dao clientKH;
@@ -103,9 +104,10 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 
 	/**
 	 * Launch the application.
-	 * @throws ClassNotFoundException 
+	 * 
+	 * @throws ClassNotFoundException
 	 */
-	public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException{
+	public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
 		try {
 			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
 				if ("Nimbus".equals(info.getName())) {
@@ -113,12 +115,7 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 					break;
 				}
 			}
-			
-			
-		
-		
-			
-			
+
 		} catch (ClassNotFoundException ex) {
 			java.util.logging.Logger.getLogger(GD_KhachHang.class.getName()).log(java.util.logging.Level.SEVERE, null,
 					ex);
@@ -138,8 +135,9 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 
 	/**
 	 * Create the frame.
-	 * @throws IOException 
-	 * @throws ClassNotFoundException 
+	 * 
+	 * @throws IOException
+	 * @throws ClassNotFoundException
 	 */
 	public GD_KhachHang() throws IOException, ClassNotFoundException {
 		this.setLocationRelativeTo(null);
@@ -154,7 +152,6 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 		contentPane.setBorder(null);
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
 
 		lblNvIcon = new JLabel("");
 		lblNvIcon.setIcon(new ImageIcon(GD_KhachHang.class.getResource("/imgs/avt.png"))); // Thay đổi đường dẫn ảnh
@@ -543,7 +540,7 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 		txtTimKiem.setBounds(871, 99, 214, 30);
 		contentPane.add(txtTimKiem);
 
-		JButton btntimkiem = new JButton("");
+		btntimkiem = new JButton("");
 		btntimkiem.setIcon(new ImageIcon(GD_KhachHang.class.getResource("/Imgs/search.png")));
 		btntimkiem.setBounds(1090, 99, 40, 30);
 		contentPane.add(btntimkiem);
@@ -594,33 +591,28 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 		contentPane.add(background);
 
 //		Load Data
-		Socket socket = new Socket("192.168.2.20", 6789);
+		Socket socket = new Socket("192.168.100.4", 6789);
 		clientKH = new ClientKhachHang_dao(socket);
-		
+
 		listKH = clientKH.getListKH();
 		loadDataToTable(listKH);
-		
-		
 
 //		Add Su Kien
 		btnThem.addActionListener(this);
 		btnSua.addActionListener(this);
 		btnXoa.addActionListener(this);
-		
+		btnLamMoi.addActionListener(this);
+		btntimkiem.addActionListener(this);
 //		KhachHang kh = clientKH.findCustomerOnPhoneNumber("123123");
 //		System.out.println(kh);
 		table.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-  				loadDataToTextFlied();
-  			}
-			
+				loadDataToTextFlied();
+			}
+
 		});
-		
-		
+
 	}
-	
-	
-	
 
 	private void initComponents() {
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -656,28 +648,86 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-		}else if(o.equals(btnSua)) {
-				try {
-					updateKhachHang();
-				} catch (ClassNotFoundException | IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-		}else if(o.equals(btnXoa)) {
+		} else if (o.equals(btnSua)) {
+			try {
+				updateKhachHang();
+			} catch (ClassNotFoundException | IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		} else if (o.equals(btnXoa)) {
 			try {
 				deleteKhachHang();
-			}catch (Exception e2) {
+			} catch (Exception e2) {
 				e2.printStackTrace();
 			}
-		}
+		} else if (o.equals(btnLamMoi)) {
+			try {
+				xoaTrangTF();
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		} else if (o.equals(btntimkiem)) {
+			try {
+				timKiem();
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		} 
 
 	}
+
+	public void timKiem() throws ClassNotFoundException, IOException {
+		// TODO Auto-generated method stub
+		xoaBang();
+		loadLaiDataSauKhiTimKiem();
+	}
 	
+	public void loadLaiDataSauKhiTimKiem() throws ClassNotFoundException, IOException {
+		String sdtCanTim = txtTimKiem.getText();
+		KhachHang khNeedFind = clientKH.findCustomerOnPhoneNumber(sdtCanTim);
+		try {
+			String ngaySinhTrongTable = "";
+			String gioiTinhTrongTable = "";
+
+			
+				String maKH = khNeedFind.getMaKH();
+				String tenKH = khNeedFind.getTenKH();
+				String email = khNeedFind.getEmail();
+				LocalDate ngaySinh = khNeedFind.getNgaySinh();
+
+				ngaySinhTrongTable = ngaySinh + "";
+				boolean gioiTinh = khNeedFind.isGioiTinh();
+
+				if (gioiTinh) {
+					gioiTinhTrongTable = "Nam";
+				} else {
+					gioiTinhTrongTable = "Nu";
+				}
+
+				String loaiKH = khNeedFind.getLoaiKH();
+				String SDT = khNeedFind.getSdt();
+				int diemHienCo = khNeedFind.getDiemHienCo();
+				String diemHienCoTrongTable = String.valueOf(diemHienCo);
+
+				String cmnd = khNeedFind.getCmnd();
+				int diemDaDung = khNeedFind.getDiemDaDung();
+				String diemDaDungTrongTable = String.valueOf(diemDaDung);
+
+				java.lang.Object[] rowData = { maKH, tenKH, ngaySinhTrongTable, SDT, cmnd, email, loaiKH,
+						gioiTinhTrongTable, diemHienCoTrongTable, diemDaDungTrongTable };
+				tableModel.addRow(rowData);
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+
 	private void loadDataToTable(List<KhachHang> listKH) {
 		try {
 			String ngaySinhTrongTable = "";
 			String gioiTinhTrongTable = "";
-		
+
 			for (KhachHang kh : listKH) {
 				String maKH = kh.getMaKH();
 				String tenKH = kh.getTenKH();
@@ -711,7 +761,7 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 			e1.printStackTrace();
 		}
 	}
-	
+
 	private void xoaTrangTF() {
 		txtHoTen.setText("");
 		txtNgaySinh.setText("");
@@ -721,13 +771,13 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 		rdbtnNam.setSelected(false);
 		rdbtnNu.setSelected(false);
 	}
-	
+
 	private void xoaBang() {
-  		for (int j = 0; j < table.getRowCount(); j++) {
-  			tableModel.removeRow(j);
-  			j--;
-  		}
-  	}
+		for (int j = 0; j < table.getRowCount(); j++) {
+			tableModel.removeRow(j);
+			j--;
+		}
+	}
 
 	public void themKhachHang() throws Exception {
 		int idCust = 0;
@@ -740,9 +790,9 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 		Date ngaySinhTrenGD = ngaySinhDateChooser.getDate();
 
 		Instant instant = ngaySinhTrenGD.toInstant();
-		
+
 		LocalDate ngaySinh = instant.atZone(ZoneId.systemDefault()).toLocalDate();
-		
+
 		String ngaySinhTrongTable = txtNgaySinh.getText();
 		String sdt = txtSDT.getText();
 		String email = txtEmail.getText();
@@ -769,10 +819,11 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 		String diemHienCoTrongTable = "0";
 		String diemDaSuDungTrongTable = "0";
 
-		KhachHang kh = new KhachHang(maKH, tenKH, email, ngaySinh, gender, loaiKH, sdt, diemHienCo, cmnd, diemDaSuDung,0);
-		
+		KhachHang kh = new KhachHang(maKH, tenKH, email, ngaySinh, gender, loaiKH, sdt, diemHienCo, cmnd, diemDaSuDung,
+				0);
+
 		clientKH.addKH(kh);
-		
+
 		java.lang.Object[] rowData = { maKH, tenKH, ngaySinhTrongTable, sdt, cmnd, email, loaiKH, gioiTinhTrongTable,
 				diemHienCoTrongTable, diemDaSuDungTrongTable };
 
@@ -780,80 +831,76 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 		xoaTrangTF();
 
 	}
-	
+
 	private void loadDataToTextFlied() {
 		int row = table.getSelectedRow();
-		if(row >= 0) {
+		if (row >= 0) {
 			String tenKH = (String) table.getValueAt(row, 1);
 			String ngaySinh = (String) table.getValueAt(row, 2);
 			String sdt = (String) table.getValueAt(row, 3);
 			String cmnd = (String) table.getValueAt(row, 4);
-			String email = (String) table.getValueAt(row,5);
+			String email = (String) table.getValueAt(row, 5);
 			String gioiTinh = (String) table.getValueAt(row, 7);
-			
+
 			txtHoTen.setText(tenKH);
 			txtNgaySinh.setText(ngaySinh);
 			txtSDT.setText(sdt);
 			txtCMND.setText(cmnd);
 			txtEmail.setText(email);
-			
-			if(gioiTinh.trim().equalsIgnoreCase("Nam")) {
+
+			if (gioiTinh.trim().equalsIgnoreCase("Nam")) {
 				rdbtnNam.setSelected(true);
-			}else {
+			} else {
 				rdbtnNu.setSelected(true);
 			}
-			
+
 		}
 	}
-	
+
 	private void updateKhachHang() throws ClassNotFoundException, IOException {
 		int row = table.getSelectedRow();
 		String sdtCanTim = (String) table.getValueAt(row, 3);
-		
+
 		String tenKH = txtHoTen.getText();
 		System.out.println(tenKH);
 		Date ngaySinhTrenGD = ngaySinhDateChooser.getDate();
-		
-		
+
 		String sdtMoi = txtSDT.getText();
 		String cmnd = txtCMND.getText();
 		String email = txtEmail.getText();
-		
+
 		LocalDate ngaySinh;
-		
+
 		// Định nghĩa định dạng của chuỗi ngày tháng
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		
-		if(ngaySinhTrenGD == null) {
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+		if (ngaySinhTrenGD == null) {
 			String ngaySinhGD = txtNgaySinh.getText();
 			ngaySinh = LocalDate.parse(ngaySinhGD, dateFormatter);
-		}else {
+		} else {
 			Instant instant = ngaySinhTrenGD.toInstant();
 			ngaySinh = instant.atZone(ZoneId.systemDefault()).toLocalDate();
 		}
 
-		
 		System.out.println(ngaySinh);
-		
+
 		KhachHang khNeedUpdate = clientKH.findCustomerOnPhoneNumber(sdtCanTim);
 		khNeedUpdate.setTenKH(tenKH);
 		khNeedUpdate.setNgaySinh(ngaySinh);
 		khNeedUpdate.setSdt(sdtMoi);
 		khNeedUpdate.setCmnd(cmnd);
 		khNeedUpdate.setEmail(email);
-		
+
 		System.out.println(khNeedUpdate);
-		
+
 		clientKH.updateKhachHang(khNeedUpdate);
-		
-		
-		
+
 		List<KhachHang> listKHUpdate = clientKH.getListKH();
 		xoaBang();
 		loadDataToTable(listKHUpdate);
 		xoaTrangTF();
 	}
-	
+
 	public void deleteKhachHang() throws ClassNotFoundException, IOException {
 		int row = table.getSelectedRow();
 		String sdtCanTim = (String) table.getValueAt(row, 3);

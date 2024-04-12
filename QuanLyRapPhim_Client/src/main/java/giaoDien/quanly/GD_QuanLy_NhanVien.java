@@ -41,7 +41,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
+import java.net.Socket;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -55,12 +58,16 @@ import javax.swing.JTextField;
 import com.mysql.cj.x.protobuf.MysqlxDatatypes.Object;
 import com.toedter.calendar.JDateChooser;
 
-
+import client_dao.ClientNhanVien_dao;
 import enities.KhachHang;
 import enities.NhanVien;
 import runapp.Login;
 
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import javax.swing.JComboBox;
@@ -77,15 +84,16 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 	private JLabel lblNvIcon; // Thêm biến để lưu đối tượng JLabel chứa ảnh NV
 	private JTable table;
 	private DefaultTableModel tableModel;
-	private JButton btnThem, btnXoa, btnSua, btnLamMoi;
+	private JButton btnThem, btnXoa, btnSua, btnLamMoi, btntimkiem;
 	private boolean isCalendarVisible = false;
 	private JTextField txtSDT, txtDiaChi, txtEmail, txtNgaySinh, txtTimKiem, txtHoTen;
 	private JDateChooser ngaySinhDateChooser; // Thêm đối tượng JDateChooser cho từ ngày
-	private List<NhanVien> listNV;
 	private JRadioButton rdbtnNam, rdbtnNu;
 	private JComboBox<String> cboxChucVu, cboxTrangThai; // Declare the JComboBox here
-
-	public static void main(String[] args) {
+	private List<NhanVien> listNV;
+	private ClientNhanVien_dao clientNV;
+	
+	public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
 		try {
 			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
 				if ("Nimbus".equals(info.getName())) {
@@ -110,8 +118,8 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 		run.setVisible(true);
 	}
 
-	public GD_QuanLy_NhanVien() {
-		initComponents();
+	public GD_QuanLy_NhanVien() throws IOException, ClassNotFoundException {
+//		initComponents();
 		this.setLocationRelativeTo(null);
 		setResizable(false);
 		setBackground(Color.WHITE);
@@ -673,15 +681,13 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 		cboxTrangThai.setBounds(97, 562, 100, 22);
 		contentPane.add(cboxTrangThai);
 
-		JButton btntimkiem = new JButton("");
+		btntimkiem = new JButton("");
 		btntimkiem.setIcon(new ImageIcon(GD_QuanLy_NhanVien.class.getResource("/Imgs/search.png")));
 		btntimkiem.setBounds(1090, 99, 40, 30);
 		contentPane.add(btntimkiem);
 
 		// Khởi tạo các nút
 		btnThem = new JButton("Thêm");
-		btnThem.addActionListener(this);
-
 		btnXoa = new JButton("Xóa");
 		btnSua = new JButton("Sửa");
 		btnLamMoi = new JButton("Làm mới");
@@ -721,12 +727,99 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 		contentPane.add(background);
 
 		// load dữ liệu
+		Socket socket = new Socket("192.168.100.4", 6789);
+		clientNV = new ClientNhanVien_dao(socket);
 		
+		listNV = clientNV.getListNV();
+		loadDataToTable(listNV);
+		
+		//add su kien
+		btnThem.addActionListener(this);
+		btnXoa.addActionListener(this);
+		btnSua.addActionListener(this);
+		btnLamMoi.addActionListener(this);
+		btntimkiem.addActionListener(this);
+
+		table.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				loadDataToTextFlied();
+			}
+
+		});
+	}
+	
+	private void loadDataToTextFlied() {
+		// TODO Auto-generated method stub
+		int row = table.getSelectedRow();
+		if (row >= 0) {
+			String tenNV = (String) table.getValueAt(row, 1);
+			String ngaySinh = (String) table.getValueAt(row, 2);
+			String sdt = (String) table.getValueAt(row, 3);
+			String diachi = (String) table.getValueAt(row, 4);
+			String email = (String) table.getValueAt(row, 5);
+			String chucVu = (String) table.getValueAt(row, 6);
+			String gioiTinh = (String) table.getValueAt(row, 7);		
+			String trangThai = (String) table.getValueAt(row, 8);
+			
+			txtHoTen.setText(tenNV);
+			txtNgaySinh.setText(ngaySinh);
+			txtSDT.setText(sdt);
+			txtDiaChi.setText(diachi);
+			txtEmail.setText(email);
+			cboxChucVu.setSelectedItem(chucVu);
+//			cboxTrangThai.setSelectedItem(trangThai);
+			if(trangThai.trim().equalsIgnoreCase("Còn làm")) {
+				cboxTrangThai.setSelectedIndex(0);
+			} else {
+				cboxTrangThai.setSelectedIndex(1);
+			}
+			
+			if (gioiTinh.trim().equalsIgnoreCase("Nam")) {
+				rdbtnNam.setSelected(true);
+			} else {
+				rdbtnNu.setSelected(true);
+			}
+
+		}
 	}
 
-	
-
-	
+	private void loadDataToTable(List<NhanVien> listNV) {
+		// TODO Auto-generated method stub
+		try {
+			String ngaySinhTrongTable = "";
+			String gioiTinhTrongTable = "";
+			String trangThaiTrongTable = "";
+			for (NhanVien nv : listNV) {
+				String maNV = nv.getMaNV();
+				String tenNV = nv.getTenNV();
+				String sdt = nv.getSdt();
+				LocalDate ngaySinh = nv.getNgaySinh();
+				ngaySinhTrongTable = ngaySinh + "";
+				String diaChi = nv.getDiaChi();
+				String email = nv.getEmail();
+				
+				boolean gioiTinh = nv.isGioiTinh();
+				if (gioiTinh) {
+					gioiTinhTrongTable = "Nam";
+				} else {
+					gioiTinhTrongTable = "Nu";
+				}
+				String chucVu = nv.getChucVu();		
+				boolean trangThai = nv.isTrangThai();
+				trangThaiTrongTable = trangThai + "";
+				if (trangThai) {
+					trangThaiTrongTable = "Còn làm";
+				} else {
+					trangThaiTrongTable = "Ngưng làm";
+				}
+				java.lang.Object[] rowData = {maNV, tenNV, ngaySinhTrongTable, sdt, diaChi, email, chucVu,
+						gioiTinhTrongTable, trangThaiTrongTable};
+				tableModel.addRow(rowData);
+			}
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+	}
 
 	private void initComponents() {
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -757,14 +850,231 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 		java.lang.Object o = e.getSource();
 		if (o.equals(btnThem)) {
 			try {
-			
+				themNV();
 			} catch (Exception e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
+		} else if (o.equals(btnXoa)) {
+			try {
+				deleteNV();
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		} else if (o.equals(btnSua)) {
+			try {
+				updateNhanVien();
+			} catch (ClassNotFoundException | IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		} else if (o.equals(btnLamMoi)) {
+			try {
+				xoaTrangTF();
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		} else if (o.equals(btntimkiem)) {
+			try {
+				timKiem();
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		} 
+	}
+
+	public void timKiem() throws ClassNotFoundException, IOException {
+		// TODO Auto-generated method stub
+		xoaBang();
+		loadLaiDataSauKhiTimKiem();
+	}
+	
+	public void loadLaiDataSauKhiTimKiem() throws ClassNotFoundException, IOException {
+		// TODO Auto-generated method stub
+		String sdtCanTim = txtTimKiem.getText();
+		NhanVien nvNeedFind = clientNV.findEmployeeOnPhoneNumber(sdtCanTim);
+		try {
+			String ngaySinhTrongTable = "";
+			String gioiTinhTrongTable = "";
+			String trangThaiTrongTable = "";
+				String maNV = nvNeedFind.getMaNV();
+				String tenNV = nvNeedFind.getTenNV();
+				String sdt = nvNeedFind.getSdt();
+				LocalDate ngaySinh = nvNeedFind.getNgaySinh();
+				ngaySinhTrongTable = ngaySinh + "";
+				String diaChi = nvNeedFind.getDiaChi();
+				String email = nvNeedFind.getEmail();
+				
+				boolean gioiTinh = nvNeedFind.isGioiTinh();
+				if (gioiTinh) {
+					gioiTinhTrongTable = "Nam";
+				} else {
+					gioiTinhTrongTable = "Nu";
+				}
+				String chucVu = nvNeedFind.getChucVu();		
+				boolean trangThai = nvNeedFind.isTrangThai();
+				trangThaiTrongTable = trangThai + "";
+				if (trangThai) {
+					trangThaiTrongTable = "Còn làm";
+				} else {
+					trangThaiTrongTable = "Ngưng làm";
+				}
+				java.lang.Object[] rowData = {maNV, tenNV, ngaySinhTrongTable, sdt, diaChi, email, chucVu,
+						gioiTinhTrongTable, trangThaiTrongTable};
+				tableModel.addRow(rowData);
+
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+	}
+
+	private void updateNhanVien() throws ClassNotFoundException, IOException{
+		// TODO Auto-generated method stub
+		int row = table.getSelectedRow();
+		String sdtCanTim = (String) table.getValueAt(row, 3);
+		
+		String tenNV = txtHoTen.getText();
+		System.out.println(tenNV);
+		Date ngaySinhTrenGD = ngaySinhDateChooser.getDate();
+		
+		String sdtMoi = txtSDT.getText();
+		String diaChi = txtDiaChi.getText();
+		String email = txtEmail.getText();
+		String chucVu = cboxChucVu.getSelectedItem().toString();
+		
+		boolean statusQuit = true;
+		if(cboxTrangThai.getSelectedItem().toString().trim().equals("Còn làm")) {
+			statusQuit = true;
+		} else{
+			statusQuit = false;
+		}
+		String trangThai = "";
+		if(trangThai.trim().equals("Còn làm")) {
+			trangThai = "Ngưng làm";
+		} else {
+			trangThai = "Còn làm";
+		}
+		
+		LocalDate ngaySinh;
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		
+		if (ngaySinhTrenGD == null) {
+			String ngaySinhGD = txtNgaySinh.getText();
+			ngaySinh = LocalDate.parse(ngaySinhGD, dateFormatter);
+		} else {
+			Instant instant = ngaySinhTrenGD.toInstant();
+			ngaySinh = instant.atZone(ZoneId.systemDefault()).toLocalDate();
+		}
+		System.out.println(ngaySinh);
+		
+		NhanVien nv_needUpdate = clientNV.findEmployeeOnPhoneNumber(sdtCanTim);
+		nv_needUpdate.setTenNV(tenNV);
+		nv_needUpdate.setNgaySinh(ngaySinh);
+		nv_needUpdate.setSdt(sdtMoi);
+		nv_needUpdate.setDiaChi(diaChi);
+		nv_needUpdate.setEmail(email);
+		nv_needUpdate.setChucVu(chucVu);
+		nv_needUpdate.setTrangThai(statusQuit);
+		
+		System.out.println(nv_needUpdate);
+		
+		clientNV.updateNV(nv_needUpdate);
+		
+		List<NhanVien> listNVUpdate = clientNV.getListNV();
+		xoaBang();
+		loadDataToTable(listNVUpdate);
+		xoaTrangTF();
+	}
+
+	private void xoaBang() {
+		for (int j = 0; j < table.getRowCount(); j++) {
+			tableModel.removeRow(j);
+			j--;
 		}
 
 	}
 
+	private void deleteNV() throws ClassNotFoundException, IOException {
+		// TODO Auto-generated method stub
+		int row = table.getSelectedRow();
+		String sdtCanTim = (String) table.getValueAt(row, 3);
+		NhanVien nv_needRemove = clientNV.findEmployeeOnPhoneNumber(sdtCanTim);
+		clientNV.deleteNV(nv_needRemove);
+		tableModel.removeRow(row);
+		xoaTrangTF();
+	}
+
+	public void themNV() throws Exception  {
+		int idCust = 0;
+		for (NhanVien nhanVien : clientNV.getListNV()) {
+			idCust++;
+		}
+		int newID = idCust + 1;
+		String maNV = "NV00" + newID;
+		String tenNV = txtHoTen.getText();
+		
+		Date ngaySinhTrenGD = ngaySinhDateChooser.getDate();
+		Instant instant = ngaySinhTrenGD.toInstant();
+		LocalDate ngaySinh = instant.atZone(ZoneId.systemDefault()).toLocalDate();
+		String ngaySinhTrongTable = txtNgaySinh.getText();
+		
+		String sdt = txtSDT.getText();
+		String diaChi = txtDiaChi.getText();
+		String email = txtEmail.getText();
+		
+		boolean gender = true;
+		if (rdbtnNu.isSelected()) {
+			gender = false;
+		} else if (rdbtnNam.isSelected()) {
+			gender = true;
+		}
+		
+		String chucVu = cboxChucVu.getSelectedItem().toString();
+		
+		String gioiTinhTrongTable = "";
+		if (gender) {
+			gioiTinhTrongTable = "Nam";
+		} else {
+			gioiTinhTrongTable = "Nu";
+		}
+		
+		boolean statusQuit = true;
+		if(cboxTrangThai.getSelectedItem().toString().trim().equals("Còn làm")) {
+			statusQuit = true;
+		} else{
+			statusQuit = false;
+		}
+		String trangThai = "";
+		if(trangThai.trim().equals("Còn làm")) {
+			trangThai = "Ngưng làm";
+		} else {
+			trangThai = "Còn làm";
+		}
+		
+//		boolean statusQuit = false;
+//		String trangThai = cboxTrangThai.getSelectedItem().toString();
+//		if(!trangThai.trim().equals("Còn làm")) {
+//			statusQuit = true;
+//		}else {
+//			statusQuit = false;
+//		}
+		NhanVien nv = new NhanVien(maNV, tenNV, diaChi, ngaySinh, gender, email, sdt, chucVu, statusQuit);
+		clientNV.addNV(nv);
+		java.lang.Object [] rowData = {maNV , tenNV , ngaySinhTrongTable , sdt , diaChi , email , chucVu , gioiTinhTrongTable , trangThai};
+		tableModel.addRow(rowData);
+		xoaTrangTF();
+	}
+
+	private void xoaTrangTF(){
+		txtHoTen.setText("");
+		txtNgaySinh.setText("");
+		txtSDT.setText("");
+		txtDiaChi.setText("");
+		txtEmail.setText("");
+		rdbtnNam.setSelected(false);
+		rdbtnNu.setSelected(false);
+		cboxChucVu.setSelectedIndex(0);
+		cboxTrangThai.setSelectedIndex(0);
+	}	
 	
 }

@@ -1,4 +1,5 @@
 CREATE DATABASE  IF NOT EXISTS `rapphim` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+drop database `rapphim`;
 USE `rapphim`;
 -- MySQL dump 10.13  Distrib 8.0.34, for Win64 (x86_64)
 --
@@ -202,7 +203,8 @@ CREATE TABLE `khachhang` (
 
 LOCK TABLES `khachhang` WRITE;
 /*!40000 ALTER TABLE `khachhang` DISABLE KEYS */;
-INSERT INTO `khachhang` VALUES ('KH001','Trưởng','maiqtruong2403@gmail.com','2003-03-24 00:00:00',_binary '','VIP','0398911257',1000,'0123',600,0),('KH002','Hai','hainguyendoanngoc@gmail.com','2003-03-24 00:00:00',_binary '','Thuong','0398911257',1000,'0123',600,0);
+INSERT INTO `khachhang` VALUES ('KH001','Trưởng','maiqtruong2403@gmail.com','2003-03-24 00:00:00',_binary '','VIP','0398911257',1000,'0123',600,0),
+('KH002','Hai','hainguyendoanngoc@gmail.com','2003-03-24 00:00:00',_binary '','Thuong','0961236005',1000,'0123',600,0);
 /*!40000 ALTER TABLE `khachhang` ENABLE KEYS */;
 UNLOCK TABLES;
 
