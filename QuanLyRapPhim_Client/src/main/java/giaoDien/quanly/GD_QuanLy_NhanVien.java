@@ -48,6 +48,7 @@ import java.net.UnknownHostException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.Calendar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -767,11 +768,11 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 			txtDiaChi.setText(diachi);
 			txtEmail.setText(email);
 			cboxChucVu.setSelectedItem(chucVu);
-//			cboxTrangThai.setSelectedItem(trangThai);
+			
 			if(trangThai.trim().equalsIgnoreCase("Còn làm")) {
-				cboxTrangThai.setSelectedIndex(0);
+				cboxTrangThai.setSelectedItem("Còn làm");
 			} else {
-				cboxTrangThai.setSelectedIndex(1);
+				cboxTrangThai.setSelectedItem("Ngưng làm");
 			}
 			
 			if (gioiTinh.trim().equalsIgnoreCase("Nam")) {
@@ -857,7 +858,7 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 			}
 		} else if (o.equals(btnXoa)) {
 			try {
-				deleteNV();
+				updateTrangThai();
 			} catch (Exception e2) {
 				e2.printStackTrace();
 			}
@@ -994,13 +995,19 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 
 	}
 
-	private void deleteNV() throws ClassNotFoundException, IOException {
+	
+	private void updateTrangThai() throws ClassNotFoundException, IOException {
 		// TODO Auto-generated method stub
 		int row = table.getSelectedRow();
 		String sdtCanTim = (String) table.getValueAt(row, 3);
-		NhanVien nv_needRemove = clientNV.findEmployeeOnPhoneNumber(sdtCanTim);
-		clientNV.deleteNV(nv_needRemove);
-		tableModel.removeRow(row);
+		
+		NhanVien nv_needUpdateTrangThai = clientNV.findEmployeeOnPhoneNumber(sdtCanTim);
+		nv_needUpdateTrangThai.setTrangThai(false);
+		clientNV.setTrangThaiNV(nv_needUpdateTrangThai);
+		
+		List<NhanVien> listNVUpdateTrangThai = clientNV.getListNV();
+		xoaBang();
+		loadDataToTable(listNVUpdateTrangThai);
 		xoaTrangTF();
 	}
 

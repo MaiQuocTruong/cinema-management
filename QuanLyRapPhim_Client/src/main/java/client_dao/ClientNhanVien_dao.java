@@ -46,16 +46,24 @@ public class ClientNhanVien_dao {
 		return nv;
 	}
 	
-	public void deleteNV(NhanVien nv) throws IOException {
-		out.writeUTF("DeleteEmployee");
+//	public void deleteNV(NhanVien nv) throws IOException {
+//		out.writeUTF("DeleteEmployee");
+//		out.flush();
+//		
+//		out.writeObject(nv);
+//		out.flush();
+//	}
+	
+	public void updateNV(NhanVien nv) throws IOException {
+		out.writeUTF("UpdateEmployee");
 		out.flush();
 		
 		out.writeObject(nv);
 		out.flush();
 	}
 	
-	public void updateNV(NhanVien nv) throws IOException {
-		out.writeUTF("UpdateEmployee");
+	public void setTrangThaiNV(NhanVien nv) throws IOException {
+		out.writeUTF("SetTrangThaiNV");
 		out.flush();
 		
 		out.writeObject(nv);

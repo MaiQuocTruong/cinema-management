@@ -9,6 +9,7 @@ import jakarta.persistence.NoResultException;
 import jakarta.persistence.Persistence;
 import jakarta.persistence.TypedQuery;
 import enities.NhanVien;
+import enities.TaiKhoan;
 public class NhanVien_dao {
 	private EntityManager em;
 	
@@ -42,12 +43,13 @@ public class NhanVien_dao {
 				   .setParameter("sdt", sdt)
 				   .getSingleResult();
 	}
-	public void deleteNV(String idNhanVien) {
+	public void setTrangThaiNV(String idNhanVien) {
 		try {
-			NhanVien nvDelete = em.find(NhanVien.class, idNhanVien);
-			if(nvDelete != null && em.contains(nvDelete)) {
+			NhanVien nvTrangThai= em.find(NhanVien.class, idNhanVien);
+			if(nvTrangThai != null && em.contains(nvTrangThai)) {
+				nvTrangThai.setTrangThai(false);
 				em.getTransaction().begin();
-				em.remove(nvDelete);
+				em.merge(nvTrangThai);
 				em.getTransaction().commit();
 			}
 		} catch (Exception e) {
@@ -58,7 +60,9 @@ public class NhanVien_dao {
 		}
 	}
 	public void updateNV(NhanVien nv_update) {
+		String idnv = nv_update.getMaNV();
 		try {
+			TaiKhoan tk = em.find(TaiKhoan.class, idnv);
 			em.getTransaction().begin();
 			em.merge(nv_update);
 			em.getTransaction().commit();

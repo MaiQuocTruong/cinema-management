@@ -591,7 +591,7 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 		contentPane.add(background);
 
 //		Load Data
-		Socket socket = new Socket("192.168.2.20", 6789);
+		Socket socket = new Socket("192.168.100.4", 6789);
 		clientKH = new ClientKhachHang_dao(socket);
 
 		listKH = clientKH.getListKH();
@@ -664,6 +664,9 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 		} else if (o.equals(btnLamMoi)) {
 			try {
 				xoaTrangTF();
+				xoaBang();
+				List<KhachHang> listKhachHang = clientKH.getListKH();
+				loadDataToTable(listKhachHang);
 			} catch (Exception e2) {
 				e2.printStackTrace();
 			}

@@ -14,6 +14,7 @@ import jakarta.persistence.EntityManagerFactory;
 import dao.EntityManagerFactoryUtil;
 import dao.KhachHang_dao;
 import dao.NhanVien_dao;
+import dao.TaiKhoan_dao;
 import enities.KhachHang;
 import enities.NhanVien;
 
@@ -25,7 +26,7 @@ public class ClientHandler implements Runnable {
 	private EntityManager em;
 	private KhachHang_dao kh_dao;
 	private NhanVien_dao nv_dao;
-	
+	private TaiKhoan_dao tk_dao;
 
 	public ClientHandler(Socket socketClient)  {
 		super();
@@ -34,6 +35,7 @@ public class ClientHandler implements Runnable {
 		em = emfUtil.getEm();
 		kh_dao = new KhachHang_dao(em);
 		nv_dao = new NhanVien_dao(em);
+		tk_dao = new TaiKhoan_dao(em);
 	}
 	
 
@@ -85,13 +87,15 @@ public class ClientHandler implements Runnable {
 					out.writeObject(resultFindNV);
 					out.flush();
 					break;
-				case "DeleteEmployee":
-					NhanVien nv_remove = (NhanVien) in.readObject();
-					nv_dao.deleteNV(nv_remove.getMaNV());
+				case "SetTrangThaiNV":
+					NhanVien nv_trangthai = (NhanVien) in.readObject();
+					nv_dao.setTrangThaiNV(nv_trangthai.getMaNV());
+					tk_dao.deleteTrangThaiTK(nv_trangthai.getMaNV());
 					break;
 				case "UpdateEmployee":
 					NhanVien nv_needUpdate = (NhanVien) in.readObject();
 					nv_dao.updateNV(nv_needUpdate);
+					tk_dao.updateTrangThaiTK(nv_needUpdate.getMaNV());
 					break;
 				default:
 					break;
