@@ -44,7 +44,8 @@ import javax.swing.table.DefaultTableModel;
 
 import com.toedter.calendar.JDateChooser;
 
-
+import client_dao.ClientKhachHang_dao;
+import client_dao.ClientXuatChieu_dao;
 import enities.Phim;
 import enities.XuatChieu;
 import giaoDien.nhanvien.GD_NhanVien;
@@ -56,11 +57,19 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+<<<<<<< Updated upstream
 import java.io.IOException;
+=======
+import java.io.EOFException;
+import java.io.IOException;
+import java.net.Socket;
+>>>>>>> Stashed changes
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -89,13 +98,18 @@ public class GD_QuanLy_SuatChieu extends JFrame implements ActionListener {
 	private JTable table;
 	private DefaultTableModel tableModel;
 	private JComboBox<String> phongChieuComboBox; // Declare the JComboBox here
-	
+	private List<XuatChieu> listXC;
+	private ClientXuatChieu_dao clientXC;
 
 //	static String quanly;
 	/**
 	 * Launch the application.
+	 * @throws IOException 
+	 * @throws UnknownHostException 
+	 * @throws ClassNotFoundException 
+	 * @throws EOFException
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException ,EOFException{
 		try {
 			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
 				if ("Nimbus".equals(info.getName())) {
@@ -122,8 +136,11 @@ public class GD_QuanLy_SuatChieu extends JFrame implements ActionListener {
 
 	/**
 	 * Create the frame.
+	 * @throws IOException 
+	 * @throws UnknownHostException 
+	 * @throws ClassNotFoundException 
 	 */
-	public GD_QuanLy_SuatChieu() {
+	public GD_QuanLy_SuatChieu() throws UnknownHostException, IOException, ClassNotFoundException {
 		initComponents();
 		setResizable(false);
 		setBackground(Color.WHITE);
@@ -675,15 +692,22 @@ public class GD_QuanLy_SuatChieu extends JFrame implements ActionListener {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				GD_QuanLy_SuatChieu_Them gd_them_suatchieu = new GD_QuanLy_SuatChieu_Them();
-				gd_them_suatchieu.setVisible(true);
-				dispose();
-
+				GD_QuanLy_SuatChieu_Them gd_them_suatchieu;
+				try {
+					gd_them_suatchieu = new GD_QuanLy_SuatChieu_Them();
+					gd_them_suatchieu.setVisible(true);
+					dispose();
+				} catch (UnknownHostException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 		// Khởi tạo DefaultTableModel với các cột
-		String[] columnNames = { "STT", "Mã suất chiếu", "Tên phim", "Ngày chiếu", "Giờ chiếu", "Định dạng", "Ngôn ngữ",
-				"Trạng thái" }; // Thay đổi tên cột tùy ý
+		String[] columnNames = { "STT", "Mã suất chiếu", "Ngày chiếu", "Giờ chiếu","Giờ kết thúc", "Định dạng","Trạng thái" }; // Thay đổi tên cột tùy ý
 		tableModel = new DefaultTableModel(columnNames, 0);
 
 		// Khởi tạo JTable với DefaultTableModel
@@ -700,13 +724,23 @@ public class GD_QuanLy_SuatChieu extends JFrame implements ActionListener {
 		contentPane.add(scrollPane);
 
 		// Thêm dữ liệu vào bảng
-//		Load Du lieu Vào Bảng
+//		Load Data
+		Socket socket = new Socket("192.168.1.14", 6789);
+		
+		clientXC = new ClientXuatChieu_dao(socket);
+		
+		listXC = clientXC.getListXC();
+		loadDataToTable(listXC);
 
 		JLabel background = new JLabel("");
 		background.setHorizontalAlignment(SwingConstants.CENTER);
 		background.setIcon(new ImageIcon(GD_QuanLy_SuatChieu.class.getResource("/imgs/bggalaxy1.png")));
 		background.setBounds(0, 0, 1162, 613);
 		contentPane.add(background);
+		
+		btnXoa.addActionListener(this);
+		btnSua.addActionListener(this);
+		btnLamMoi.addActionListener(this);
 
 	}
 
@@ -735,9 +769,94 @@ public class GD_QuanLy_SuatChieu extends JFrame implements ActionListener {
 	}
 
 	
+	private void loadDataToTable(List< XuatChieu> listXC) {
+		int i = 1;
+		for (XuatChieu xc : listXC) {
+			tableModel.addRow(new Object[] {i,xc.getMaXuat(),xc.getNgayChieu(),xc.getGioChieu(),xc.getGioKetThuc(),xc.getDinhDang(),xc.getTrangThai()});
+			++i;
+		}
+//		try {
+//			int i = 1;
+//			for (XuatChieu xc : listXC) {
+//				for (Phim ph : listPH) {
+//					if(ph.getMaXuat().equals(xc.getMaXuat())) {
+//						tableModel.addRow(new Object[]{i,xc.getMaXuat(),ph.getTenPhim(),xc.getNgayChieu(),xc.getGioChieu(),xc.getDinhDang(),ph.getNgonNgu(),xc.getTrangThai()});
+//					}
+//				}
+//			}
+//		}catch(Exception e) {
+//			e.printStackTrace();
+//		}
+	}
+	
 	
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		Object o = e.getSource();
+		if(o.equals(btnXoa)) {
+			try {
+				deleteXuatChieu();
+			}catch(Exception e1) {
+				e1.printStackTrace();
+			}
+
+		}
+		if(o.equals(btnSua)) {
+			try {
+				updateXuatChieu();
+			}catch(Exception e1) {
+				e1.printStackTrace();
+			}
+		}
+//		if(o.equals(btnXoa)) {
+//			try {
+//				int r = table.getSelectedRow();
+//				String maXuat = (String)tableModel.getValueAt(r, 0);
+//				XuatChieu xc = new XuatChieu(maXuat);
+//				clientXC.deleteXuatChieu(xc);
+//				tableModel.removeRow(r);
+//			} catch (IOException e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			}
+//		}
+	}
+	
+	private void xoaBang() {
+  		for (int j = 0; j < table.getRowCount(); j++) {
+  			tableModel.removeRow(j);
+  			j--;
+  		}
+  	}
+	
+	private void updateXuatChieu() throws ClassNotFoundException ,IOException{
+		int r = table.getSelectedRow();
+		String maXuat = (String)tableModel.getValueAt(r, 1);
+		Date ngayChieu = (Date)tableModel.getValueAt(r, 2);
+		Time gioChieu = (Time) tableModel.getValueAt(r, 3); 
+		Time gioKetThuc = (Time) tableModel.getValueAt(r, 4); 
+		String dinhDang = (String)tableModel.getValueAt(r, 5);
+		String trangThai = (String)tableModel.getValueAt(r, 6);
+		
+		XuatChieu xc = clientXC.findXuatChieuOnMaXC(maXuat);
+		xc.setDinhDang(dinhDang);
+		xc.setNgayChieu(ngayChieu);
+		xc.setGioChieu(gioChieu);
+		xc.setGioKetThuc(gioKetThuc);
+		xc.setTrangThai(trangThai);
+		
+		clientXC.updateXuatChieu(xc);
+		List<XuatChieu> list = clientXC.getListXC();
+		xoaBang();
+		loadDataToTable(list);
+	}
+	
+	private void deleteXuatChieu() throws ClassNotFoundException,IOException {
+		int r = table.getSelectedRow();
+		String maXuat = (String)tableModel.getValueAt(r, 1);
+		XuatChieu xc = new XuatChieu(maXuat);
+		clientXC.deleteXuatChieu(xc);
+		tableModel.removeRow(r);
 	}
 }

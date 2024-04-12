@@ -6,7 +6,12 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -16,8 +21,10 @@ import javax.swing.table.DefaultTableModel;
 
 import com.toedter.calendar.JDateChooser;
 
-
+import client_dao.ClientKhachHang_dao;
+import client_dao.ClientXuatChieu_dao;
 import enities.Phim;
+import enities.XuatChieu;
 
 import java.awt.Color;
 import javax.swing.JLabel;
@@ -27,19 +34,24 @@ import javax.swing.JComboBox;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 
 public class GD_QuanLy_SuatChieu_Them extends JFrame {
 
 	private JPanel contentPane;
 	private boolean isCalendarVisible = false;
 	private DefaultTableModel model;
-	private JTable table;
 	private List<String> dsTenPhim;
+	private JTextField txt_MaXuat;
+	private JDateChooser ngayChieuDate;
+	private ClientXuatChieu_dao client_xc;
 
 	/**
 	 * Launch the application.
+	 * @throws IOException 
+	 * @throws UnknownHostException 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws UnknownHostException, IOException {
 		try {
 			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
 				if ("Nimbus".equals(info.getName())) {
@@ -66,9 +78,14 @@ public class GD_QuanLy_SuatChieu_Them extends JFrame {
 
 	/**
 	 * Create the frame.
+	 * @throws IOException 
+	 * @throws UnknownHostException 
 	 */
-	public GD_QuanLy_SuatChieu_Them() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	public GD_QuanLy_SuatChieu_Them() throws UnknownHostException, IOException {
+//		initComponents();
+		setResizable(false);
+		this.setLocationRelativeTo(null);;
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 997, 700);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -122,14 +139,13 @@ public class GD_QuanLy_SuatChieu_Them extends JFrame {
 		String[] colName = {"Gio Bat Dau","Gio Ket Thuc","Ten Phim"};
 		
 		model = new DefaultTableModel(colName,0);
-		table = new JTable(model);
-		
-		JScrollPane scrPane_danhSach = new JScrollPane(table);
-		scrPane_danhSach.setBounds(10, 189, 447, 426);
-		pnl_danhSachSuatChieu.add(scrPane_danhSach);
 		
 		JLabel lbl_icon = new JLabel();
 		lbl_icon.setBounds(490, 26, 193, 224);
+		
+		ngayChieuDate = new JDateChooser();
+		ngayChieuDate.setBounds(655, 338, 318, 29);
+		contentPane.add(ngayChieuDate);
                
         JLabel lblNewLabel = new JLabel("Cập nhật xuất chiếu ");
         lblNewLabel.setForeground(new Color(0, 50, 100));
@@ -142,60 +158,49 @@ public class GD_QuanLy_SuatChieu_Them extends JFrame {
         lblNewLabel_1.setBounds(691, 128, 282, 31);
         contentPane.add(lblNewLabel_1);
         
-        JLabel lblNewLabel_2 = new JLabel("Tên phim:");
-        lblNewLabel_2.setFont(new Font("Tahoma", Font.PLAIN, 20));
-        lblNewLabel_2.setBounds(512, 295, 115, 25);
-        contentPane.add(lblNewLabel_2);
+        JLabel lbl_dinhDang = new JLabel("Định dạng:");
+        lbl_dinhDang.setFont(new Font("Tahoma", Font.PLAIN, 20));
+        lbl_dinhDang.setBounds(532, 496, 113, 25);
+        contentPane.add(lbl_dinhDang);
         
-        JComboBox cbx_tenPhim = new JComboBox();
-        cbx_tenPhim.setBounds(655, 295, 318, 27);
+        //tao mang dinh dang
+        String[] dinhDang_arr = {"2D","3D"};
         
-      
-    
-       
-       
-        
-        contentPane.add(cbx_tenPhim);
-        
-        JLabel lblNewLabel_2_1 = new JLabel("Phòng chiếu:");
-        lblNewLabel_2_1.setFont(new Font("Tahoma", Font.PLAIN, 20));
-        lblNewLabel_2_1.setBounds(512, 348, 139, 25);
-        contentPane.add(lblNewLabel_2_1);
-        
-        JComboBox cbx_phongChieu = new JComboBox();
-        cbx_phongChieu.setBounds(655, 347, 318, 31);
-        contentPane.add(cbx_phongChieu);
-        
-        JLabel lblNewLabel_2_1_1 = new JLabel("Định dạng:");
-        lblNewLabel_2_1_1.setFont(new Font("Tahoma", Font.PLAIN, 20));
-        lblNewLabel_2_1_1.setBounds(512, 401, 139, 25);
-        contentPane.add(lblNewLabel_2_1_1);
-        
-        JComboBox cbx_dinhDang = new JComboBox();
-        cbx_dinhDang.setBounds(655, 400, 318, 31);
+        JComboBox<String> cbx_dinhDang = new JComboBox<>(dinhDang_arr);
+        cbx_dinhDang.setBounds(655, 497, 318, 31);
         contentPane.add(cbx_dinhDang);
         
-        JLabel lblNewLabel_3 = new JLabel("Ngày chiếu :");
-        lblNewLabel_3.setFont(new Font("Tahoma", Font.PLAIN, 20));
-        lblNewLabel_3.setBounds(512, 457, 125, 25);
-        contentPane.add(lblNewLabel_3);
+        JLabel lbl_ngayChieu = new JLabel("Ngày chiếu :");
+        lbl_ngayChieu.setFont(new Font("Tahoma", Font.PLAIN, 20));
+        lbl_ngayChieu.setBounds(512, 338, 125, 25);
+        contentPane.add(lbl_ngayChieu);
 		
-		JLabel lbl_gioBatDau = new JLabel("Giờ băt đầu:");
+		JLabel lbl_gioBatDau = new JLabel("Giờ bắt đầu:");
 		lbl_gioBatDau.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lbl_gioBatDau.setBounds(512, 512, 139, 25);
+		lbl_gioBatDau.setBounds(512, 391, 139, 25);
 		contentPane.add(lbl_gioBatDau);
 		
-		JComboBox cbx_gioBatDau = new JComboBox();
-		cbx_gioBatDau.setBounds(655, 511, 318, 31);
+		// Tạo mảng giờ cho JComboBox
+		// Tạo mảng giờ và phút cho JComboBox
+        String[] timeSlots = new String[24 * 60]; // 24 giờ * 4 slot trong mỗi giờ
+        int slotIndex = 0;
+        for(int i = 0; i < 24; i++) {
+            for(int j = 0; j < 60; j++) { // Tăng phút mỗi lần 1 phút
+                timeSlots[slotIndex++] = String.format("%02d:%02d", i, j);
+            }
+        }
+		
+		JComboBox<String> cbx_gioBatDau = new JComboBox<>(timeSlots);
+		cbx_gioBatDau.setBounds(655, 392, 318, 31);
 		contentPane.add(cbx_gioBatDau);
 		
-		JLabel lblNewLabel_2_1_1_2 = new JLabel("Giờ kết thúc:");
-		lblNewLabel_2_1_1_2.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblNewLabel_2_1_1_2.setBounds(512, 564, 139, 25);
-		contentPane.add(lblNewLabel_2_1_1_2);
+		JLabel lbl_gioKetThuc = new JLabel("Giờ kết thúc:");
+		lbl_gioKetThuc.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lbl_gioKetThuc.setBounds(512, 440, 139, 25);
+		contentPane.add(lbl_gioKetThuc);
 		
-		JComboBox cbx_gioKetThuc = new JComboBox();
-		cbx_gioKetThuc.setBounds(655, 563, 318, 31);
+		JComboBox<String> cbx_gioKetThuc = new JComboBox<>(timeSlots);
+		cbx_gioKetThuc.setBounds(655, 441, 318, 31);
 		contentPane.add(cbx_gioKetThuc);
 		
 		JButton btn_capNhat = new JButton("Cập nhật");
@@ -203,12 +208,36 @@ public class GD_QuanLy_SuatChieu_Them extends JFrame {
 		btn_capNhat.setBounds(527, 622, 124, 31);
 		contentPane.add(btn_capNhat);
 		
+		String[] trangThai_arr = {"Đang chiếu","Chuẩn bị chiếu"};
+		
+		JComboBox<String> cbx_trangThai = new JComboBox<String>(trangThai_arr);
+		cbx_trangThai.setBounds(655, 554, 320, 29);
+		contentPane.add(cbx_trangThai);
+		
+//		Load Data
+		Socket socket = new Socket("192.168.1.14", 6789);
+		client_xc = new ClientXuatChieu_dao(socket);
+		
 		btn_capNhat.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				String maXuat = txt_MaXuat.getText();
+				Date ngayChieu = ngayChieuDate.getDate();
+				String gioChieuString = cbx_gioBatDau.getSelectedItem().toString();
+				Time gioChieu = Time.valueOf(gioChieuString + ":00");
+				String gioKetThucString = cbx_gioKetThuc.getSelectedItem().toString();
+				Time gioKetThuc = Time.valueOf(gioKetThucString + ":00"); 
+				String dinhDang = cbx_dinhDang.getSelectedItem().toString();
+				String trangThai = cbx_trangThai.getSelectedItem().toString();
 				
+				XuatChieu xc = new XuatChieu(maXuat, dinhDang, ngayChieu,gioChieu,gioKetThuc,trangThai);
 				
+				try {
+					client_xc.addXC(xc);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 			}
 		});
 		
@@ -217,10 +246,49 @@ public class GD_QuanLy_SuatChieu_Them extends JFrame {
 		btn_xoa.setBounds(840, 622, 124, 31);
 		contentPane.add(btn_xoa);
 		
-		JDateChooser ngayChieuDate = new JDateChooser();
-		ngayChieuDate.setBounds(655, 457, 318, 29);
-		contentPane.add(ngayChieuDate);
 		
 		
+		JLabel maXuat_lbl = new JLabel("Mã Xuất :");
+		maXuat_lbl.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		maXuat_lbl.setBounds(539, 286, 98, 31);
+		contentPane.add(maXuat_lbl);
+		
+		txt_MaXuat = new JTextField();
+		txt_MaXuat.setBounds(655, 286, 309, 31);
+		contentPane.add(txt_MaXuat);
+		txt_MaXuat.setColumns(10);
+		
+		JLabel lbl_trangThai = new JLabel("Trạng Thái:");
+		lbl_trangThai.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lbl_trangThai.setBounds(532, 552, 113, 25);
+		contentPane.add(lbl_trangThai);
+		
+		
+		
+		
+	}
+	
+	private void initComponents() {
+		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+		addWindowListener(new java.awt.event.WindowAdapter() {
+			public void windowClosing(java.awt.event.WindowEvent evt) {
+				formWindowClosing(evt);
+			}
+		});
+
+		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+		getContentPane().setLayout(layout);
+		layout.setHorizontalGroup(
+				layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGap(0, 400, Short.MAX_VALUE));
+		layout.setVerticalGroup(
+				layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGap(0, 300, Short.MAX_VALUE));
+
+		pack();
+	}
+
+	private void formWindowClosing(java.awt.event.WindowEvent evt) {// GEN-FIRST:event_formWindowClosing
+		GD_QuanLy gdql = new GD_QuanLy();
+		gdql.setLocationRelativeTo(null);
+		gdql.setVisible(true);
 	}
 }

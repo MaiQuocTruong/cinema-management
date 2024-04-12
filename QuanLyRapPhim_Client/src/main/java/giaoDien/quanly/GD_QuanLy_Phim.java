@@ -221,11 +221,20 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				GD_QuanLy_SuatChieu gdqlsc = new GD_QuanLy_SuatChieu();
-				gdqlsc.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				gdqlsc.setLocationRelativeTo(null);
-				gdqlsc.setVisible(true);
-				dispose();
+				GD_QuanLy_SuatChieu gdqlsc;
+				try {
+					gdqlsc = new GD_QuanLy_SuatChieu();
+					gdqlsc.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					gdqlsc.setLocationRelativeTo(null);
+					gdqlsc.setVisible(true);
+					dispose();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 		JButton btnqlyphongchieu = new JButton("Quản Lý Phòng Chiếu");

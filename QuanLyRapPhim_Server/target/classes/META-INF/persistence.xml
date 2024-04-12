@@ -16,7 +16,7 @@
 			<property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/rapPhim" />
 			<property name="jakarta.persistence.jdbc.user" value="root" />
 			<property name="jakarta.persistence.jdbc.password"
-				value="haipro456" />
+				value="loc2003" />
 
 			<!-- Automatically export the schema -->
 			<property

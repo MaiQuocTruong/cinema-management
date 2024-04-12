@@ -1,15 +1,18 @@
 package enities;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 @Entity
 @Table(name = "phim")
-public class Phim {
-	
+public class Phim implements Serializable{
 	@Id
 	@Column(name = "MaPhim")
 	private String maPhim;
@@ -67,6 +70,14 @@ public class Phim {
 		this.ngonNgu = ngonNgu;
 		this.quocGia = quocGia;
 		this.trangThaiPhim = trangThaiPhim;
+	}
+
+	public String getMaPhim() {
+		return maPhim;
+	}
+
+	public void setMaPhim(String maPhim) {
+		this.maPhim = maPhim;
 	}
 
 	public String getMaXuat() {
@@ -173,8 +184,18 @@ public class Phim {
 		this.trangThaiPhim = trangThaiPhim;
 	}
 
-	public String getMaPhim() {
-		return maPhim;
+	@Override
+	public String toString() {
+		return "Phim [maPhim=" + maPhim + ", maXuat=" + maXuat + ", tenPhim=" + tenPhim + ", loaiPhim=" + loaiPhim
+				+ ", ngayChieu=" + ngayChieu + ", ngayHetHan=" + ngayHetHan + ", giaTien=" + giaTien + ", soLuongVe="
+				+ soLuongVe + ", hinhPhim=" + hinhPhim + ", gioiHanTuoi=" + gioiHanTuoi + ", thoiLuong=" + thoiLuong
+				+ ", ngonNgu=" + ngonNgu + ", quocGia=" + quocGia + ", trangThaiPhim=" + trangThaiPhim + "]";
 	}
 
+	
+
+	
+	
+	
+	
 }

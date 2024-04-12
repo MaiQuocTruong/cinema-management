@@ -13,10 +13,17 @@ import jakarta.persistence.EntityManagerFactory;
 
 import dao.EntityManagerFactoryUtil;
 import dao.KhachHang_dao;
+<<<<<<< Updated upstream
 import dao.NhanVien_dao;
 import dao.TaiKhoan_dao;
 import enities.KhachHang;
 import enities.NhanVien;
+=======
+import dao.XuatChieu_dao;
+import enities.KhachHang;
+import enities.Phim;
+import enities.XuatChieu;
+>>>>>>> Stashed changes
 
 public class ClientHandler implements Runnable {
 	private Socket socketClient;
@@ -25,8 +32,12 @@ public class ClientHandler implements Runnable {
 	private EntityManagerFactoryUtil emfUtil;
 	private EntityManager em;
 	private KhachHang_dao kh_dao;
+<<<<<<< Updated upstream
 	private NhanVien_dao nv_dao;
 	private TaiKhoan_dao tk_dao;
+=======
+	private XuatChieu_dao xc_dao;
+>>>>>>> Stashed changes
 
 	public ClientHandler(Socket socketClient)  {
 		super();
@@ -34,8 +45,12 @@ public class ClientHandler implements Runnable {
 		emfUtil = new EntityManagerFactoryUtil();
 		em = emfUtil.getEm();
 		kh_dao = new KhachHang_dao(em);
+<<<<<<< Updated upstream
 		nv_dao = new NhanVien_dao(em);
 		tk_dao = new TaiKhoan_dao(em);
+=======
+		xc_dao = new XuatChieu_dao(em);
+>>>>>>> Stashed changes
 	}
 	
 
@@ -72,6 +87,7 @@ public class ClientHandler implements Runnable {
 					KhachHang kh_remove = (KhachHang) in.readObject();
 					kh_dao.deleteKhachHang(kh_remove.getMaKH());
 					break;
+<<<<<<< Updated upstream
 				case "GetListEmployee":
 					List<NhanVien> listNV = nv_dao.getListNhanVien();
 					out.writeObject(listNV);
@@ -96,6 +112,30 @@ public class ClientHandler implements Runnable {
 					NhanVien nv_needUpdate = (NhanVien) in.readObject();
 					nv_dao.updateNV(nv_needUpdate);
 					tk_dao.updateTrangThaiTK(nv_needUpdate.getMaNV());
+=======
+				case "GetListXuatChieu":
+					List<XuatChieu> listXC = xc_dao.getListXuatChieu();
+					out.writeObject(listXC);
+					out.flush();
+					break;
+				case "AddXuatChieu":
+					XuatChieu xc = (XuatChieu) in.readObject();
+					xc_dao.addXuatChieu(xc);
+					break;
+				case "findXuatChieuOnMaXC":
+					String maXC = in.readUTF();
+					XuatChieu resultFindXC = xc_dao.findXuatChieuOnMaXC(maXC);
+					out.writeObject(resultFindXC);
+					out.flush();
+					break;
+				case "DeleteXuatChieu":
+					XuatChieu xc_remove = (XuatChieu) in.readObject();
+					xc_dao.deleteXuatChieu(xc_remove.getMaXuat());
+					break;
+				case "UpdateXuatChieu":
+					XuatChieu xc_update = (XuatChieu) in.readObject();
+					xc_dao.updateXuatChieu(xc_update);
+>>>>>>> Stashed changes
 					break;
 				default:
 					break;

@@ -1,5 +1,6 @@
 package enities;
 
+import java.io.Serializable;
 import java.sql.Time;
 import java.util.Date;
 
@@ -10,7 +11,8 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "xuatchieu")
-public class XuatChieu {
+public class XuatChieu implements Serializable {
+	
 	@Id
 	@Column(name = "MaXuat")
 	private String maXuat;
@@ -86,6 +88,12 @@ public class XuatChieu {
 
 	public String getMaXuat() {
 		return maXuat;
+	}
+
+	@Override
+	public String toString() {
+		return "XuatChieu [maXuat=" + maXuat + ", dinhDang=" + dinhDang + ", ngayChieu=" + ngayChieu + ", gioChieu="
+				+ gioChieu + ", gioKetThuc=" + gioKetThuc + ", trangThai=" + trangThai + "]";
 	}
 	
 	

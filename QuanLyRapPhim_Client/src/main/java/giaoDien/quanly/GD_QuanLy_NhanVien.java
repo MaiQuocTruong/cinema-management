@@ -42,7 +42,10 @@ import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+<<<<<<< Updated upstream
 import java.net.Socket;
+=======
+>>>>>>> Stashed changes
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.sql.Connection;
@@ -237,11 +240,20 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				GD_QuanLy_SuatChieu gdqlsc = new GD_QuanLy_SuatChieu();
-				gdqlsc.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				gdqlsc.setLocationRelativeTo(null);
-				gdqlsc.setVisible(true);
-				dispose();
+				GD_QuanLy_SuatChieu gdqlsc;
+				try {
+					gdqlsc = new GD_QuanLy_SuatChieu();
+					gdqlsc.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					gdqlsc.setLocationRelativeTo(null);
+					gdqlsc.setVisible(true);
+					dispose();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 		JButton btnqlyphongchieu = new JButton("Quản Lý Phòng Chiếu");
