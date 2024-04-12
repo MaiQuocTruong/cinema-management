@@ -591,7 +591,7 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 		contentPane.add(background);
 
 //		Load Data
-		Socket socket = new Socket("192.168.100.4", 6789);
+		Socket socket = new Socket("192.168.2.20", 6789);
 		clientKH = new ClientKhachHang_dao(socket);
 
 		listKH = clientKH.getListKH();
@@ -686,41 +686,50 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 	public void loadLaiDataSauKhiTimKiem() throws ClassNotFoundException, IOException {
 		String sdtCanTim = txtTimKiem.getText();
 		KhachHang khNeedFind = clientKH.findCustomerOnPhoneNumber(sdtCanTim);
-		try {
-			String ngaySinhTrongTable = "";
-			String gioiTinhTrongTable = "";
+		
+		if(khNeedFind != null) {
+			try {
+				String ngaySinhTrongTable = "";
+				String gioiTinhTrongTable = "";
 
-			
-				String maKH = khNeedFind.getMaKH();
-				String tenKH = khNeedFind.getTenKH();
-				String email = khNeedFind.getEmail();
-				LocalDate ngaySinh = khNeedFind.getNgaySinh();
+				
+					String maKH = khNeedFind.getMaKH();
+					String tenKH = khNeedFind.getTenKH();
+					String email = khNeedFind.getEmail();
+					LocalDate ngaySinh = khNeedFind.getNgaySinh();
 
-				ngaySinhTrongTable = ngaySinh + "";
-				boolean gioiTinh = khNeedFind.isGioiTinh();
+					ngaySinhTrongTable = ngaySinh + "";
+					boolean gioiTinh = khNeedFind.isGioiTinh();
 
-				if (gioiTinh) {
-					gioiTinhTrongTable = "Nam";
-				} else {
-					gioiTinhTrongTable = "Nu";
-				}
+					if (gioiTinh) {
+						gioiTinhTrongTable = "Nam";
+					} else {
+						gioiTinhTrongTable = "Nu";
+					}
 
-				String loaiKH = khNeedFind.getLoaiKH();
-				String SDT = khNeedFind.getSdt();
-				int diemHienCo = khNeedFind.getDiemHienCo();
-				String diemHienCoTrongTable = String.valueOf(diemHienCo);
+					String loaiKH = khNeedFind.getLoaiKH();
+					String SDT = khNeedFind.getSdt();
+					int diemHienCo = khNeedFind.getDiemHienCo();
+					String diemHienCoTrongTable = String.valueOf(diemHienCo);
 
-				String cmnd = khNeedFind.getCmnd();
-				int diemDaDung = khNeedFind.getDiemDaDung();
-				String diemDaDungTrongTable = String.valueOf(diemDaDung);
+					String cmnd = khNeedFind.getCmnd();
+					int diemDaDung = khNeedFind.getDiemDaDung();
+					String diemDaDungTrongTable = String.valueOf(diemDaDung);
 
-				java.lang.Object[] rowData = { maKH, tenKH, ngaySinhTrongTable, SDT, cmnd, email, loaiKH,
-						gioiTinhTrongTable, diemHienCoTrongTable, diemDaDungTrongTable };
-				tableModel.addRow(rowData);
-		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+					java.lang.Object[] rowData = { maKH, tenKH, ngaySinhTrongTable, SDT, cmnd, email, loaiKH,
+							gioiTinhTrongTable, diemHienCoTrongTable, diemDaDungTrongTable };
+					tableModel.addRow(rowData);
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}else {
+			JOptionPane.showMessageDialog(null, "Không Tìm Thấy Khách Hàng Này","Lỗi", JOptionPane.ERROR_MESSAGE);
+			listKH = clientKH.getListKH();
+//			Nếu không tìm ra hiển thị thông báo lỗi và load lại ds khách hàng còn nếu ko muỗn thì command lại
+			loadDataToTable(listKH);
 		}
+		
 	}
 
 	private void loadDataToTable(List<KhachHang> listKH) {

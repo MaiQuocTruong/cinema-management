@@ -30,6 +30,6 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/QuanLyRapPhim_Server/lib/entities.jar"/>
+	<classpathentry kind="lib" path="D:/Project_RapPhim/Code_RapPhim/QuanLyRapPhim_Server/lib/entities.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

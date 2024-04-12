@@ -48,9 +48,15 @@ public class KhachHang_dao {
 	}
 	
 	public KhachHang findCustomerOnPhoneNumber(String phoneNumber) {
-		return em.createQuery("Select kh from KhachHang kh where kh.sdt = :sdt", KhachHang.class)
-			   .setParameter("sdt", phoneNumber)
-			   .getSingleResult();
+		try {
+	        KhachHang kh = em.createQuery("SELECT kh FROM KhachHang kh WHERE kh.sdt = :sdt", KhachHang.class)
+	                .setParameter("sdt", phoneNumber)
+	                .getSingleResult();
+	        
+	        return kh; // Trả về khách hàng nếu tìm thấy
+	    } catch (NoResultException e) {
+	        return null; // Trả về null nếu không tìm thấy khách hàng
+	    }
 	}
 	
 	public void updateKhachHang(KhachHang kh_update) {
