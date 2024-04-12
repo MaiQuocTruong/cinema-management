@@ -728,7 +728,7 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 		contentPane.add(background);
 
 		// load dữ liệu
-		Socket socket = new Socket("192.168.100.4", 6789);
+		Socket socket = new Socket("192.168.2.20", 6789);
 		clientNV = new ClientNhanVien_dao(socket);
 		
 		listNV = clientNV.getListNV();
@@ -951,9 +951,9 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 		}
 		String trangThai = "";
 		if(trangThai.trim().equals("Còn làm")) {
-			trangThai = "Ngưng làm";
-		} else {
 			trangThai = "Còn làm";
+		} else {
+			trangThai = "Ngưng làm";
 		}
 		
 		LocalDate ngaySinh;
