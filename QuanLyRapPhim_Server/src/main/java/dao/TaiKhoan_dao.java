@@ -51,7 +51,7 @@ public class TaiKhoan_dao {
 			TaiKhoan tk = em.find(TaiKhoan.class, idNV);
 			System.out.println(tk);
 			if(tk != null && em.contains(tk)) {
-				tk.setTrangThai(true);
+				tk.setTrangThai(false);
 				em.getTransaction().begin();
 				em.merge(tk);
 				em.getTransaction().commit();
