@@ -60,9 +60,11 @@ public class NhanVien_dao {
 		}
 	}
 	public void updateNV(NhanVien nv_update) {
-		String idnv = nv_update.getMaNV();
+		
+		nv_update.setTrangThai(true);
+		System.out.println("Nhan Vien Need Update" + nv_update);
 		try {
-			TaiKhoan tk = em.find(TaiKhoan.class, idnv);
+			
 			em.getTransaction().begin();
 			em.merge(nv_update);
 			em.getTransaction().commit();
