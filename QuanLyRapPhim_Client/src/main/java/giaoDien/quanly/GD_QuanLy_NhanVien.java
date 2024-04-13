@@ -737,7 +737,7 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 		contentPane.add(background);
 
 		// load dữ liệu
-		Socket socket = new Socket("192.168.2.20", 6789);
+		Socket socket = new Socket("192.168.100.4", 6789);
 		clientNV = new ClientNhanVien_dao(socket);
 
 		listNV = clientNV.getListNV();
@@ -901,6 +901,9 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 		} else if (o.equals(btnLamMoi)) {
 			try {
 				xoaTrangTF();
+				xoaBang();
+				List<NhanVien> listNVSearch = clientNV.getListNV();
+				loadDataToTable(listNVSearch);
 			} catch (Exception e2) {
 				e2.printStackTrace();
 			}

@@ -36,7 +36,7 @@ import javax.swing.table.DefaultTableModel;
 
 import com.toedter.calendar.JDateChooser;
 
-import enities.Phim;
+//import enities.Phim;
 import runapp.Login;
 import testbutton.Buttontest;
 

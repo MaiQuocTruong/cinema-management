@@ -23,8 +23,8 @@ import com.toedter.calendar.JDateChooser;
 
 import client_dao.ClientKhachHang_dao;
 
-import enities.Phim;
-import enities.XuatChieu;
+//import enities.Phim;
+//import enities.XuatChieu;
 
 import java.awt.Color;
 import javax.swing.JLabel;
@@ -218,22 +218,22 @@ public class GD_QuanLy_SuatChieu_Them extends JFrame {
 		Socket socket = new Socket("192.168.2.20", 6789);
 //		client_xc = new ClientXuatChieu_dao(socket);
 		
-		btn_capNhat.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String maXuat = txt_MaXuat.getText();
-				Date ngayChieu = ngayChieuDate.getDate();
-				String gioChieuString = cbx_gioBatDau.getSelectedItem().toString();
-				Time gioChieu = Time.valueOf(gioChieuString + ":00");
-				String gioKetThucString = cbx_gioKetThuc.getSelectedItem().toString();
-				Time gioKetThuc = Time.valueOf(gioKetThucString + ":00"); 
-				String dinhDang = cbx_dinhDang.getSelectedItem().toString();
-				String trangThai = cbx_trangThai.getSelectedItem().toString();
-				
-				XuatChieu xc = new XuatChieu(maXuat, dinhDang, ngayChieu,gioChieu,gioKetThuc,trangThai);
-			}
-		});
+//		btn_capNhat.addActionListener(new ActionListener() {
+//			
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				String maXuat = txt_MaXuat.getText();
+//				Date ngayChieu = ngayChieuDate.getDate();
+//				String gioChieuString = cbx_gioBatDau.getSelectedItem().toString();
+//				Time gioChieu = Time.valueOf(gioChieuString + ":00");
+//				String gioKetThucString = cbx_gioKetThuc.getSelectedItem().toString();
+//				Time gioKetThuc = Time.valueOf(gioKetThucString + ":00"); 
+//				String dinhDang = cbx_dinhDang.getSelectedItem().toString();
+//				String trangThai = cbx_trangThai.getSelectedItem().toString();
+//				
+//				XuatChieu xc = new XuatChieu(maXuat, dinhDang, ngayChieu,gioChieu,gioKetThuc,trangThai);
+//			}
+//		});
 		
 		JButton btn_xoa = new JButton("Xóa");
 		btn_xoa.setFont(new Font("Tahoma", Font.PLAIN, 20));

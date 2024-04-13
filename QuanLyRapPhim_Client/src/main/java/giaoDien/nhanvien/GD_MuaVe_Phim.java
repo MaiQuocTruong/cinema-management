@@ -61,7 +61,7 @@ import com.toedter.calendar.JDateChooser;
 
 
 
-import enities.Phim;
+//import enities.Phim;
 import runapp.Login;
 
 import java.text.SimpleDateFormat;

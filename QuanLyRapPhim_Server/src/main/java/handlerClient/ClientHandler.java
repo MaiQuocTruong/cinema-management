@@ -113,6 +113,7 @@ public class ClientHandler implements Runnable {
 				case "UpdateEmployee":
 					NhanVien nv_needUpdate = (NhanVien) in.readObject();
 					nv_dao.updateNV(nv_needUpdate);
+					tk_dao.updateTrangThaiTK(nv_needUpdate.getMaNV());
 
 				
 				

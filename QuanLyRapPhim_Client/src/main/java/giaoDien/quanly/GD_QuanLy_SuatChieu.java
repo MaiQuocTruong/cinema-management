@@ -45,8 +45,8 @@ import javax.swing.table.DefaultTableModel;
 import com.toedter.calendar.JDateChooser;
 
 
-import enities.Phim;
-import enities.XuatChieu;
+//import enities.Phim;
+//import enities.XuatChieu;
 import giaoDien.nhanvien.GD_NhanVien;
 import runapp.Login;
 import testbutton.Buttontest;
@@ -97,7 +97,7 @@ public class GD_QuanLy_SuatChieu extends JFrame implements ActionListener {
 	private JTable table;
 	private DefaultTableModel tableModel;
 	private JComboBox<String> phongChieuComboBox; // Declare the JComboBox here
-	private List<XuatChieu> listXC;
+//	private List<XuatChieu> listXC;
 	
 
 //	static String quanly;
@@ -714,13 +714,8 @@ public class GD_QuanLy_SuatChieu extends JFrame implements ActionListener {
 
 		// Thêm dữ liệu vào bảng
 //		Load Data
-		Socket socket = new Socket("192.168.2.20", 6789);
-		
-		
-		
-		
-		
-		loadDataToTable(listXC);
+//		Socket socket = new Socket("192.168.2.20", 6789);
+//		loadDataToTable(listXC);
 
 		JLabel background = new JLabel("");
 		background.setHorizontalAlignment(SwingConstants.CENTER);
@@ -759,46 +754,46 @@ public class GD_QuanLy_SuatChieu extends JFrame implements ActionListener {
 	}
 
 	
-	private void loadDataToTable(List< XuatChieu> listXC) {
-		int i = 1;
-		for (XuatChieu xc : listXC) {
-			tableModel.addRow(new Object[] {i,xc.getMaXuat(),xc.getNgayChieu(),xc.getGioChieu(),xc.getGioKetThuc(),xc.getDinhDang(),xc.getTrangThai()});
-			++i;
-		}
-//		try {
-//			int i = 1;
-//			for (XuatChieu xc : listXC) {
-//				for (Phim ph : listPH) {
-//					if(ph.getMaXuat().equals(xc.getMaXuat())) {
-//						tableModel.addRow(new Object[]{i,xc.getMaXuat(),ph.getTenPhim(),xc.getNgayChieu(),xc.getGioChieu(),xc.getDinhDang(),ph.getNgonNgu(),xc.getTrangThai()});
-//					}
-//				}
-//			}
-//		}catch(Exception e) {
-//			e.printStackTrace();
+//	private void loadDataToTable(List< XuatChieu> listXC) {
+//		int i = 1;
+//		for (XuatChieu xc : listXC) {
+//			tableModel.addRow(new Object[] {i,xc.getMaXuat(),xc.getNgayChieu(),xc.getGioChieu(),xc.getGioKetThuc(),xc.getDinhDang(),xc.getTrangThai()});
+//			++i;
 //		}
-	}
+////		try {
+////			int i = 1;
+////			for (XuatChieu xc : listXC) {
+////				for (Phim ph : listPH) {
+////					if(ph.getMaXuat().equals(xc.getMaXuat())) {
+////						tableModel.addRow(new Object[]{i,xc.getMaXuat(),ph.getTenPhim(),xc.getNgayChieu(),xc.getGioChieu(),xc.getDinhDang(),ph.getNgonNgu(),xc.getTrangThai()});
+////					}
+////				}
+////			}
+////		}catch(Exception e) {
+////			e.printStackTrace();
+////		}
+//	}
 	
 	
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		Object o = e.getSource();
-		if(o.equals(btnXoa)) {
-			try {
-				deleteXuatChieu();
-			}catch(Exception e1) {
-				e1.printStackTrace();
-			}
-
-		}
-		if(o.equals(btnSua)) {
-			try {
-//				updateXuatChieu();
-			}catch(Exception e1) {
-				e1.printStackTrace();
-			}
-		}
+//		Object o = e.getSource();
+//		if(o.equals(btnXoa)) {
+//			try {
+//				deleteXuatChieu();
+//			}catch(Exception e1) {
+//				e1.printStackTrace();
+//			}
+//
+//		}
+//		if(o.equals(btnSua)) {
+//			try {
+////				updateXuatChieu();
+//			}catch(Exception e1) {
+//				e1.printStackTrace();
+//			}
+//		}
 //		if(o.equals(btnXoa)) {
 //			try {
 //				int r = table.getSelectedRow();
@@ -842,11 +837,11 @@ public class GD_QuanLy_SuatChieu extends JFrame implements ActionListener {
 //		loadDataToTable(list);
 //	}
 	
-	private void deleteXuatChieu() throws ClassNotFoundException,IOException {
-		int r = table.getSelectedRow();
-		String maXuat = (String)tableModel.getValueAt(r, 1);
-		XuatChieu xc = new XuatChieu(maXuat);
-//		clientXC.deleteXuatChieu(xc);
-		tableModel.removeRow(r);
-	}
+//	private void deleteXuatChieu() throws ClassNotFoundException,IOException {
+//		int r = table.getSelectedRow();
+//		String maXuat = (String)tableModel.getValueAt(r, 1);
+//		XuatChieu xc = new XuatChieu(maXuat);
+////		clientXC.deleteXuatChieu(xc);
+//		tableModel.removeRow(r);
+//	}
 }
