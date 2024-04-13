@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -168,11 +169,24 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				GD_MuaVe_Phim gdmvphim = new GD_MuaVe_Phim();
-				gdmvphim.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				gdmvphim.setLocationRelativeTo(null);
-				gdmvphim.setVisible(true);
-				dispose();
+				GD_MuaVe_Phim gdmvphim;
+				try {
+					gdmvphim = new GD_MuaVe_Phim();
+					gdmvphim.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					gdmvphim.setLocationRelativeTo(null);
+					gdmvphim.setVisible(true);
+					dispose();
+				} catch (UnknownHostException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
 			}
 		});
 		JButton btnGhe = new JButton("Chọn Ghế");

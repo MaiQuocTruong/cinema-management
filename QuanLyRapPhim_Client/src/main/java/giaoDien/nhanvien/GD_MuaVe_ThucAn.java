@@ -43,6 +43,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -226,11 +227,24 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				GD_MuaVe_Phim gdMuaVe = new GD_MuaVe_Phim();
-				gdMuaVe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				gdMuaVe.setLocationRelativeTo(null);
-				gdMuaVe.setVisible(true);
-				dispose();
+				GD_MuaVe_Phim gdMuaVe;
+				try {
+					gdMuaVe = new GD_MuaVe_Phim();
+					gdMuaVe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					gdMuaVe.setLocationRelativeTo(null);
+					gdMuaVe.setVisible(true);
+					dispose();
+				} catch (UnknownHostException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
 			}
 		});
 		JButton btnGhe = new JButton("Chọn Ghế");

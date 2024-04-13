@@ -49,13 +49,13 @@ public class ClientXuatChieu_dao implements Serializable {
 		return xc;
 	}
 	
-	public void updateXuatChieu(XuatChieu xc) throws IOException {
-		out.writeUTF("UpdateXuatChieu");
-		out.flush();
-		
-		out.writeObject(xc);
-		out.flush();
-	}
+//	public void updateXuatChieu(XuatChieu xc) throws IOException {
+//		out.writeUTF("UpdateXuatChieu");
+//		out.flush();
+//		
+//		out.writeObject(xc);
+//		out.flush();
+//	}
 	
 	public void deleteXuatChieu(XuatChieu xc) throws IOException {
 		out.writeUTF("DeleteXuatChieu");

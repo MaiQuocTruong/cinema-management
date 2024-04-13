@@ -241,11 +241,24 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				GD_MuaVe_Phim gdmvphim = new GD_MuaVe_Phim();
-				gdmvphim.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				gdmvphim.setLocationRelativeTo(null);
-				gdmvphim.setVisible(true);
-				dispose();
+				GD_MuaVe_Phim gdmvphim;
+				try {
+					gdmvphim = new GD_MuaVe_Phim();
+					gdmvphim.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					gdmvphim.setLocationRelativeTo(null);
+					gdmvphim.setVisible(true);
+					dispose();
+				} catch (UnknownHostException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
 			}
 		});
 		JButton btnGhe = new JButton("Chọn Ghế");
@@ -591,7 +604,7 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 		contentPane.add(background);
 
 //		Load Data
-		Socket socket = new Socket("192.168.100.4", 6789);
+		Socket socket = new Socket("192.168.2.20", 6789);
 		clientKH = new ClientKhachHang_dao(socket);
 
 		listKH = clientKH.getListKH();

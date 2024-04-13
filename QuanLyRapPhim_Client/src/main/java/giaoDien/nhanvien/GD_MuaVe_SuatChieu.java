@@ -43,6 +43,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -217,11 +218,24 @@ public class GD_MuaVe_SuatChieu extends JFrame implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				GD_MuaVe_Phim gdMuaVePhim = new GD_MuaVe_Phim();
-				gdMuaVePhim.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				gdMuaVePhim.setLocationRelativeTo(null);
-				gdMuaVePhim.setVisible(true);
-				dispose();
+				GD_MuaVe_Phim gdMuaVePhim;
+				try {
+					gdMuaVePhim = new GD_MuaVe_Phim();
+					gdMuaVePhim.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					gdMuaVePhim.setLocationRelativeTo(null);
+					gdMuaVePhim.setVisible(true);
+					dispose();
+				} catch (UnknownHostException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
 			}
 		});
 		JButton btnGhe = new JButton("Chọn Ghế");
@@ -563,7 +577,18 @@ public class GD_MuaVe_SuatChieu extends JFrame implements ActionListener {
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 		addWindowListener(new java.awt.event.WindowAdapter() {
 			public void windowClosing(java.awt.event.WindowEvent evt) {
-				formWindowClosing(evt);
+				try {
+					formWindowClosing(evt);
+				} catch (UnknownHostException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 
@@ -577,7 +602,7 @@ public class GD_MuaVe_SuatChieu extends JFrame implements ActionListener {
 		pack();
 	}
 
-	private void formWindowClosing(java.awt.event.WindowEvent evt) {// GEN-FIRST:event_formWindowClosing
+	private void formWindowClosing(java.awt.event.WindowEvent evt) throws UnknownHostException, IOException, ClassNotFoundException {// GEN-FIRST:event_formWindowClosing
 		GD_MuaVe_Phim gdmvphim = new GD_MuaVe_Phim();
 		gdmvphim.setLocationRelativeTo(null);
 		gdmvphim.setVisible(true);

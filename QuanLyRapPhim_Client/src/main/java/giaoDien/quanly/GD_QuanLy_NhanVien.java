@@ -42,10 +42,10 @@ import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
-<<<<<<< Updated upstream
+
 import java.net.Socket;
-=======
->>>>>>> Stashed changes
+
+
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.sql.Connection;

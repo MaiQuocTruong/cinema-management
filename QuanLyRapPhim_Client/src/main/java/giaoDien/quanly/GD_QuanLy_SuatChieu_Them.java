@@ -22,7 +22,7 @@ import javax.swing.table.DefaultTableModel;
 import com.toedter.calendar.JDateChooser;
 
 import client_dao.ClientKhachHang_dao;
-import client_dao.ClientXuatChieu_dao;
+
 import enities.Phim;
 import enities.XuatChieu;
 
@@ -44,7 +44,7 @@ public class GD_QuanLy_SuatChieu_Them extends JFrame {
 	private List<String> dsTenPhim;
 	private JTextField txt_MaXuat;
 	private JDateChooser ngayChieuDate;
-	private ClientXuatChieu_dao client_xc;
+//	private ClientXuatChieu_dao client_xc;
 
 	/**
 	 * Launch the application.
@@ -215,8 +215,8 @@ public class GD_QuanLy_SuatChieu_Them extends JFrame {
 		contentPane.add(cbx_trangThai);
 		
 //		Load Data
-		Socket socket = new Socket("192.168.1.14", 6789);
-		client_xc = new ClientXuatChieu_dao(socket);
+		Socket socket = new Socket("192.168.2.20", 6789);
+//		client_xc = new ClientXuatChieu_dao(socket);
 		
 		btn_capNhat.addActionListener(new ActionListener() {
 			
@@ -232,12 +232,6 @@ public class GD_QuanLy_SuatChieu_Them extends JFrame {
 				String trangThai = cbx_trangThai.getSelectedItem().toString();
 				
 				XuatChieu xc = new XuatChieu(maXuat, dinhDang, ngayChieu,gioChieu,gioKetThuc,trangThai);
-				
-				try {
-					client_xc.addXC(xc);
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
 			}
 		});
 		

@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "nhanvien")
 public class NhanVien implements Serializable {
 	@Id
 	@Column(name = "MaNhanVien")

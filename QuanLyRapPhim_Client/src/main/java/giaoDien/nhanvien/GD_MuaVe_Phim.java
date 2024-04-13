@@ -44,10 +44,13 @@ import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.net.Socket;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.Calendar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -56,16 +59,19 @@ import java.awt.Component;
 import javax.swing.JTextField;
 import com.toedter.calendar.JDateChooser;
 
+
+
+import enities.Phim;
 import runapp.Login;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 public class GD_MuaVe_Phim extends JFrame implements ActionListener {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JLabel lblClock, lbltennv;
 	private Timer timer;
@@ -86,11 +92,15 @@ public class GD_MuaVe_Phim extends JFrame implements ActionListener {
 	private JTextField textField;
 	private JTextField textField_1;
 
+
 //	static String quanly;
 	/**
 	 * Launch the application.
+	 * @throws IOException 
+	 * @throws UnknownHostException 
+	 * @throws ClassNotFoundException 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
 		try {
 			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
 				if ("Nimbus".equals(info.getName())) {
@@ -117,8 +127,11 @@ public class GD_MuaVe_Phim extends JFrame implements ActionListener {
 
 	/**
 	 * Create the frame.
+	 * @throws IOException 
+	 * @throws UnknownHostException 
+	 * @throws ClassNotFoundException 
 	 */
-	public GD_MuaVe_Phim() {
+	public GD_MuaVe_Phim() throws UnknownHostException, IOException, ClassNotFoundException {
 		initComponents();
 		setResizable(false);
 		setBackground(Color.WHITE);
@@ -652,6 +665,16 @@ public class GD_MuaVe_Phim extends JFrame implements ActionListener {
 		background.setIcon(new ImageIcon(GD_NhanVien.class.getResource("/imgs/bggalaxy1.png")));
 		background.setBounds(0, 0, 1162, 613);
 		contentPane.add(background);
+//		
+//		Socket socket = new Socket("192.168.2.20", 6789);
+//		
+//		clientPhim = new ClientPhim_dao(socket);
+//		
+//		List<Phim> listMovies = clientPhim.getListPhim();
+//		for (Phim phim : listMovies) {
+//			System.out.println(phim);
+//		}
+		
 
 	}
 
