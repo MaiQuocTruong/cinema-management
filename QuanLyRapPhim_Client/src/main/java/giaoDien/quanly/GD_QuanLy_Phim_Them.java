@@ -57,7 +57,7 @@ public class GD_QuanLy_Phim_Them extends JFrame {
 	}
 
 	public GD_QuanLy_Phim_Them() {
-		initComponents();
+//		initComponents();
 		setBounds(100, 100, 787, 820);
 		setResizable(false);
 		setBackground(Color.WHITE);
@@ -105,12 +105,12 @@ public class GD_QuanLy_Phim_Them extends JFrame {
 
         // Tạo JButton "Upload File" và xử lý sự kiện khi nút được nhấn
         btnUploadFile = new JButton("Upload File");
-        btnUploadFile.setBounds(192, 397, 165, 30);
+        btnUploadFile.setBounds(192, 447, 165, 30);
         contentPane.add(btnUploadFile);
 
         // Tạo JLabel để hiển thị hình ảnh
         lblHinhAnh = new JLabel();
-        lblHinhAnh.setBounds(192, 175, 165, 212);
+        lblHinhAnh.setBounds(192, 234, 165, 194);
         lblHinhAnh.setBorder(BorderFactory.createLineBorder(Color.BLACK)); // Tạo đường viền đen xung quanh
         contentPane.add(lblHinhAnh);
         
@@ -276,15 +276,6 @@ public class GD_QuanLy_Phim_Them extends JFrame {
                 lblHinhAnh.setIcon(new ImageIcon(image));
             }
         });
-        
-        JLabel lblMaSC = new JLabel("Mã suất chiếu");
-        lblMaSC.setFont(new Font("Tahoma", Font.PLAIN, 16));
-        lblMaSC.setBounds(23, 446, 100, 30);
-        contentPane.add(lblMaSC);
-        
-        JComboBox comboBox = new JComboBox();
-        comboBox.setBounds(135, 446, 288, 34);
-        contentPane.add(comboBox);
 	}
 
 	private void initComponents() {
