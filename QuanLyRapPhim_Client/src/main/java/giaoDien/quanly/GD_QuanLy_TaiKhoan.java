@@ -42,7 +42,9 @@ import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.net.Socket;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -56,8 +58,10 @@ import javax.swing.JTextField;
 import com.mysql.cj.x.protobuf.MysqlxDatatypes.Object;
 import com.toedter.calendar.JDateChooser;
 
+import client_dao.ClientTaiKhoan_dao;
 import enities.KhachHang;
 import enities.NhanVien;
+import enities.TaiKhoan;
 import runapp.Login;
 
 import java.text.SimpleDateFormat;
@@ -77,13 +81,17 @@ public class GD_QuanLy_TaiKhoan extends JFrame implements ActionListener {
 	private JLabel lblNvIcon; // Thêm biến để lưu đối tượng JLabel chứa ảnh NV
 	private JTable table;
 	private DefaultTableModel tableModel;
-	private JButton btnThem, btnXoa, btnSua, btnLamMoi;
+	private JButton btnThem, btnXoa, btnSua, btnLamMoi, btntimkiem;
 	private boolean isCalendarVisible = false;
 	private JTextField txtMatKhau, txtTimKiem, txtEmail;
+	private JComboBox<String> cboxTrangThai;
 	private List<NhanVien> listNV;
+	private List<TaiKhoan> listTK;
+	private ClientTaiKhoan_dao clientTK;
 	private int idCust = 0;
+	boolean isNhanVienDaThem = false;
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws UnknownHostException, ClassNotFoundException, IOException {
 		try {
 			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
 				if ("Nimbus".equals(info.getName())) {
@@ -108,7 +116,7 @@ public class GD_QuanLy_TaiKhoan extends JFrame implements ActionListener {
 		run.setVisible(true);
 	}
 
-	public GD_QuanLy_TaiKhoan() {
+	public GD_QuanLy_TaiKhoan() throws ClassNotFoundException, IOException {
 		this.setLocationRelativeTo(null);
 		initComponents();
 		setResizable(false);
@@ -577,6 +585,7 @@ public class GD_QuanLy_TaiKhoan extends JFrame implements ActionListener {
 		contentPane.add(pnlMatKhau);
 
 		txtMatKhau = new JTextField();
+		txtMatKhau.setEnabled(false);
 		txtMatKhau.setFont(new Font("Dialog", Font.PLAIN, 16));
 		txtMatKhau.setColumns(16);
 		pnlMatKhau.add(txtMatKhau);
@@ -601,11 +610,11 @@ public class GD_QuanLy_TaiKhoan extends JFrame implements ActionListener {
 		lblTrangThai.setBounds(17, 276, 130, 21);
 		contentPane.add(lblTrangThai);
 
-		JComboBox cboxTrangThai = new JComboBox();
+		cboxTrangThai = new JComboBox<>(new String[] { "Còn làm", "Ngưng làm" });
 		cboxTrangThai.setBounds(17, 313, 214, 30);
 		contentPane.add(cboxTrangThai);
 
-		JButton btntimkiem = new JButton("");
+		btntimkiem = new JButton("");
 		btntimkiem.setIcon(new ImageIcon(GD_QuanLy_TaiKhoan.class.getResource("/Imgs/search.png")));
 		btntimkiem.setBounds(1090, 99, 40, 30);
 		contentPane.add(btntimkiem);
@@ -648,58 +657,187 @@ public class GD_QuanLy_TaiKhoan extends JFrame implements ActionListener {
 		contentPane.add(background);
 
 		// load dữ liệu
-		loadData();
+		Socket socket = new Socket("192.168.100.4", 6789);
+		clientTK = new ClientTaiKhoan_dao(socket);
+		
+		listTK = clientTK.getListTK();
+		loadDataToTable(listTK);
+		
+		//su kien cua cac button
+		btnThem.addActionListener(new ActionListener() {
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        // Kiểm tra xem đã có nhân viên được thêm vào chưa
+		        if (!isNhanVienDaThem) {
+		            // Nếu chưa có nhân viên được thêm vào, thông báo lỗi
+		            JOptionPane.showMessageDialog(null, "Qua quản lý nhân viên để thêm nhân viên đồng thời thêm tài khoản!");
+		            return;
+		        }
+		        // Nếu đã có nhân viên được thêm vào, thực hiện thêm tài khoản
+		        // Your code to add account here
+		    }
+		});
+		
+		btnXoa.addActionListener(new ActionListener() {
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        // Kiểm tra xem đã có nhân viên được thêm vào chưa
+		        if (!isNhanVienDaThem) {
+		            // Nếu chưa có nhân viên được thêm vào, thông báo lỗi
+		            JOptionPane.showMessageDialog(null, "Qua quản lý nhân viên để xóa nhân viên đồng thời xóa tài khoản!");
+		            return;
+		        }
+		        // Nếu đã có nhân viên được thêm vào, thực hiện xóa tài khoản
+		        // Your code to delete account here
+		    }
+		});
+		
+		btnSua.addActionListener(new ActionListener() {
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        // Kiểm tra xem đã có nhân viên được thêm vào chưa
+		        if (!isNhanVienDaThem) {
+		            // Nếu chưa có nhân viên được thêm vào, thông báo lỗi
+		            JOptionPane.showMessageDialog(null, "Qua quản lý nhân viên để sửa nhân viên đồng thời sửa tài khoản!!");
+		            return;
+		        }
+		        // Nếu đã có nhân viên được thêm vào, thực hiện sửa tài khoản
+		        // Your code to edit account here
+		    }
+		});
+		
+		btnLamMoi.addActionListener(new ActionListener() {
 
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				xoaTrangTF();
+				xoaBang();
+				try {
+					List<TaiKhoan> listTKS = clientTK.getListTK();
+					loadDataToTable(listTKS);
+				} catch (ClassNotFoundException | IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+			
+		});
+		
+		btntimkiem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				try {
+					timKiem();
+				} catch (ClassNotFoundException | IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+			
+		});
+		
+		table.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				loadDataToTextFlied();
+			}
+		});
 	}
 
-	private void loadData() {
+	private void timKiem() throws ClassNotFoundException, IOException{
 		// TODO Auto-generated method stub
-//		try {
-//			String ngaySinhTrongTable = "";
-//			String gioiTinhTrongTable = "";
-//			String trangThaiTrongTable = "";
-//			nv_dao.setUp();
-//			listNV = nv_dao.getListNV();
-//			for (NhanVien nv : listNV) {
-//				String maNV = nv.getMaNV();
-//				String tenNV = nv.getTenNV();
-//				String email = nv.getEmail();
-//				String diaChi = nv.getDiaChi();
-//				Date ngaySinh = nv.getNgaySinh();
-//
-//				ngaySinhTrongTable = ngaySinh + "";
-//				boolean gioiTinh = nv.isGioiTinh();
-//
-//				if (gioiTinh) {
-//					gioiTinhTrongTable = "Nam";
-//				} else {
-//					gioiTinhTrongTable = "Nu";
-//				}
-//				
-//				boolean trangThai = nv.isTrangThai();
-//				if (trangThai) {
-//					trangThaiTrongTable = "Còn làm";
-//				} else {
-//					trangThaiTrongTable = "Ngưng làm";
-//				}
-////				cboxTrangThai.addItem(trangThaiTrongTable);
-//				String SDT = nv.getSdt();
-//				
-//				String chucVu = nv.getChucVu();
-//				cboxChucVu.addItem(nv.getChucVu());
-//				
-//
-//				java.lang.Object[] rowData = {maNV, tenNV, ngaySinhTrongTable, SDT, diaChi, email, chucVu,
-//						gioiTinhTrongTable, trangThaiTrongTable};
-//				tableModel.addRow(rowData);
-//				idCust++;
-//			}
-//		} catch (Exception e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		}
-//
-//		System.out.println(idCust);
+		xoaBang();
+		loadLaiDataSauKhiTimKiem();
+	}
+
+	private void loadLaiDataSauKhiTimKiem() throws ClassNotFoundException, IOException {
+		// TODO Auto-generated method stub
+		String maNvCanTim = txtTimKiem.getText();
+		TaiKhoan tkNeedFind = clientTK.findTKOnMaNV(maNvCanTim);
+		if (tkNeedFind == null) {
+	        JOptionPane.showMessageDialog(null, "Không tìm thấy nhân viên với mã " + maNvCanTim);
+	        loadDataToTable(listTK);
+		} else {
+			try {
+				String trangThaiTrongTable = "";
+				String maNV = tkNeedFind.getMaNV();
+				String matKhau = tkNeedFind.getMatkhau();
+				String email = tkNeedFind.getEmail();
+				boolean trangThai = tkNeedFind.isTrangThai();
+				trangThaiTrongTable = trangThai + "";
+				if (trangThai) {
+					trangThaiTrongTable = "Còn làm";
+				} else {
+					trangThaiTrongTable = "Ngưng làm";
+				}
+				java.lang.Object[] rowData = { maNV, matKhau, email, trangThaiTrongTable };
+				tableModel.addRow(rowData);
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+			}
+		}
+	}
+
+	private void xoaBang() {
+		// TODO Auto-generated method stub
+		for (int j = 0; j < table.getRowCount(); j++) {
+			tableModel.removeRow(j);
+			j--;
+		}
+	}
+
+	private void xoaTrangTF() {
+		// TODO Auto-generated method stub
+		txtMatKhau.setText("");
+		txtEmail.setText("");
+		txtTimKiem.setText("");
+		cboxTrangThai.setSelectedIndex(0);
+	}
+
+	private void loadDataToTextFlied() {
+		// TODO Auto-generated method stub
+		int row = table.getSelectedRow();
+		if (row >= 0) {
+			String matKhau = tableModel.getValueAt(row, 1).toString();
+			String email = tableModel.getValueAt(row, 2).toString();
+			String trangThai = tableModel.getValueAt(row, 3).toString();
+
+			txtMatKhau.setText(matKhau);
+			txtEmail.setText(email);
+			if (trangThai.trim().equalsIgnoreCase("Còn làm")) {
+				cboxTrangThai.setSelectedItem("Còn làm");
+			} else {
+				cboxTrangThai.setSelectedItem("Ngưng làm");
+			}
+		}
+	}
+
+	private void loadDataToTable(List<TaiKhoan> listTK) {
+		// TODO Auto-generated method stub
+		try {
+			String trangThaiTrongTable = "";
+			for (TaiKhoan tk : listTK) {
+				String maNV = tk.getMaNV();
+				String matKhau = tk.getMatkhau();
+				String email = tk.getEmail();
+				
+				boolean trangThai = tk.isTrangThai();
+				trangThaiTrongTable = trangThai + "";
+				if (trangThai) {
+					trangThaiTrongTable = "Còn làm";
+				} else {
+					trangThaiTrongTable = "Ngưng làm";
+				}
+				java.lang.Object[] rowData = { maNV, matKhau, email, trangThaiTrongTable };
+				tableModel.addRow(rowData);
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
 	}
 
 	private void initComponents() {

@@ -432,13 +432,19 @@ public class GD_QuanLy_ThongKePhim extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				GD_QuanLy_TaiKhoan gdTaiKhoan = new GD_QuanLy_TaiKhoan();
-				gdTaiKhoan.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				gdTaiKhoan.setLocationRelativeTo(null);
-				gdTaiKhoan.setVisible(true);
-				dispose();
+				GD_QuanLy_TaiKhoan gdqlytk;
+				try {
+					gdqlytk = new GD_QuanLy_TaiKhoan();
+					gdqlytk.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					gdqlytk.setLocationRelativeTo(null);
+					gdqlytk.setVisible(true);
+					dispose();
+				} catch (ClassNotFoundException | IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
-			
+
 		});
 		panelTaiKhoan.add(btnTaiKhoan);
 

@@ -443,13 +443,19 @@ public class GD_QuanLy_PhongChieu extends JFrame implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				GD_QuanLy_TaiKhoan gdqlytk = new GD_QuanLy_TaiKhoan();
-				gdqlytk.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				gdqlytk.setLocationRelativeTo(null);
-				gdqlytk.setVisible(true);
-				dispose();
+				GD_QuanLy_TaiKhoan gdqlytk;
+				try {
+					gdqlytk = new GD_QuanLy_TaiKhoan();
+					gdqlytk.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					gdqlytk.setLocationRelativeTo(null);
+					gdqlytk.setVisible(true);
+					dispose();
+				} catch (ClassNotFoundException | IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
-			
+
 		});
 		panelTaiKhoan.add(btnTaiKhoan);
 
@@ -663,6 +669,34 @@ public class GD_QuanLy_PhongChieu extends JFrame implements ActionListener {
 		background.setIcon(new ImageIcon(GD_QuanLy_PhongChieu.class.getResource("/imgs/bggalaxy1.png")));
 		background.setBounds(0, 0, 1162, 613);
 		contentPane.add(background);
+		
+		
+		//add su kien
+		btnThem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				GD_QuanLy_PhongChieu_Them_Sua gdthemsua = new GD_QuanLy_PhongChieu_Them_Sua();
+				gdthemsua.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				gdthemsua.setLocationRelativeTo(null);
+				gdthemsua.setVisible(true);
+				dispose();
+			}
+			
+		});
+		
+		btnSua.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				GD_QuanLy_PhongChieu_Them_Sua gdthemsua = new GD_QuanLy_PhongChieu_Them_Sua();
+				gdthemsua.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				gdthemsua.setLocationRelativeTo(null);
+				gdthemsua.setVisible(true);
+				dispose();
+			}
+		});
 
 	}
 

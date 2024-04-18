@@ -3,6 +3,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import javax.swing.JOptionPane;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.NoResultException;
@@ -62,5 +64,17 @@ public class TaiKhoan_dao {
 			}
 			e.printStackTrace();
 		}
+	}
+	
+	public TaiKhoan findEmployeeOnMaNV(String manv) {
+	    try {
+	        return em.createQuery("Select tk from TaiKhoan tk where tk.maNV = :maNV", TaiKhoan.class)
+	                .setParameter("maNV", manv)
+	                .getSingleResult();
+	    } catch (NoResultException e) {
+	        // Xử lý khi không tìm thấy kết quả
+	        // Hiển thị thông báo cho người dùng
+	        return null; // Hoặc bạn có thể trả về một giá trị mặc định hoặc null tùy thuộc vào logic của bạn
+	    }
 	}
 }

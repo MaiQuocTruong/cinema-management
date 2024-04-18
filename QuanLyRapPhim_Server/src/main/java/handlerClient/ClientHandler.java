@@ -19,8 +19,7 @@ import dao.NhanVien_dao;
 import dao.TaiKhoan_dao;
 import enities.KhachHang;
 import enities.NhanVien;
-
-
+import enities.TaiKhoan;
 import enities.KhachHang;
 
 
@@ -89,7 +88,6 @@ public class ClientHandler implements Runnable {
 					KhachHang kh_remove = (KhachHang) in.readObject();
 					kh_dao.deleteKhachHang(kh_remove.getMaKH());
 					break;
-
 				case "GetListEmployee":
 					List<NhanVien> listNV = nv_dao.getListNhanVien();
 					out.writeObject(listNV);
@@ -114,9 +112,17 @@ public class ClientHandler implements Runnable {
 					NhanVien nv_needUpdate = (NhanVien) in.readObject();
 					nv_dao.updateNV(nv_needUpdate);
 					tk_dao.updateTrangThaiTK(nv_needUpdate.getMaNV());
-
-				
-				
+				case "GetListAccount":
+					List<TaiKhoan> listTK = tk_dao.getListTaiKhoan();
+					out.writeObject(listTK);
+					out.flush();
+					break;
+				case "FindAccountOnMaNV":
+					String manv = in.readUTF();
+					TaiKhoan resultFindTK = tk_dao.findEmployeeOnMaNV(manv);
+					out.writeObject(resultFindTK);
+					out.flush();
+					break;
 				default:
 					break;
 				}

@@ -430,13 +430,19 @@ public class GD_QuanLy extends JFrame implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				GD_QuanLy_TaiKhoan gdqlytk = new GD_QuanLy_TaiKhoan();
-				gdqlytk.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				gdqlytk.setLocationRelativeTo(null);
-				gdqlytk.setVisible(true);
-				dispose();
+				GD_QuanLy_TaiKhoan gdqlytk;
+				try {
+					gdqlytk = new GD_QuanLy_TaiKhoan();
+					gdqlytk.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					gdqlytk.setLocationRelativeTo(null);
+					gdqlytk.setVisible(true);
+					dispose();
+				} catch (ClassNotFoundException | IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
-			
+
 		});
 		panelTaiKhoan.add(btnTaiKhoan);
 		

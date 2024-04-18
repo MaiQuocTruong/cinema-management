@@ -435,11 +435,17 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				GD_QuanLy_TaiKhoan gdqlytk = new GD_QuanLy_TaiKhoan();
-				gdqlytk.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				gdqlytk.setLocationRelativeTo(null);
-				gdqlytk.setVisible(true);
-				dispose();
+				GD_QuanLy_TaiKhoan gdqlytk;
+				try {
+					gdqlytk = new GD_QuanLy_TaiKhoan();
+					gdqlytk.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					gdqlytk.setLocationRelativeTo(null);
+					gdqlytk.setVisible(true);
+					dispose();
+				} catch (ClassNotFoundException | IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 
 		});
@@ -861,6 +867,10 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 		if (o.equals(btnThem)) {
 			try {
 				themNV();
+				listNV = clientNV.getListNV();
+				xoaBang();
+				xoaTrangTF();
+				loadDataToTable(listNV);
 			} catch (Exception e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
