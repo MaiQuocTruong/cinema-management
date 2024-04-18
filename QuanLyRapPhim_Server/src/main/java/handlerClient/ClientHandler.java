@@ -15,10 +15,11 @@ import dao.EntityManagerFactoryUtil;
 import dao.KhachHang_dao;
 
 import dao.NhanVien_dao;
-
+import dao.PhongChieuPhim_dao;
 import dao.TaiKhoan_dao;
 import enities.KhachHang;
 import enities.NhanVien;
+import enities.PhongChieuPhim;
 import enities.TaiKhoan;
 import enities.KhachHang;
 
@@ -35,7 +36,7 @@ public class ClientHandler implements Runnable {
 
 	private NhanVien_dao nv_dao;
 	private TaiKhoan_dao tk_dao;
-
+	private PhongChieuPhim_dao pc_dao;
 	
 	
 
@@ -49,7 +50,7 @@ public class ClientHandler implements Runnable {
 
 		nv_dao = new NhanVien_dao(em);
 		tk_dao = new TaiKhoan_dao(em);
-
+		pc_dao = new PhongChieuPhim_dao(em);
 	
 		
 	}
@@ -122,6 +123,29 @@ public class ClientHandler implements Runnable {
 					TaiKhoan resultFindTK = tk_dao.findEmployeeOnMaNV(manv);
 					out.writeObject(resultFindTK);
 					out.flush();
+					break;
+				case "GetListPhongChieu":
+					List<PhongChieuPhim> listPC = pc_dao.getListPhongChieu();
+					out.writeObject(listPC);
+					out.flush();
+					break;
+				case "AddPhongChieu":
+					PhongChieuPhim pcp = (PhongChieuPhim) in.readObject();
+					pc_dao.addPhongChieu(pcp);
+					break;
+				case "findPhongChieuOnMaPC":
+					String maPC = in.readUTF();
+					PhongChieuPhim phimCanTim = pc_dao.findPhongChieuOnMaPC(maPC);
+					out.writeObject(phimCanTim);
+					out.flush();
+					break;
+				case "UpdatePhongChieu":
+					PhongChieuPhim pc_needUpdate = (PhongChieuPhim) in.readObject();
+					pc_dao.updatePhongChieu(pc_needUpdate);
+					break;	
+				case "DeletePhongChieu":
+					PhongChieuPhim pc_needRemove = (PhongChieuPhim) in.readObject();
+					pc_dao.deletePhongChieu(pc_needRemove.getMaPhongChieu());
 					break;
 				default:
 					break;

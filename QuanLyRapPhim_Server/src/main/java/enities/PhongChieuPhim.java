@@ -25,10 +25,14 @@ public class PhongChieuPhim implements Serializable{
 	@Column(name = "SucChua")
 	private int sucChua;
 
-	@OneToMany(mappedBy = "phongchieu", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "phongchieu", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<XuatChieu> xuatChieus = new HashSet<>();
 	
 	
+	public Set<XuatChieu> getXuatChieus() {
+		return xuatChieus;
+	}
+
 	public PhongChieuPhim() {
 		super();
 		// TODO Auto-generated constructor stub

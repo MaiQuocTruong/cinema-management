@@ -261,13 +261,26 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				GD_QuanLy_PhongChieu gdqlpc = new GD_QuanLy_PhongChieu();
-				gdqlpc.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				gdqlpc.setLocationRelativeTo(null);
-				gdqlpc.setVisible(true);
-				dispose();
-			}
+				GD_QuanLy_PhongChieu gdqlpc;
+				try {
+					gdqlpc = new GD_QuanLy_PhongChieu();
+					gdqlpc.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					gdqlpc.setLocationRelativeTo(null);
+					gdqlpc.setVisible(true);
+					dispose();
+				} catch (UnknownHostException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 
+			}
+			
 		});
 		panelPhim.add(btnqlyPhim);
 		panelPhim.add(btnSuatChieu);
@@ -743,7 +756,7 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 		contentPane.add(background);
 
 		// load dữ liệu
-		Socket socket = new Socket("192.168.100.4", 6789);
+		Socket socket = new Socket("192.168.1.19", 6789);
 		clientNV = new ClientNhanVien_dao(socket);
 
 		listNV = clientNV.getListNV();

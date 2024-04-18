@@ -44,6 +44,10 @@ import javax.swing.table.DefaultTableModel;
 
 import com.toedter.calendar.JDateChooser;
 
+import client_dao.ClientPhongChieu_dao;
+import enities.NhanVien;
+import enities.PhongChieuPhim;
+import enities.XuatChieu;
 import giaoDien.nhanvien.GD_NhanVien;
 import runapp.Login;
 import testbutton.Buttontest;
@@ -54,13 +58,17 @@ import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.net.Socket;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 public class GD_QuanLy_PhongChieu extends JFrame implements ActionListener {
 	/**
@@ -85,12 +93,18 @@ public class GD_QuanLy_PhongChieu extends JFrame implements ActionListener {
 	private JComboBox<String> phongChieuComboBox; // Declare the JComboBox here
 	private JTextField txtTenPC;
 	private JTextField txtSucChua;
+	private ClientPhongChieu_dao clientPC_dao;
+	private List<PhongChieuPhim> ds_pc;
 
 //	static String quanly;
 	/**
 	 * Launch the application.
+	 * 
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 * @throws UnknownHostException
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws UnknownHostException, ClassNotFoundException, IOException {
 		try {
 			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
 				if ("Nimbus".equals(info.getName())) {
@@ -117,8 +131,12 @@ public class GD_QuanLy_PhongChieu extends JFrame implements ActionListener {
 
 	/**
 	 * Create the frame.
+	 * 
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 * @throws UnknownHostException
 	 */
-	public GD_QuanLy_PhongChieu() {
+	public GD_QuanLy_PhongChieu() throws UnknownHostException, ClassNotFoundException, IOException {
 		initComponents();
 		setResizable(false);
 		setBackground(Color.WHITE);
@@ -387,7 +405,7 @@ public class GD_QuanLy_PhongChieu extends JFrame implements ActionListener {
 					e1.printStackTrace();
 				}
 			}
-			
+
 		});
 		panelNhanVien.add(btnNhanVien);
 
@@ -660,44 +678,94 @@ public class GD_QuanLy_PhongChieu extends JFrame implements ActionListener {
 		// Thêm bảng và JScrollPane vào contentPane
 		contentPane.add(scrollPane);
 
-		// Thêm dữ liệu vào bảng
-		Object[] rowData = { "1", "PC001", "SC001", "Phòng 1", "30" }; // Thay đổi dữ liệu tùy ý
-		tableModel.addRow(rowData);
-
 		JLabel background = new JLabel("");
 		background.setHorizontalAlignment(SwingConstants.CENTER);
 		background.setIcon(new ImageIcon(GD_QuanLy_PhongChieu.class.getResource("/imgs/bggalaxy1.png")));
 		background.setBounds(0, 0, 1162, 613);
 		contentPane.add(background);
-		
-		
-		//add su kien
+
+		// add su kien
 		btnThem.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				GD_QuanLy_PhongChieu_Them_Sua gdthemsua = new GD_QuanLy_PhongChieu_Them_Sua();
-				gdthemsua.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				gdthemsua.setLocationRelativeTo(null);
-				gdthemsua.setVisible(true);
-				dispose();
+				GD_QuanLy_PhongChieu_Them gdthem;
+				try {
+					Socket socket = new Socket("192.168.1.19", 6789);
+					clientPC_dao = new ClientPhongChieu_dao(socket);
+					gdthem = new GD_QuanLy_PhongChieu_Them();
+					gdthem.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					gdthem.setLocationRelativeTo(null);
+					gdthem.setVisible(true);
+					dispose();
+
+					ds_pc = clientPC_dao.getListPhongChieu();
+					loadTableData(ds_pc);
+				} catch (UnknownHostException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
 			}
-			
+
 		});
-		
+
 		btnSua.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				GD_QuanLy_PhongChieu_Them_Sua gdthemsua = new GD_QuanLy_PhongChieu_Them_Sua();
-				gdthemsua.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				gdthemsua.setLocationRelativeTo(null);
-				gdthemsua.setVisible(true);
-				dispose();
+				GD_QuanLy_PhongChieu_Sua gdthemsua;
+				try {
+					gdthemsua = new GD_QuanLy_PhongChieu_Sua();
+					gdthemsua.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					gdthemsua.setLocationRelativeTo(null);
+					gdthemsua.setVisible(true);
+					dispose();
+				} catch (UnknownHostException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
 			}
 		});
+		
+		btnXoa.addActionListener(this);
+		btnLamMoi.addActionListener(this);
 
+		Socket socket = new Socket("192.168.1.19", 6789);
+		clientPC_dao = new ClientPhongChieu_dao(socket);
+		ds_pc = clientPC_dao.getListPhongChieu();
+		loadTableData(ds_pc);
+
+	}
+
+	private void loadTableData(List<PhongChieuPhim> ds_pc) {
+		int i = 1;
+	    for (PhongChieuPhim pc : ds_pc) {
+	        Set<XuatChieu> List_XC = pc.getXuatChieus();
+	        if (List_XC.isEmpty()) {
+	            // Phòng này không có xuất chiếu nào, vẫn hiển thị thông tin phòng chiếu
+	            tableModel.addRow(new Object[] {i, pc.getMaPhongChieu(), "", pc.getTenPhongChieu(), pc.getSucChua()});
+	            ++i;
+	        } else {
+	            for (XuatChieu xc : List_XC) {
+	                // Kiểm tra xem mã xuất chiếu có rỗng hay không
+	                String maXuatChieu = xc.getMaXuat().isEmpty() ? "" : xc.getMaXuat();
+	                tableModel.addRow(new Object[] {i, pc.getMaPhongChieu(), maXuatChieu, pc.getTenPhongChieu(), pc.getSucChua()});
+	                ++i;
+	            }
+	        }
+	    }
 	}
 
 	private void initComponents() {
@@ -723,8 +791,29 @@ public class GD_QuanLy_PhongChieu extends JFrame implements ActionListener {
 		gdql.setLocationRelativeTo(null);
 		gdql.setVisible(true);
 	}
+	
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		Object o = e.getSource();
+		if(o.equals(btnXoa)) {
+			try {
+				int row = table.getSelectedRow();
+				String maCanXoa = (String) table.getValueAt(row, 1);
+				PhongChieuPhim nv_needXoa = clientPC_dao.findPhongChieuOnMaPC(maCanXoa);
+				clientPC_dao.deletePhongChieu(nv_needXoa);
+				tableModel.removeRow(row);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (ClassNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+
+		}
+		if(o.equals(btnLamMoi)) {
+			
+		}
 	}
 }

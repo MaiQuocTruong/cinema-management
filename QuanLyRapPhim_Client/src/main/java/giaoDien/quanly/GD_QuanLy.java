@@ -42,6 +42,7 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -235,11 +236,24 @@ public class GD_QuanLy extends JFrame implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				GD_QuanLy_PhongChieu gdqlpc = new GD_QuanLy_PhongChieu();
-				gdqlpc.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				gdqlpc.setLocationRelativeTo(null);
-				gdqlpc.setVisible(true);
-				dispose();
+				GD_QuanLy_PhongChieu gdqlpc;
+				try {
+					gdqlpc = new GD_QuanLy_PhongChieu();
+					gdqlpc.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					gdqlpc.setLocationRelativeTo(null);
+					gdqlpc.setVisible(true);
+					dispose();
+				} catch (UnknownHostException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
 			}
 			
 		});
