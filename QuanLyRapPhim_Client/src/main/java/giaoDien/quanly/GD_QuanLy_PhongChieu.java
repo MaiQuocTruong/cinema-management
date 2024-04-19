@@ -95,6 +95,7 @@ public class GD_QuanLy_PhongChieu extends JFrame implements ActionListener {
 	private JTextField txtSucChua;
 	private ClientPhongChieu_dao clientPC_dao;
 	private List<PhongChieuPhim> ds_pc;
+	private JTextField txtMaPC;
 
 //	static String quanly;
 	/**
@@ -137,7 +138,7 @@ public class GD_QuanLy_PhongChieu extends JFrame implements ActionListener {
 	 * @throws UnknownHostException
 	 */
 	public GD_QuanLy_PhongChieu() throws UnknownHostException, ClassNotFoundException, IOException {
-		initComponents();
+//		initComponents();
 		setResizable(false);
 		setBackground(Color.WHITE);
 		setTitle("Giao Diện Quản Lý Phòng Chiếu");
@@ -600,22 +601,11 @@ public class GD_QuanLy_PhongChieu extends JFrame implements ActionListener {
 		pnlTrangThai.add(lblTenPC);
 
 		txtTenPC = new JTextField();
+		txtTenPC.setEnabled(false);
 		txtTenPC.setFont(new Font("Dialog", Font.PLAIN, 16));
 		txtTenPC.setColumns(16);
 		txtTenPC.setBounds(10, 175, 230, 27);
 		contentPane.add(txtTenPC);
-
-		JPanel pnlSuatChieu = new JPanel();
-		pnlSuatChieu.setLayout(null);
-		pnlSuatChieu.setOpaque(false);
-		pnlSuatChieu.setBackground(Color.YELLOW);
-		pnlSuatChieu.setBounds(10, 284, 230, 37);
-		contentPane.add(pnlSuatChieu);
-
-		JLabel lblMaSC = new JLabel("Mã suất chiếu:");
-		lblMaSC.setFont(new Font("Dialog", Font.PLAIN, 16));
-		lblMaSC.setBounds(5, 5, 102, 21);
-		pnlSuatChieu.add(lblMaSC);
 
 		JPanel pnlSucChua = new JPanel();
 		pnlSucChua.setLayout(null);
@@ -630,14 +620,29 @@ public class GD_QuanLy_PhongChieu extends JFrame implements ActionListener {
 		pnlSucChua.add(lblSucChua);
 
 		txtSucChua = new JTextField();
+		txtSucChua.setEnabled(false);
 		txtSucChua.setFont(new Font("Dialog", Font.PLAIN, 16));
 		txtSucChua.setColumns(16);
 		txtSucChua.setBounds(10, 247, 230, 27);
 		contentPane.add(txtSucChua);
-
-		JComboBox comboBox = new JComboBox();
-		comboBox.setBounds(111, 5, 109, 24);
-		pnlSuatChieu.add(comboBox);
+		
+		JPanel pnlSucChua_1 = new JPanel();
+		pnlSucChua_1.setLayout(null);
+		pnlSucChua_1.setOpaque(false);
+		pnlSucChua_1.setBackground(Color.YELLOW);
+		pnlSucChua_1.setBounds(10, 284, 230, 37);
+		contentPane.add(pnlSucChua_1);
+		
+		JLabel lblMaPC = new JLabel("Mã phòng chiếu:");
+		lblMaPC.setFont(new Font("Dialog", Font.PLAIN, 16));
+		lblMaPC.setBounds(5, 5, 152, 21);
+		pnlSucChua_1.add(lblMaPC);
+		txtMaPC = new JTextField();
+		txtMaPC.setEnabled(false);
+		txtMaPC.setFont(new Font("Dialog", Font.PLAIN, 16));
+		txtMaPC.setColumns(16);
+		txtMaPC.setBounds(10, 319, 230, 27);
+		contentPane.add(txtMaPC);
 
 		// Thêm chúng vào ButtonGroup
 		ButtonGroup buttonGroup = new ButtonGroup();
@@ -660,7 +665,7 @@ public class GD_QuanLy_PhongChieu extends JFrame implements ActionListener {
 		contentPane.add(btnLamMoi);
 		contentPane.add(btnSua);
 		// Khởi tạo DefaultTableModel với các cột
-		String[] columnNames = { "STT", "Mã phòng chiếu", "Mã suất chiếu", "Tên phòng chiếu", "Sức chứa" }; // Thay đổi
+		String[] columnNames = { "STT", "Mã phòng chiếu", "Tên phòng chiếu", "Sức chứa" }; // Thay đổi
 																											// tên cột
 																											// tùy ý
 		tableModel = new DefaultTableModel(columnNames, 0);
@@ -692,7 +697,7 @@ public class GD_QuanLy_PhongChieu extends JFrame implements ActionListener {
 				// TODO Auto-generated method stub
 				GD_QuanLy_PhongChieu_Them gdthem;
 				try {
-					Socket socket = new Socket("192.168.1.19", 6789);
+					Socket socket = new Socket("192.168.100.4", 6789);
 					clientPC_dao = new ClientPhongChieu_dao(socket);
 					gdthem = new GD_QuanLy_PhongChieu_Them();
 					gdthem.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -716,57 +721,72 @@ public class GD_QuanLy_PhongChieu extends JFrame implements ActionListener {
 			}
 
 		});
-
+		
 		btnSua.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				GD_QuanLy_PhongChieu_Sua gdthemsua;
-				try {
-					gdthemsua = new GD_QuanLy_PhongChieu_Sua();
-					gdthemsua.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-					gdthemsua.setLocationRelativeTo(null);
-					gdthemsua.setVisible(true);
-					dispose();
-				} catch (UnknownHostException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-
-			}
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        try {
+		            // Lấy mã phòng chiếu được chọn từ bảng
+		            int selectedRow = table.getSelectedRow();
+		            if (selectedRow == -1) {
+		                JOptionPane.showMessageDialog(null, "Vui lòng chọn một dữ liệu ở bảng để sửa.");
+		                return;
+		            }
+		            String maPhongChieu = (String) table.getValueAt(selectedRow, 1);
+		            
+		            // Hiển thị giao diện sửa phòng chiếu
+		            GD_QuanLy_PhongChieu_Sua gdSua = new GD_QuanLy_PhongChieu_Sua();
+		            gdSua.setMaPhongChieu(maPhongChieu); // Truyền mã phòng chiếu tới giao diện sửa
+		            gdSua.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		            gdSua.setLocationRelativeTo(null);
+		            gdSua.setVisible(true);
+		            dispose();
+		        } catch (UnknownHostException e1) {
+		            e1.printStackTrace();
+		        } catch (IOException e1) {
+		            e1.printStackTrace();
+		        }
+		    }
 		});
+
 		
 		btnXoa.addActionListener(this);
 		btnLamMoi.addActionListener(this);
 
-		Socket socket = new Socket("192.168.1.19", 6789);
+		Socket socket = new Socket("192.168.100.4", 6789);
 		clientPC_dao = new ClientPhongChieu_dao(socket);
 		ds_pc = clientPC_dao.getListPhongChieu();
 		loadTableData(ds_pc);
-
+		
+		table.addMouseListener(new MouseAdapter() {
+		    @Override
+		    public void mouseClicked(MouseEvent e) {
+		        loadDataFromTableToTextField();
+		    }
+		});
 	}
 
-	private void loadTableData(List<PhongChieuPhim> ds_pc) {
-		int i = 1;
-	    for (PhongChieuPhim pc : ds_pc) {
-	        Set<XuatChieu> List_XC = pc.getXuatChieus();
-	        if (List_XC.isEmpty()) {
-	            // Phòng này không có xuất chiếu nào, vẫn hiển thị thông tin phòng chiếu
-	            tableModel.addRow(new Object[] {i, pc.getMaPhongChieu(), "", pc.getTenPhongChieu(), pc.getSucChua()});
-	            ++i;
-	        } else {
-	            for (XuatChieu xc : List_XC) {
-	                // Kiểm tra xem mã xuất chiếu có rỗng hay không
-	                String maXuatChieu = xc.getMaXuat().isEmpty() ? "" : xc.getMaXuat();
-	                tableModel.addRow(new Object[] {i, pc.getMaPhongChieu(), maXuatChieu, pc.getTenPhongChieu(), pc.getSucChua()});
-	                ++i;
-	            }
-	        }
+	private void loadDataFromTableToTextField() {
+	    int selectedRow = table.getSelectedRow();
+	    if (selectedRow != -1) {
+	    	String maPhongChieu = (String) table.getValueAt(selectedRow, 1);
+	        String tenPhongChieu = (String) table.getValueAt(selectedRow, 2);
+	        int sucChua = (int) table.getValueAt(selectedRow, 3);
+	        txtMaPC.setText(maPhongChieu);
+	        txtTenPC.setText(tenPhongChieu);
+	        txtSucChua.setText(String.valueOf(sucChua));
 	    }
 	}
+	
+	private void loadTableData(List<PhongChieuPhim> ds_pc) {
+	    int i = 1;
+	    for (PhongChieuPhim pc : ds_pc) {
+	        // Thêm thông tin của mỗi phòng chiếu vào bảng
+	        tableModel.addRow(new Object[] { i, pc.getMaPhongChieu(), pc.getTenPhongChieu(), pc.getSucChua() });
+	        ++i;
+	    }
+	}
+
 
 	private void initComponents() {
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);

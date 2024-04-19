@@ -73,6 +73,4 @@ public class TaiKhoan implements Serializable {
 		return "TaiKhoan [maNV=" + maNV + ", matkhau=" + matkhau + ", email=" + email + ", trangThai=" + trangThai
 				+ "]";
 	}
-	
-	
 }

@@ -37,6 +37,6 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/loc-projects/cinema-management/QuanLyRapPhim_Server/lib/entities.jar"/>
+	<classpathentry kind="lib" path="/QuanLyRapPhim_Server/lib/entities.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

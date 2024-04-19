@@ -24,6 +24,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.List;
 import java.awt.event.ActionEvent;
 
 public class GD_QuanLy_PhongChieu_Them extends JFrame implements ActionListener {
@@ -36,13 +37,17 @@ public class GD_QuanLy_PhongChieu_Them extends JFrame implements ActionListener 
 	private JButton btnXacNhan;
 	private JButton  btnHuyBo;
 	private ClientPhongChieu_dao clientPC_dao;
+	private List<PhongChieuPhim> dsPhongChieu;
+    private static int lastPhongChieuId = 0; // Biến toàn cục để lưu trữ số cuối cùng của mã phòng chiếu
+	private String maPhongChieu; // Thêm trường mã phòng chiếu
 
 	/**
 	 * Launch the application.
 	 * @throws IOException 
 	 * @throws UnknownHostException 
+	 * @throws ClassNotFoundException 
 	 */
-	public static void main(String[] args) throws UnknownHostException, IOException {
+	public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
 		try {
 			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
 				if ("Nimbus".equals(info.getName())) {
@@ -63,8 +68,9 @@ public class GD_QuanLy_PhongChieu_Them extends JFrame implements ActionListener 
 	 * Create the frame.
 	 * @throws IOException 
 	 * @throws UnknownHostException 
+	 * @throws ClassNotFoundException 
 	 */
-	public GD_QuanLy_PhongChieu_Them() throws UnknownHostException, IOException {
+	public GD_QuanLy_PhongChieu_Them() throws UnknownHostException, IOException, ClassNotFoundException {
 		setTitle("Thêm/Sửa phòng chiếu");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 551, 259);
@@ -137,7 +143,9 @@ public class GD_QuanLy_PhongChieu_Them extends JFrame implements ActionListener 
 		lblMaPhongChieu.setBounds(280, 137, 46, 27);
 		contentPane.add(lblMaPhongChieu);
 		
+        String maPC = "PC" + String.format("%03d", lastPhongChieuId);
 		txtPhongChieu = new JTextField(); 
+		txtPhongChieu.setEnabled(false);
 		txtPhongChieu.setColumns(10);
 		txtPhongChieu.setBounds(327, 137, 200, 26);
 		contentPane.add(txtPhongChieu);
@@ -151,10 +159,23 @@ public class GD_QuanLy_PhongChieu_Them extends JFrame implements ActionListener 
 		btnXacNhan.addActionListener(this);
 		btnHuyBo.addActionListener(this);
 		
-		Socket socket = new Socket("192.168.1.19",6789);
+		Socket socket = new Socket("192.168.100.4",6789);
 		clientPC_dao = new ClientPhongChieu_dao(socket);
+		
+		dsPhongChieu = clientPC_dao.getListPhongChieu();
+		for (PhongChieuPhim phongChieuPhim : dsPhongChieu) {
+            int id = Integer.parseInt(phongChieuPhim.getMaPhongChieu().substring(2));
+            if (id > lastPhongChieuId) {
+                lastPhongChieuId = id;
+            }
+        }
 	}
 	
+	public void setMaPhongChieu(String maPhongChieu) {
+		this.maPhongChieu = maPhongChieu;
+		// Hiển thị mã phòng chiếu lên giao diện
+		txtPhongChieu.setText(maPhongChieu);
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -162,21 +183,24 @@ public class GD_QuanLy_PhongChieu_Them extends JFrame implements ActionListener 
 		if(o.equals(btnXacNhan)) {
 			String tenpc = txtTenPC.getText();
 			String succhua = txtSucChua.getText();
-			String maPC = txtPhongChieu.getText();
+
+			lastPhongChieuId++; // Tăng số cuối cùng lên 1
+            String maPC = "PC" + String.format("%03d", lastPhongChieuId);
+			
+            if (tenpc.isEmpty() || succhua.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!");
+                return;
+            }
 			
 			PhongChieuPhim pcp = new PhongChieuPhim(maPC, tenpc,Integer.parseInt(succhua));
 			try {
-				if(!(maPC != null)) {
-					JOptionPane.showMessageDialog(this, "Vui lòng nhập mã phòng chiếu!");
-				}else {
-					clientPC_dao.addPhongChieu(pcp);
-					JOptionPane.showMessageDialog(this, "Thêm thành công!");
-					GD_QuanLy_PhongChieu gd_PhongChieu = new GD_QuanLy_PhongChieu();
-					gd_PhongChieu.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-					gd_PhongChieu.setLocationRelativeTo(null);
-					gd_PhongChieu.setVisible(true);
-					dispose();
-				}
+				 clientPC_dao.addPhongChieu(pcp);
+				 JOptionPane.showMessageDialog(this, "Thêm thành công");
+				 GD_QuanLy_PhongChieu gd_PhongChieu = new GD_QuanLy_PhongChieu();
+				 gd_PhongChieu.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				 gd_PhongChieu.setLocationRelativeTo(null);
+				 gd_PhongChieu.setVisible(true);
+				 dispose();
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			} catch (ClassNotFoundException e1) {

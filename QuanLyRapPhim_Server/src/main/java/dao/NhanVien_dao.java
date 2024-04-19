@@ -43,6 +43,13 @@ public class NhanVien_dao {
 				   .setParameter("sdt", sdt)
 				   .getSingleResult();
 	}
+	
+	public NhanVien findEmployeeOnId(String idNhanVien) {
+		return em.createQuery("Select nv from NhanVien nv where nv.maNV = :maNV", NhanVien.class).
+				setParameter("maNV", idNhanVien)
+				.getSingleResult();
+	}
+	
 	public void setTrangThaiNV(String idNhanVien) {
 		try {
 			NhanVien nvTrangThai= em.find(NhanVien.class, idNhanVien);
@@ -60,11 +67,9 @@ public class NhanVien_dao {
 		}
 	}
 	public void updateNV(NhanVien nv_update) {
-		
-		nv_update.setTrangThai(true);
 		System.out.println("Nhan Vien Need Update" + nv_update);
 		try {
-			
+			nv_update.setTrangThai(true);
 			em.getTransaction().begin();
 			em.merge(nv_update);
 			em.getTransaction().commit();

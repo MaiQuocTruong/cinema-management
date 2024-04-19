@@ -139,7 +139,4 @@ public class NhanVien implements Serializable {
 				+ ", gioiTinh=" + gioiTinh + ", email=" + email + ", sdt=" + sdt + ", chucVu=" + chucVu + ", trangThai="
 				+ trangThai + "]";
 	}
-
-	
-	
 }

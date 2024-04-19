@@ -6,6 +6,7 @@ import java.util.List;
 import enities.NhanVien;
 import enities.PhongChieuPhim;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
 
 public class PhongChieuPhim_dao {
@@ -38,9 +39,9 @@ public class PhongChieuPhim_dao {
 	}
 	
 	public PhongChieuPhim findPhongChieuOnMaPC(String maPC) {
-	    return em.createQuery("Select pc from PhongChieuPhim pc where pc.maPhongChieu = :maPhongChieu", PhongChieuPhim.class)
-	             .setParameter("maPhongChieu", maPC)
-	             .getSingleResult();
+		    return em.createQuery("Select pc from PhongChieuPhim pc where pc.maPhongChieu = :maPhongChieu", PhongChieuPhim.class)
+		             .setParameter("maPhongChieu", maPC)
+		             .getSingleResult();
 	}
 	
 	public void updatePhongChieu(PhongChieuPhim pcp_update) {

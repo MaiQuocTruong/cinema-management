@@ -46,13 +46,16 @@ public class ClientNhanVien_dao {
 		return nv;
 	}
 	
-//	public void deleteNV(NhanVien nv) throws IOException {
-//		out.writeUTF("DeleteEmployee");
-//		out.flush();
-//		
-//		out.writeObject(nv);
-//		out.flush();
-//	}
+	public NhanVien findEmployeeOnId(String idNhanVien) throws IOException, ClassNotFoundException {
+		out.writeUTF("FindEmployeeOnId");
+		out.flush();
+		
+		out.writeUTF(idNhanVien);
+		out.flush();
+		
+		NhanVien nv = (NhanVien) in.readObject();
+		return nv;
+	}
 	
 	public void updateNV(NhanVien nv) throws IOException {
 		out.writeUTF("UpdateEmployee");

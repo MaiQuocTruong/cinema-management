@@ -109,10 +109,17 @@ public class ClientHandler implements Runnable {
 					nv_dao.setTrangThaiNV(nv_trangthai.getMaNV());
 					tk_dao.deleteTrangThaiTK(nv_trangthai.getMaNV());
 					break;
+				case "FindEmployeeOnId":
+					String maNV = in.readUTF();
+					NhanVien nvCanTim = nv_dao.findEmployeeOnId(maNV);
+					out.writeObject(nvCanTim);
+					out.flush();
+					break;
 				case "UpdateEmployee":
 					NhanVien nv_needUpdate = (NhanVien) in.readObject();
 					nv_dao.updateNV(nv_needUpdate);
 					tk_dao.updateTrangThaiTK(nv_needUpdate.getMaNV());
+					break;
 				case "GetListAccount":
 					List<TaiKhoan> listTK = tk_dao.getListTaiKhoan();
 					out.writeObject(listTK);

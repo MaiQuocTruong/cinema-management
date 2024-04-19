@@ -81,10 +81,9 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane, panelPhim, panelDichVu, panelNhanVien, panelTaiKhoan, panelThongKe;
-	private JLabel lblClock, lbltennv;
+	private JLabel lbltennv, lblNvIcon;
 	Color customColor = new Color(0, 92, 111);
 	Color whiteColor = Color.WHITE;
-	private JLabel lblNvIcon; // Thêm biến để lưu đối tượng JLabel chứa ảnh NV
 	private JTable table;
 	private DefaultTableModel tableModel;
 	private JButton btnThem, btnXoa, btnSua, btnLamMoi, btntimkiem;
@@ -123,7 +122,6 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 	}
 
 	public GD_QuanLy_NhanVien() throws IOException, ClassNotFoundException {
-//		initComponents();
 		this.setLocationRelativeTo(null);
 		setResizable(false);
 		setBackground(Color.WHITE);
@@ -756,7 +754,7 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 		contentPane.add(background);
 
 		// load dữ liệu
-		Socket socket = new Socket("192.168.1.19", 6789);
+		Socket socket = new Socket("192.168.100.4", 6789);
 		clientNV = new ClientNhanVien_dao(socket);
 
 		listNV = clientNV.getListNV();
@@ -834,6 +832,7 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 					gioiTinhTrongTable = "Nu";
 				}
 				String chucVu = nv.getChucVu();
+				
 				boolean trangThai = nv.isTrangThai();
 				trangThaiTrongTable = trangThai + "";
 				if (trangThai) {
@@ -849,31 +848,6 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 			e1.printStackTrace();
 		}
 	}
-
-	private void initComponents() {
-		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-		addWindowListener(new java.awt.event.WindowAdapter() {
-			public void windowClosing(java.awt.event.WindowEvent evt) {
-				formWindowClosing(evt);
-			}
-		});
-
-		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-		getContentPane().setLayout(layout);
-		layout.setHorizontalGroup(
-				layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGap(0, 400, Short.MAX_VALUE));
-		layout.setVerticalGroup(
-				layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGap(0, 300, Short.MAX_VALUE));
-
-		pack();
-	}
-
-	private void formWindowClosing(java.awt.event.WindowEvent evt) {// GEN-FIRST:event_formWindowClosing
-		GD_QuanLy gdql = new GD_QuanLy();
-		gdql.setLocationRelativeTo(null);
-		gdql.setVisible(true);
-	}
-
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		java.lang.Object o = e.getSource();
@@ -896,31 +870,15 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 			}
 		} else if (o.equals(btnSua)) {
 			try {
-				updateNhanVien();
-				latch.await();
-			} catch (ClassNotFoundException | IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			try {
+				suaNV();
 				listNV = clientNV.getListNV();
 				xoaBang();
 				xoaTrangTF();
 				loadDataToTable(listNV);
-			} catch (UnknownHostException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (ClassNotFoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+			} catch (Exception e2) {
+				// TODO: handle exception
+				e2.printStackTrace();
 			}
-			
 		} else if (o.equals(btnLamMoi)) {
 			try {
 				xoaTrangTF();
@@ -938,6 +896,63 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 			}
 		}
 	}
+
+	private void suaNV() throws ClassNotFoundException, IOException, Exception {
+	    // TODO Auto-generated method stub
+	    int row = table.getSelectedRow();
+	    String maNVCantim = (String) table.getValueAt(row, 0);
+
+	    String tenNV = txtHoTen.getText();
+	    System.out.println(tenNV);
+	    Date ngaySinhTrenGD = ngaySinhDateChooser.getDate();
+
+	    String sdtMoi = txtSDT.getText();
+	    String diaChi = txtDiaChi.getText();
+	    String email = txtEmail.getText();
+	    String chucVu = cboxChucVu.getSelectedItem().toString();
+
+	    boolean statusQuit = true;
+	    if (cboxTrangThai.getSelectedItem().toString().trim().equals("Còn làm")) {
+	        statusQuit = true;
+	    } else {
+	        statusQuit = false;
+	    }
+
+	    String trangThai = ""; // Khai báo biến trạng thái ở đây
+
+	    // Cập nhật giá trị cho biến trạng thái
+	    if (statusQuit) { // Nếu trạng thái là Còn làm
+	        trangThai = "Ngưng làm"; // Gán trạng thái là Ngưng làm
+	    } else {
+	        trangThai = "Còn làm"; // Ngược lại, gán trạng thái là Còn làm
+	    }
+
+	    LocalDate ngaySinh;
+	    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+	    if (ngaySinhTrenGD == null) {
+	        String ngaySinhGD = txtNgaySinh.getText();
+	        ngaySinh = LocalDate.parse(ngaySinhGD, dateFormatter);
+	    } else {
+	        Instant instant = ngaySinhTrenGD.toInstant();
+	        ngaySinh = instant.atZone(ZoneId.systemDefault()).toLocalDate();
+	    }
+
+	    NhanVien nv_needUpdate = clientNV.findEmployeeOnId(maNVCantim);
+	    nv_needUpdate.setTenNV(tenNV);
+	    nv_needUpdate.setNgaySinh(ngaySinh);
+	    nv_needUpdate.setSdt(sdtMoi);
+	    nv_needUpdate.setDiaChi(diaChi);
+	    nv_needUpdate.setEmail(email);
+	    nv_needUpdate.setChucVu(chucVu);
+	    nv_needUpdate.setTrangThai(statusQuit);
+
+	    System.out.println("NV Trong Ham" + nv_needUpdate);
+
+	    clientNV.updateNV(nv_needUpdate);
+	    
+	}
+
 
 	public void timKiem() throws ClassNotFoundException, IOException {
 		// TODO Auto-generated method stub
@@ -984,61 +999,6 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 		}
 	}
 
-	private void updateNhanVien() throws ClassNotFoundException, IOException {
-		// TODO Auto-generated method stub
-		int row = table.getSelectedRow();
-		String sdtCanTim = (String) table.getValueAt(row, 3);
-
-		String tenNV = txtHoTen.getText();
-		System.out.println(tenNV);
-		Date ngaySinhTrenGD = ngaySinhDateChooser.getDate();
-
-		String sdtMoi = txtSDT.getText();
-		String diaChi = txtDiaChi.getText();
-		String email = txtEmail.getText();
-		String chucVu = cboxChucVu.getSelectedItem().toString();
-
-		boolean statusQuit = true;
-		if (cboxTrangThai.getSelectedItem().toString().trim().equals("Còn làm")) {
-			statusQuit = true;
-		} else {
-			statusQuit = false;
-		}
-		String trangThai = "";
-		if (trangThai.trim().equals("Còn làm")) {
-			trangThai = "Ngưng làm";
-		} else {
-			trangThai = "Còn làm";
-		}
-
-		LocalDate ngaySinh;
-		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-		if (ngaySinhTrenGD == null) {
-			String ngaySinhGD = txtNgaySinh.getText();
-			ngaySinh = LocalDate.parse(ngaySinhGD, dateFormatter);
-		} else {
-			Instant instant = ngaySinhTrenGD.toInstant();
-			ngaySinh = instant.atZone(ZoneId.systemDefault()).toLocalDate();
-		}
-	
-
-		NhanVien nv_needUpdate = clientNV.findEmployeeOnPhoneNumber(sdtCanTim);
-		nv_needUpdate.setTenNV(tenNV);
-		nv_needUpdate.setNgaySinh(ngaySinh);
-		nv_needUpdate.setSdt(sdtMoi);
-		nv_needUpdate.setDiaChi(diaChi);
-		nv_needUpdate.setEmail(email);
-		nv_needUpdate.setChucVu(chucVu);
-		nv_needUpdate.setTrangThai(statusQuit);
-
-		System.out.println("NV Trong Ham" + nv_needUpdate);
-
-		clientNV.updateNV(nv_needUpdate);
-
-		latch.countDown();
-		
-	}
 
 	private void xoaBang() {
 		for (int j = 0; j < table.getRowCount(); j++) {
