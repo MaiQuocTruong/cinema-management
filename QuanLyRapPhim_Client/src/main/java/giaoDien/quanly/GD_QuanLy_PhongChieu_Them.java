@@ -159,7 +159,7 @@ public class GD_QuanLy_PhongChieu_Them extends JFrame implements ActionListener 
 		btnXacNhan.addActionListener(this);
 		btnHuyBo.addActionListener(this);
 		
-		Socket socket = new Socket("192.168.2.10",6789);
+		Socket socket = new Socket("192.168.1.10",6789);
 		clientPC_dao = new ClientPhongChieu_dao(socket);
 		
 		dsPhongChieu = clientPC_dao.getListPhongChieu();
@@ -226,8 +226,6 @@ public class GD_QuanLy_PhongChieu_Them extends JFrame implements ActionListener 
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-
 		}
-		
 	}
 }

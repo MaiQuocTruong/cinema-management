@@ -74,7 +74,7 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JLabel lblClock, lbltennv;
+	private JLabel lblClock;
 	private Timer timer;
 	Connection con = null;
 	ResultSet rs = null;
@@ -89,7 +89,7 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 	private JTextField txtTen;
 	private boolean isCalendarVisible = false;
 	private JComboBox<String> loaiDoAnComboBox; // Declare the JComboBox here
-
+	public JLabel lbltennv;
 	
 	private List<DichVuAnUong> listServices = new ArrayList<DichVuAnUong>();
 
@@ -230,6 +230,7 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 				GD_MuaVe_Phim gdMuaVe;
 				try {
 					gdMuaVe = new GD_MuaVe_Phim();
+					gdMuaVe.lbltennv.setText(lbltennv.getText());
 					gdMuaVe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 					gdMuaVe.setLocationRelativeTo(null);
 					gdMuaVe.setVisible(true);
@@ -256,6 +257,7 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				GD_MuaVe_ChonGhe gdmGHE = new GD_MuaVe_ChonGhe();
+				gdmGHE.lbltennv.setText(lbltennv.getText());
 				gdmGHE.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				gdmGHE.setLocationRelativeTo(null);
 				gdmGHE.setVisible(true);
@@ -274,6 +276,7 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				GD_MuaVe_SuatChieu gdSChieu = new GD_MuaVe_SuatChieu();
+				gdSChieu.lbltennv.setText(lbltennv.getText());
 				gdSChieu.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				gdSChieu.setLocationRelativeTo(null);
 				gdSChieu.setVisible(true);
@@ -397,6 +400,7 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 				GD_KhachHang gdkh;
 				try {
 					gdkh = new GD_KhachHang();
+					gdkh.lbltennv.setText(lbltennv.getText());
 					gdkh.setVisible(true);
 					gdkh.setLocationRelativeTo(null);
 					dispose();

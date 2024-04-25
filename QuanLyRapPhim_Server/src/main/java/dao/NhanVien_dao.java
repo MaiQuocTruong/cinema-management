@@ -44,6 +44,17 @@ public class NhanVien_dao {
 				   .getSingleResult();
 	}
 	
+	public String getTenNhanVien(String manv) {
+		try {
+	        NhanVien nv = em.createQuery("Select nv from NhanVien nv where nv.maNV = :maNV", NhanVien.class)
+	                .setParameter("maNV", manv)
+	                .getSingleResult();
+	        return nv.getTenNV();
+	    } catch (NoResultException e) {
+	        return null;
+	    }
+	}
+	
 	public NhanVien findEmployeeOnId(String idNhanVien) {
 		return em.createQuery("Select nv from NhanVien nv where nv.maNV = :maNV", NhanVien.class).
 				setParameter("maNV", idNhanVien)

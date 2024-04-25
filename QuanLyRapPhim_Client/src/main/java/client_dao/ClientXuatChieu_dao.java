@@ -15,7 +15,7 @@ import enities.PhongChieuPhim;
 import enities.XuatChieu;
 
 
-public class ClientXuatChieu_dao implements Serializable {
+public class ClientXuatChieu_dao {
 	private ObjectOutputStream out;
 	private ObjectInputStream in;
 	

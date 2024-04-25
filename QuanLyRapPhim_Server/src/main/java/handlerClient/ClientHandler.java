@@ -126,6 +126,11 @@ public class ClientHandler implements Runnable {
 					nv_dao.updateNV(nv_needUpdate);
 					tk_dao.updateTrangThaiTK(nv_needUpdate.getMaNV());
 					break;
+				case "getNameNhanVien":
+					String manv_cantimten = in.readUTF();
+					out.writeObject(nv_dao.getTenNhanVien(manv_cantimten));
+					out.flush();
+					break;
 				case "GetListAccount":
 					List<TaiKhoan> listTK = tk_dao.getListTaiKhoan();
 					out.writeObject(listTK);
@@ -137,6 +142,16 @@ public class ClientHandler implements Runnable {
 					out.writeObject(resultFindTK);
 					out.flush();
 					break;
+//				case "checkPassword":
+//					String maNVCheck = in.readUTF();
+//					TaiKhoan tkCanCheck = tk_dao.findEmployeeOnMaNV(maNVCheck);
+//					if(tk_dao.kiemTraMatKhau(tkCanCheck.getMaNV(),tkCanCheck.getMatkhau())) {
+//						out.writeObject(true);
+//						out.flush();
+//					}
+//					out.writeObject(false);
+//					out.flush();
+//					break;
 				case "GetListPhongChieu":
 					List<PhongChieuPhim> listPC = pc_dao.getListPhongChieu();
 					out.writeObject(listPC);

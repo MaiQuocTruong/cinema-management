@@ -73,7 +73,7 @@ public class GD_MuaVe_Phim extends JFrame implements ActionListener {
 	 * 
 	 */
 	private JPanel contentPane;
-	private JLabel lblClock, lbltennv;
+	private JLabel lblClock;
 	private Timer timer;
 	Connection con = null;
 	ResultSet rs = null;
@@ -91,7 +91,7 @@ public class GD_MuaVe_Phim extends JFrame implements ActionListener {
 	private boolean isCalendarVisible = false;
 	private JTextField textField;
 	private JTextField textField_1;
-
+	public JLabel lbltennv;
 
 //	static String quanly;
 	/**
@@ -264,6 +264,7 @@ public class GD_MuaVe_Phim extends JFrame implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				GD_MuaVe_ChonGhe gdmGHE = new GD_MuaVe_ChonGhe();
+				gdmGHE.lbltennv.setText(lbltennv.getText());
 				gdmGHE.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				gdmGHE.setLocationRelativeTo(null);
 				gdmGHE.setVisible(true);
@@ -279,6 +280,7 @@ public class GD_MuaVe_Phim extends JFrame implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				GD_MuaVe_ThucAn gdmvthan = new GD_MuaVe_ThucAn();
+				gdmvthan.lbltennv.setText(lbltennv.getText());
 				gdmvthan.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				gdmvthan.setLocationRelativeTo(null);
 				gdmvthan.setVisible(true);
@@ -293,6 +295,7 @@ public class GD_MuaVe_Phim extends JFrame implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				GD_MuaVe_SuatChieu gdSChieu = new GD_MuaVe_SuatChieu();
+				gdSChieu.lbltennv.setText(lbltennv.getText());
 				gdSChieu.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				gdSChieu.setLocationRelativeTo(null);
 				gdSChieu.setVisible(true);
@@ -418,6 +421,7 @@ public class GD_MuaVe_Phim extends JFrame implements ActionListener {
 				GD_KhachHang gdkh;
 				try {
 					gdkh = new GD_KhachHang();
+					gdkh.lbltennv.setText(lbltennv.getText());
 					gdkh.setVisible(true);
 					gdkh.setLocationRelativeTo(null);
 					dispose();
@@ -698,6 +702,7 @@ public class GD_MuaVe_Phim extends JFrame implements ActionListener {
 
 	private void formWindowClosing(java.awt.event.WindowEvent evt) {// GEN-FIRST:event_formWindowClosing
 		GD_NhanVien gdnv = new GD_NhanVien();
+		gdnv.lbltennv.setText(lbltennv.getText());
 		gdnv.setLocationRelativeTo(null);
 		gdnv.setVisible(true);
 	}

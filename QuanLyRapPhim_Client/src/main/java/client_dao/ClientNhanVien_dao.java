@@ -57,6 +57,17 @@ public class ClientNhanVien_dao {
 		return nv;
 	}
 	
+	public String getNameNhanVien(String manv) throws IOException, ClassNotFoundException {
+		out.writeUTF("getNameNhanVien");
+		out.flush();
+		
+		out.writeUTF(manv);
+		out.flush();
+		
+		String tenNV = (String) in.readObject();
+		return tenNV;
+	}
+	
 	public void updateNV(NhanVien nv) throws IOException {
 		out.writeUTF("UpdateEmployee");
 		out.flush();

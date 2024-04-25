@@ -704,7 +704,7 @@ public class GD_QuanLy_PhongChieu extends JFrame implements ActionListener {
 				// TODO Auto-generated method stub
 				GD_QuanLy_PhongChieu_Them gdthem;
 				try {
-					Socket socket = new Socket("192.168.2.10", 6789);
+					Socket socket = new Socket("192.168.1.10", 6789);
 					clientPC_dao = new ClientPhongChieu_dao(socket);
 					gdthem = new GD_QuanLy_PhongChieu_Them();
 					gdthem.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -760,7 +760,7 @@ public class GD_QuanLy_PhongChieu extends JFrame implements ActionListener {
 		btnXoa.addActionListener(this);
 		btnLamMoi.addActionListener(this);
 
-		Socket socket = new Socket("192.168.2.10", 6789);
+		Socket socket = new Socket("192.168.1.10", 6789);
 		clientPC_dao = new ClientPhongChieu_dao(socket);
 		ds_pc = clientPC_dao.getListPhongChieu();
 		loadTableData(ds_pc);

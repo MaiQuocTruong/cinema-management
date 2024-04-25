@@ -26,6 +26,18 @@ public class ClientTaiKhoan_dao {
 		return listTK;
 	}
 	
+//	public Boolean kiemTraMatKhau(String maNVCheck) throws IOException, ClassNotFoundException {
+//		out.writeUTF("checkPassword");
+//		out.flush();
+//		
+//		out.writeUTF(maNVCheck);
+//		out.flush();
+//		
+//		Boolean flag = (Boolean)in.readObject();
+//		
+//		return flag;
+//	}
+	
 	public TaiKhoan findTKOnMaNV(String manv) throws IOException, ClassNotFoundException {
 		out.writeUTF("FindAccountOnMaNV");
 		out.flush();

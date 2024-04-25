@@ -4,6 +4,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import client_dao.ClientNhanVien_dao;
+import client_dao.ClientTaiKhoan_dao;
+import enities.NhanVien;
+import enities.TaiKhoan;
 import giaoDien.nhanvien.GD_NhanVien;
 import giaoDien.quanly.GD_QuanLy;
 
@@ -26,6 +30,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import java.awt.event.MouseMotionAdapter;
+import java.io.IOException;
+import java.net.Socket;
 import java.awt.event.MouseAdapter;
 
 public class Login extends JFrame implements ActionListener{
@@ -44,6 +50,8 @@ public class Login extends JFrame implements ActionListener{
 	ResultSet rs = null;
 	PreparedStatement pst = null;
 	String quanly;
+	private ClientNhanVien_dao clientNV_dao;
+	private ClientTaiKhoan_dao clientTK_dao;
 	/**
 	 * Launch the application.
 	 */
@@ -97,11 +105,17 @@ public class Login extends JFrame implements ActionListener{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-//				dangNhap();
-	            GD_QuanLy gdqly = new GD_QuanLy();
-	            gdqly.setVisible(true);
-	            gdqly.setLocationRelativeTo(null);
-	            dispose();
+				try {
+					Socket socket = new Socket("192.168.1.10", 6789);
+					clientNV_dao = new ClientNhanVien_dao(socket);
+					dangNhap();
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 
@@ -185,8 +199,46 @@ public class Login extends JFrame implements ActionListener{
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
+		if (e.getSource() == txtUser || e.getSource() == passMk) {
+	        try {
+				dangNhap();
+			} catch (ClassNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} // Gọi phương thức đăng nhập khi Enter được ấn trên các trường nhập liệu
+	    }
 	}
-
+	
+	private void dangNhap() throws ClassNotFoundException, IOException {
+		// TODO Auto-generated method stub
+		if (txtUser.getText().trim().isEmpty() || passMk.getPassword().length == 0) {
+            JOptionPane.showMessageDialog(null, "Vui lòng nhập tài khoản và mật khẩu.");
+            return; // Exit the method if fields are empty
+        }
+        
+        if(txtUser.getText().equals("TK001")) {
+            GD_QuanLy gdqly = new GD_QuanLy();
+            gdqly.setVisible(true);
+            gdqly.setLocationRelativeTo(null);
+            dispose();
+        }else {
+        	Socket socket = new Socket("192.168.1.10",6789);
+        	clientTK_dao = new ClientTaiKhoan_dao(socket);
+        	TaiKhoan tk = clientTK_dao.findTKOnMaNV(txtUser.getText());
+        	if(tk.getMatkhau().equals(new String(passMk.getPassword()))) {
+        		String tenNhanVien = clientNV_dao.getNameNhanVien(txtUser.getText());
+            	GD_NhanVien gdnv = new GD_NhanVien();
+            	gdnv.lbltennv.setText(tenNhanVien);
+            	gdnv.setVisible(true);
+            	gdnv.setLocationRelativeTo(null);
+            	dispose();
+        	}else {
+        		JOptionPane.showMessageDialog(this, "Mật khẩu sai");
+        	}
+        }
+    }
 }
 

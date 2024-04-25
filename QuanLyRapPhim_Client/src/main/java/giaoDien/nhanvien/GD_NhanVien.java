@@ -49,7 +49,7 @@ public class GD_NhanVien extends JFrame implements ActionListener {
 	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JLabel lblClock, lbltennv;
+	private JLabel lblClock;
 	private Timer timer;
 	Connection con = null;
 	ResultSet rs = null;
@@ -59,6 +59,7 @@ public class GD_NhanVien extends JFrame implements ActionListener {
 	Color whiteColor = Color.WHITE;
     private JLabel lblNvIcon; // Thêm biến để lưu đối tượng JLabel chứa ảnh NV
     private boolean daChonPhim = false; // Biến để kiểm tra xem đã chọn Phim hay chưa
+    public JLabel lbltennv;
 //	static String quanly;
 	/**
 	 * Launch the application.
@@ -92,7 +93,7 @@ public class GD_NhanVien extends JFrame implements ActionListener {
 	 * Create the frame.
 	 */
 	public GD_NhanVien() {
-		initComponents();
+//		initComponents();
 		setResizable(false);
 		setBackground(Color.WHITE);
 		setTitle("Giao Diện Nhân Viên");
@@ -116,7 +117,7 @@ public class GD_NhanVien extends JFrame implements ActionListener {
 		lblnhanvien.setForeground(Color.WHITE);
 		contentPane.add(lblnhanvien);
 		
-		lbltennv = new JLabel("Trương Đại Lộc");
+		lbltennv = new JLabel();
 		lbltennv.setForeground(Color.WHITE);
 		lbltennv.setFont(new Font("Tahoma", Font.BOLD, 16));
 		lbltennv.setBounds(832, 0, 238, 50);
@@ -192,6 +193,7 @@ public class GD_NhanVien extends JFrame implements ActionListener {
 				GD_MuaVe_Phim gdMuaVe;
 				try {
 					gdMuaVe = new GD_MuaVe_Phim();
+					gdMuaVe.lbltennv.setText(lbltennv.getText());
 					gdMuaVe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 					gdMuaVe.setLocationRelativeTo(null);
 					gdMuaVe.setVisible(true);
@@ -366,6 +368,7 @@ public class GD_NhanVien extends JFrame implements ActionListener {
 				GD_KhachHang gdkh;
 				try {
 					gdkh = new GD_KhachHang();
+					gdkh.lbltennv.setText(lbltennv.getText());
 					gdkh.setVisible(true);
 					gdkh.setLocationRelativeTo(null);
 					dispose();
