@@ -8,6 +8,8 @@ import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.IOException;
+import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -283,7 +285,12 @@ public class GD_QuanLy_Phim_Them extends JFrame {
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 		addWindowListener(new java.awt.event.WindowAdapter() {
 			public void windowClosing(java.awt.event.WindowEvent evt) {
-				formWindowClosing(evt);
+				try {
+					formWindowClosing(evt);
+				} catch (ClassNotFoundException | IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 
@@ -297,7 +304,7 @@ public class GD_QuanLy_Phim_Them extends JFrame {
 		pack();
 	}
 
-	private void formWindowClosing(java.awt.event.WindowEvent evt) {// GEN-FIRST:event_formWindowClosing
+	private void formWindowClosing(java.awt.event.WindowEvent evt) throws UnknownHostException, ClassNotFoundException, IOException {// GEN-FIRST:event_formWindowClosing
 		GD_QuanLy_Phim gdqlphim = new GD_QuanLy_Phim();
 		gdqlphim.setLocationRelativeTo(null);
 		gdqlphim.setVisible(true);

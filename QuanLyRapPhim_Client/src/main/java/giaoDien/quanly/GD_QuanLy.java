@@ -197,11 +197,18 @@ public class GD_QuanLy extends JFrame implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				GD_QuanLy_Phim gdqlphim = new GD_QuanLy_Phim();
-				gdqlphim.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				gdqlphim.setLocationRelativeTo(null);
-				gdqlphim.setVisible(true);
-				dispose();
+				GD_QuanLy_Phim gdqlphim;
+				try {
+					gdqlphim = new GD_QuanLy_Phim();
+					gdqlphim.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					gdqlphim.setLocationRelativeTo(null);
+					gdqlphim.setVisible(true);
+					dispose();
+				} catch (ClassNotFoundException | IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
 			}
 		});
 		JButton btnSuatChieu = new JButton("Quản Lý Suất Chiếu");

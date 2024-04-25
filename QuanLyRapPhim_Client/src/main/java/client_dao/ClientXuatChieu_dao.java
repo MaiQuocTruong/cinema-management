@@ -7,8 +7,11 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+
+import enities.PhongChieuPhim;
 import enities.XuatChieu;
 
 
@@ -30,16 +33,7 @@ public class ClientXuatChieu_dao implements Serializable {
 		return listXC;
 	}
 	
-	public void addXC(XuatChieu xc) throws IOException {
-		out.writeUTF("AddXuatChieu");
-		out.flush();
-		
-		out.writeObject(xc);
-		out.flush();
-		
-	}
-	
-	public XuatChieu findXuatChieuOnMaXC(String maXC) throws IOException, ClassNotFoundException {
+	public XuatChieu findPhongChieuOnMaXuat(String maXC) throws IOException, ClassNotFoundException {
 		out.writeUTF("findXuatChieuOnMaXC");
 		out.flush();
 		
@@ -49,7 +43,22 @@ public class ClientXuatChieu_dao implements Serializable {
 		XuatChieu xc = (XuatChieu) in.readObject();
 		return xc;
 	}
-	
+	public void addXC(XuatChieu xc) throws IOException {
+		out.writeUTF("AddXuatChieu");
+		out.flush();
+		
+		out.writeObject(xc);
+		out.flush();
+		
+	}
+
+	public void deleteXuatChieu(XuatChieu xc) throws IOException {
+		out.writeUTF("DeleteXuatChieu");
+		out.flush();
+		
+		out.writeObject(xc);
+		out.flush();
+	}
 	public void updateXuatChieu(XuatChieu xc) throws IOException {
 		out.writeUTF("UpdateXuatChieu");
 		out.flush();
@@ -58,27 +67,24 @@ public class ClientXuatChieu_dao implements Serializable {
 		out.flush();
 	}
 	
-	public void deleteXuatChieu(XuatChieu xc) throws IOException {
-		out.writeUTF("DeleteXuatChieu");
-		out.flush();
-		
-		out.writeObject(xc);
-		out.flush();
-	}
-	
-	public XuatChieu findXuatChieuOnNgayChieu(String Ma) throws IOException, ClassNotFoundException {
+	public XuatChieu findXuatChieuOnNgayChieu(LocalDate ngayChieu) throws IOException, ClassNotFoundException {
+	    // Gửi yêu cầu tìm kiếm đến máy chủ
 	    out.writeUTF("FindXuatChieuOnNgayChieu");
 	    out.flush();
 	    
-	    // Gửi ngày chiếu đến máy chủ
-	    out.writeObject(Ma);
+	    // Chuyển đổi LocalDate thành chuỗi và gửi đến máy chủ
+	    String ngayChieuString = ngayChieu.toString();
+	    out.writeUTF(ngayChieuString);
 	    out.flush();
 	    
-	    // Đọc danh sách xuất chiếu từ máy chủ
-	    XuatChieu danhSachXuatChieu = (XuatChieu) in.readObject();
-		return danhSachXuatChieu;
+	    // Đọc kết quả từ máy chủ
+	    XuatChieu xuatChieu = (XuatChieu) in.readObject();
 	    
-	   
+	    return xuatChieu;
 	}
+
+
+
+    
 
 }

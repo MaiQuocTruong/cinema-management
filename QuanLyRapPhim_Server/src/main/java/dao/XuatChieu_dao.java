@@ -15,10 +15,10 @@ import jakarta.persistence.TypedQuery;
 public class XuatChieu_dao {
 	private EntityManager em;
 
-	public XuatChieu_dao() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+//	public XuatChieu_dao() {
+//		super();
+//		// TODO Auto-generated constructor stub
+//	}
 
 	public XuatChieu_dao(EntityManager em) {
 		super();
@@ -32,6 +32,30 @@ public class XuatChieu_dao {
 		listXuatChieu = resultQuery.getResultList();
 		return listXuatChieu;
 	}
+	
+	public XuatChieu findXuatChieuOnMaXC(String maXC) {
+	    return em.createQuery("Select xc from XuatChieu xc where xc.maXuat = :maXuat", XuatChieu.class)
+	             .setParameter("maXuat", maXC)
+	             .getSingleResult();
+}
+	
+	public void deleteXuatChieu(String maXuat) {
+		try {
+//			// Kiểm tra xem đối tượng có trong persistence context hay không
+			XuatChieu xcDelete = em.find(XuatChieu.class, maXuat);
+			 if (xcDelete != null && em.contains(xcDelete)) {
+				 	em.getTransaction().begin();
+	                em.remove(xcDelete); // Xóa đối tượng nếu nó được quản lý
+	                em.getTransaction().commit();
+	          }
+		}catch (Exception e) {
+			if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback(); // Rollback transaction nếu có lỗi xảy ra
+            }
+            e.printStackTrace();
+		}
+	}
+	
 	public void addxuatChieu(XuatChieu xc) {
 		// TODO Auto-generated method stub
 		try {
@@ -43,30 +67,6 @@ public class XuatChieu_dao {
 				System.out.println("Vẫn Đang Active");
 			}
 			e.printStackTrace();
-		}
-	}
-	
-	
-	public XuatChieu findXuatChieuOnMaXC(String maXC) {
-	    return em.createQuery("Select xc from XuatChieu xc where xc.maXuat = :maXuat", XuatChieu.class)
-	             .setParameter("maXuat", maXC)
-	             .getSingleResult();
-}
-	
-	public void deleteXuatChieu(String maXuat) {
-		try {
-//			// Kiểm tra xem đối tượng có trong persistence context hay không
-			XuatChieu XuatChieuDelete = em.find(XuatChieu.class, maXuat);
-			 if (XuatChieuDelete != null && em.contains(XuatChieuDelete)) {
-				 	em.getTransaction().begin();
-	                em.remove(XuatChieuDelete); // Xóa đối tượng nếu nó được quản lý
-	                em.getTransaction().commit();
-	          }
-		}catch (Exception e) {
-			if (em.getTransaction().isActive()) {
-                em.getTransaction().rollback(); // Rollback transaction nếu có lỗi xảy ra
-            }
-            e.printStackTrace();
 		}
 	}
 	
@@ -83,14 +83,11 @@ public class XuatChieu_dao {
 			e.printStackTrace();
 		}
 	}
-	
-	public XuatChieu findXuatChieuOnNgayChieu(String Ma) {
-	    return em.createQuery("Select xc from XuatChieu xc where xc.maXuat = :maXuat", XuatChieu.class)
-	             .setParameter("maXuat", Ma)
+	public XuatChieu findXuatChieuOnNgayChieu(LocalDate ngayChieu) {
+	    return em.createQuery("SELECT xc FROM XuatChieu xc WHERE xc.ngayChieu = :ngayChieu", XuatChieu.class)
+	             .setParameter("ngayChieu", ngayChieu)
 	             .getSingleResult();
-}
-	
-	
-	
+	}
+
 	
 }

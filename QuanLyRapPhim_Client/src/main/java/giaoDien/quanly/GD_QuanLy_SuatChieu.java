@@ -44,7 +44,7 @@ import javax.swing.table.DefaultTableModel;
 
 import com.toedter.calendar.JDateChooser;
 
-
+import client_dao.ClientPhongChieu_dao;
 import client_dao.ClientXuatChieu_dao;
 import enities.Phim;
 import enities.PhongChieuPhim;
@@ -94,12 +94,12 @@ public class GD_QuanLy_SuatChieu extends JFrame implements ActionListener {
 	private JPanel panelPhim, panelDichVu, panelNhanVien, panelTaiKhoan, panelThongKe;
 	Color customColor = new Color(0, 92, 111);
 	Color whiteColor = Color.WHITE;
-	private JTextField txtNgayHienThi,txtHoTen, txtmaXC;
+	private JTextField txtNgayHienThi, txtHoTen, txtmaXC;
 	private JLabel lblNvIcon; // Thêm biến để lưu đối tượng JLabel chứa ảnh NV
 	private boolean daChonPhim = false; // Biến để kiểm tra xem đã chọn Phim hay chưa
 	private JDateChooser ngayHienThiDateChooser; // Thêm đối tượng JDateChooser cho từ ngày
 	private boolean isCalendarVisible = false;
-	private JButton btnThem, btnXoa, btnLamMoi, btnSua,btnTracuu,btnTimtheoNgay;
+	private JButton btnThem, btnXoa, btnLamMoi, btnSua, btnTracuu, btnTimtheoNgay;
 	private JTable table;
 	private DefaultTableModel tableModel;
 	private JComboBox<String> phongChieuComboBox; // Declare the JComboBox here
@@ -109,12 +109,14 @@ public class GD_QuanLy_SuatChieu extends JFrame implements ActionListener {
 //	static String quanly;
 	/**
 	 * Launch the application.
-	 * @throws IOException 
-	 * @throws UnknownHostException 
-	 * @throws ClassNotFoundException 
-	 * @throws EOFException
+	 * 
+	 * @throws IOException
+	 * @throws UnknownHostException
+	 * @throws ClassNotFoundException
+	 * 
 	 */
-	public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException ,EOFException{
+	public static void main(String[] args)
+			throws UnknownHostException, IOException, ClassNotFoundException, EOFException {
 		try {
 			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
 				if ("Nimbus".equals(info.getName())) {
@@ -141,9 +143,10 @@ public class GD_QuanLy_SuatChieu extends JFrame implements ActionListener {
 
 	/**
 	 * Create the frame.
-	 * @throws IOException 
-	 * @throws UnknownHostException 
-	 * @throws ClassNotFoundException 
+	 * 
+	 * @throws IOException
+	 * @throws UnknownHostException
+	 * @throws ClassNotFoundException
 	 */
 	public GD_QuanLy_SuatChieu() throws UnknownHostException, IOException, ClassNotFoundException {
 		initComponents();
@@ -242,18 +245,22 @@ public class GD_QuanLy_SuatChieu extends JFrame implements ActionListener {
 		JButton btnqlyPhim = new JButton("Quản Lý Phim");
 		btnqlyPhim.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnqlyPhim.setIcon(new ImageIcon(GD_QuanLy_SuatChieu.class.getResource("/imgs/film-reel.png")));
-		btnqlyPhim.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				GD_QuanLy_Phim gdqlphim = new GD_QuanLy_Phim();
-				gdqlphim.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				gdqlphim.setLocationRelativeTo(null);
-				gdqlphim.setVisible(true);
-				dispose();
-			}
-		});
+//		btnqlyPhim.addActionListener(new ActionListener() {
+//
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				// TODO Auto-generated method stub
+//				GD_QuanLy_Phim gdqlphim;
+//				try {
+//					gdqlphim = new GD_QuanLy_Phim();
+//					
+//				} catch (ClassNotFoundException | IOException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				}
+//				
+//			}
+//		});
 		JButton btnSuatChieu = new JButton("Quản Lý Suất Chiếu");
 		btnSuatChieu.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnSuatChieu.setIcon(new ImageIcon(GD_QuanLy_SuatChieu.class.getResource("/imgs/clapperboard2.png")));
@@ -284,7 +291,7 @@ public class GD_QuanLy_SuatChieu extends JFrame implements ActionListener {
 				}
 
 			}
-			
+
 		});
 
 		panelPhim.add(btnqlyPhim);
@@ -419,7 +426,7 @@ public class GD_QuanLy_SuatChieu extends JFrame implements ActionListener {
 					e1.printStackTrace();
 				}
 			}
-			
+
 		});
 		panelNhanVien.add(btnNhanVien);
 
@@ -601,8 +608,6 @@ public class GD_QuanLy_SuatChieu extends JFrame implements ActionListener {
 		lblTraCuuSuatChieu.setBounds(45, 102, 152, 20);
 		contentPane.add(lblTraCuuSuatChieu);
 
-		
-
 		JPanel pnlNgayHienThi_1 = new JPanel();
 		pnlNgayHienThi_1.setOpaque(false);
 		pnlNgayHienThi_1.setBackground(Color.YELLOW);
@@ -615,21 +620,21 @@ public class GD_QuanLy_SuatChieu extends JFrame implements ActionListener {
 		pnlNgayHienThi_1.add(txtNgayHienThi);
 
 //		// Khởi tạo JDateChooser cho từ ngày
-//		ngayHienThiDateChooser = new JDateChooser();
-//		ngayHienThiDateChooser.setBounds(140, 194, 100, 29);
-//		ngayHienThiDateChooser.getDateEditor().getUiComponent().setVisible(isCalendarVisible);
-//		contentPane.add(ngayHienThiDateChooser);
-//
-//		// Thêm sự kiện cho JDateChooser để cập nhật giá trị vào textfield khi người
-//		// dùng chọn ngày
-//		ngayHienThiDateChooser.addPropertyChangeListener("date", new PropertyChangeListener() {
-//			@Override
-//			public void propertyChange(PropertyChangeEvent evt) {
-//				Date selectedDate = ngayHienThiDateChooser.getDate();
-//				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//				txtNgayHienThi.setText(dateFormat.format(selectedDate));
-//			}
-//		});
+		ngayHienThiDateChooser = new JDateChooser();
+		ngayHienThiDateChooser.setBounds(140, 194, 100, 29);
+		ngayHienThiDateChooser.getDateEditor().getUiComponent().setVisible(isCalendarVisible);
+		contentPane.add(ngayHienThiDateChooser);
+
+		// Thêm sự kiện cho JDateChooser để cập nhật giá trị vào textfield khi người
+		// dùng chọn ngày
+		ngayHienThiDateChooser.addPropertyChangeListener("date", new PropertyChangeListener() {
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				Date selectedDate = ngayHienThiDateChooser.getDate();
+				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+				txtNgayHienThi.setText(dateFormat.format(selectedDate));
+			}
+		});
 
 		JPanel pnlNgayHienThi = new JPanel();
 		pnlNgayHienThi.setOpaque(false);
@@ -641,7 +646,7 @@ public class GD_QuanLy_SuatChieu extends JFrame implements ActionListener {
 //		JLabel lblNgayHienThi = new JLabel("Ngày hiển thị:");
 //		lblNgayHienThi.setFont(new Font("Open Sans", 0, 16));
 //		pnlNgayHienThi.add(lblNgayHienThi);
-		btnTimtheoNgay=new JButton("Theo Ngày");
+		btnTimtheoNgay = new JButton("Theo Ngày");
 		btnTimtheoNgay.setFont(new Font("Open Sans", 0, 16));
 		pnlNgayHienThi.add(btnTimtheoNgay);
 		btnTimtheoNgay.addActionListener(this);
@@ -678,62 +683,37 @@ public class GD_QuanLy_SuatChieu extends JFrame implements ActionListener {
 		buttonGroup.add(rdbtnDangChieu);
 		buttonGroup.add(rdbtnDaChieu);
 
-		
-		
 		JLabel lblTenPhim = new JLabel("Tra cứu theo:");
 		lblTenPhim.setFont(new Font("Dialog", Font.PLAIN, 16));
 		contentPane.add(lblTenPhim);
-		
+
 		JPanel pnltrucuu = new JPanel();
 		pnltrucuu.setOpaque(false);
 		pnltrucuu.setBackground(Color.YELLOW);
 		pnltrucuu.setBounds(10, 429, 230, 37);
 		contentPane.add(pnltrucuu);
 		pnltrucuu.setLayout(new FlowLayout(FlowLayout.LEFT));
-		
-		
-		
-		
-		
-		
-		btnTracuu=new JButton();
+
+		btnTracuu = new JButton();
 		btnTracuu.setFont(new Font("Open Sans", 0, 16)); // NOI18N
 		btnTracuu.setSelected(true);
 		btnTracuu.setText("Theo mã XC");
 		btnTracuu.addActionListener(this);
 		pnltrucuu.add(btnTracuu);
-		
-		
+
 		JPanel pnlTheoTenPhim = new JPanel();
 		pnlTheoTenPhim.setBackground(new Color(255, 255, 0));
 		pnlTheoTenPhim.setBounds(10, 464, 230, 37);
 		pnlTheoTenPhim.setOpaque(false);
 		contentPane.add(pnlTheoTenPhim);
 		// Add JTextField below JCheckBox
-		 txtmaXC = new JTextField();
+		txtmaXC = new JTextField();
 		txtmaXC.setFont(new Font("Open Sans", 0, 16));
 		txtmaXC.setColumns(16); // You can adjust the column count based on your requirement
 		pnlTheoTenPhim.add(txtmaXC);
-		
-		
+
 		// Khởi tạo các nút
 		btnThem = new JButton("Thêm");
-		btnXoa = new JButton("Xóa");
-		btnLamMoi = new JButton("Làm mới");
-		btnSua = new JButton("Sửa");
-
-		// Đặt vị trí cho các nút
-		btnThem.setBounds(250, 99, 100, 30);
-		btnXoa.setBounds(360, 99, 100, 30);
-		btnLamMoi.setBounds(470, 99, 100, 30);
-		btnSua.setBounds(580, 99, 100, 30);
-
-		// Thêm các nút vào contentPane
-		contentPane.add(btnThem);
-		contentPane.add(btnXoa);
-		contentPane.add(btnLamMoi);
-		contentPane.add(btnSua);
-
 		// Thêm sự kiện các nút
 		btnThem.addActionListener(new ActionListener() {
 					
@@ -742,8 +722,8 @@ public class GD_QuanLy_SuatChieu extends JFrame implements ActionListener {
 						// TODO Auto-generated method stub
 						GD_QuanLy_SuatChieu_Them gdThemSuatChieu;
 						try {
-							Socket socket = new Socket("192.168.2.10", 6789);
-							clientXC = new ClientXuatChieu_dao(socket);
+//							Socket socket = new Socket("192.168.1.70", 6789);
+//							clientXC = new ClientXuatChieu_dao(socket);
 							try {
 								gdThemSuatChieu = new GD_QuanLy_SuatChieu_Them();
 								gdThemSuatChieu.setVisible(true);
@@ -764,98 +744,100 @@ public class GD_QuanLy_SuatChieu extends JFrame implements ActionListener {
 						
 					}
 				});
-				
-				btnSua.addActionListener(new ActionListener() {
-				    @Override
-				    public void actionPerformed(ActionEvent e) {
-				    	
-				       
-				    	try {
-				            // Lấy mã phòng chiếu được chọn từ bảng
-				            int selectedRow = table.getSelectedRow();
-				            if (selectedRow == -1) {
-				                JOptionPane.showMessageDialog(null, "Vui lòng chọn một dữ liệu ở bảng để sửa.");
-				                return;
-				            }
-				           
-				            String maXuat = (String) table.getValueAt(selectedRow, 0);
-				            
-				            String maPhim=(String) table.getValueAt(selectedRow, 1);
-				            String maPhongChieu=(String) table.getValueAt(selectedRow, 2);
+		btnSua = new JButton("Sửa");
+		btnSua.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
 
-				            LocalDate ngayChieu = (LocalDate) table.getValueAt(selectedRow, 3);
+				try {
+					// Lấy mã phòng chiếu được chọn từ bảng
+					int selectedRow = table.getSelectedRow();
+					if (selectedRow == -1) {
+						JOptionPane.showMessageDialog(null, "Vui lòng chọn một dữ liệu ở bảng để sửa.");
+						return;
+					}
+					String maXuat = (String) table.getValueAt(selectedRow, 0);
+					String maPhim=(String) table.getValueAt(selectedRow, 1);
+		            String maPhongChieu=(String) table.getValueAt(selectedRow, 2);
+					String trangThai = (String) table.getValueAt(selectedRow, 7);
+					String dinhDang = (String) table.getValueAt(selectedRow, 6);
+					LocalDate ngayChieu = (LocalDate) table.getValueAt(selectedRow, 3);
+					Time gioChieu = (Time) table.getValueAt(selectedRow, 4);
+					Time gioKetthuc = (Time) table.getValueAt(selectedRow, 5);
+					
+					// Hiển thị giao diện sửa phòng chiếu
+					GD_QuanLy_SuatChieu_Sua gdSua = new GD_QuanLy_SuatChieu_Sua();
+					// Truyền mã phòng chiếu tới giao diện sửa
+					gdSua.addMaPhimToList(maPhim);
+					gdSua.addMaPhongChieuToList(maPhongChieu);
+					gdSua.setMaXuat(maXuat,maPhim,maPhongChieu, trangThai,dinhDang,ngayChieu.toString(),gioChieu.toString(),gioKetthuc.toString());
+					gdSua.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					gdSua.setLocationRelativeTo(null);
+					gdSua.setVisible(true);
+					dispose();
 
-				            // Chuyển đổi chuỗi ngày chiếu sang kiểu LocalDate
-				            
-				            
-				            Time gioChieu = (Time) table.getValueAt(selectedRow, 4);  
-				            Time  gioKetthuc= (Time) table.getValueAt(selectedRow, 5);
-				            String  dinhDang= (String) table.getValueAt(selectedRow, 6);
-				            String  trangThai= (String) table.getValueAt(selectedRow, 7);
-				            // Hiển thị giao diện sửa phòng chiếu
-				            GD_QuanLy_SuatChieu_Sua gdSua = new GD_QuanLy_SuatChieu_Sua();
-				            gdSua.addMaPhimToList(maPhim);
-				            gdSua.addMaPhongChieuToList(maPhongChieu);
-				            //gdSua.setmaXuat(maXuat); // Truyền mã phòng chiếu tới giao diện sửa
-				            gdSua.updateFields(maXuat,maPhim,maPhongChieu,ngayChieu.toString(),gioChieu.toString(),gioKetthuc.toString(),dinhDang,trangThai);
-				            
-				            gdSua.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				            gdSua.setLocationRelativeTo(null);
-				            gdSua.setVisible(true);
-				            dispose();
-				        } catch (UnknownHostException e1) {
-				            e1.printStackTrace();
-				        } catch (IOException e1) {
-				            e1.printStackTrace();
-				        } catch (ClassNotFoundException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-				    }
-				});
-				
-				
-				
-				
+				} catch (UnknownHostException e1) {
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+
+		});
+
+		btnXoa = new JButton("Xóa");
+		btnLamMoi = new JButton("Làm mới");
+
+		// Đặt vị trí cho các nút
+		btnThem.setBounds(250, 99, 100, 30);
+		btnXoa.setBounds(360, 99, 100, 30);
+		btnLamMoi.setBounds(470, 99, 100, 30);
+		btnSua.setBounds(580, 99, 100, 30);
+
+		// Thêm các nút vào contentPane
+		contentPane.add(btnThem);
+		contentPane.add(btnXoa);
+		contentPane.add(btnLamMoi);
+		contentPane.add(btnSua);
 
 		// Khởi tạo DefaultTableModel với các cột
-		String[] columnNames = {"Mã suất chiếu","Mã Phim","Mã PC", "Ngày chiếu", "Giờ chiếu","Giờ kết thúc", "Định dạng","Trạng thái" }; // Thay đổi tên cột tùy ý
+		String[] columnNames = { "Mã suất chiếu", "Mã Phim", "Mã PC", "Ngày chiếu", "Giờ chiếu", "Giờ kết thúc",
+				"Định dạng", "Trạng thái" }; // Thay đổi tên cột tùy ý
 		tableModel = new DefaultTableModel(columnNames, 0);
 
 		// Khởi tạo JTable với DefaultTableModel
 		table = new JTable(tableModel);
 		// Đặt chiều rộng cho cột "Tên phim"
-		//table.getColumnModel().getColumn(2).setPreferredWidth(200); // Đặt giá trị 300 làm ví dụ, bạn có thể điều chỉnh
-																	// theo ý muốn
+		// table.getColumnModel().getColumn(2).setPreferredWidth(200); // Đặt giá trị
+		// 300 làm ví dụ, bạn có thể điều chỉnh
+		// theo ý muốn
 
-		
-		
 		// Tạo JScrollPane để thêm bảng vào để có thể cuộn
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.setBounds(250, 140, 900, 300); // Điều chỉnh tọa độ và kích thước của bảng
 
 		// Thêm bảng và JScrollPane vào contentPane
 		contentPane.add(scrollPane);
-		
 
 		// Thêm dữ liệu vào bảng
-		//Load Data
+		// Load Data
 		Socket socket = new Socket("192.168.2.10", 6789);
-		clientXC= new ClientXuatChieu_dao(socket);
+		clientXC = new ClientXuatChieu_dao(socket);
 		listXC = clientXC.getListXC();
 		loadDataToTable(listXC);
-		
-		
+
 		JLabel background = new JLabel("");
 		background.setHorizontalAlignment(SwingConstants.CENTER);
 		background.setIcon(new ImageIcon(GD_QuanLy_SuatChieu.class.getResource("/imgs/bggalaxy1.png")));
 		background.setBounds(0, 0, 1162, 613);
 		contentPane.add(background);
-		
+
 		btnXoa.addActionListener(this);
 		btnSua.addActionListener(this);
 		btnLamMoi.addActionListener(this);
-		
 
 	}
 
@@ -883,152 +865,154 @@ public class GD_QuanLy_SuatChieu extends JFrame implements ActionListener {
 		gdql.setVisible(true);
 	}
 
-	
-
-	
-
-private void loadDataToTable(List<XuatChieu> listXC) {
-		
+	private void loadDataToTable(List<XuatChieu> listXC) {
 		try {
 			String ngayChieuTrongTable = "";
-		
+
 			for (XuatChieu xc : listXC) {
-				
+
 				String maXuat = xc.getMaXuat();
-				LocalDate ngayChieu =xc.getNgayChieu();
-				ngayChieuTrongTable=ngayChieu+"";
-				String maPhim =xc.getPhim().getMaPhim();
-				
-				String maPhongChieu=xc.getPhongchieu().getMaPhongChieu();
-				
-				//String maPhim = ph.getMaPhim();
-				Time GioChieu=xc.getGioChieu();
-				Time GioKetThuc=xc.getGioKetThuc();
-				String dinhDang=xc.getDinhDang();
-				String trangThai=xc.getTrangThai();
-				
-				java.lang.Object[] rowData = {maXuat,maPhim,maPhongChieu,ngayChieu,GioChieu,GioKetThuc,dinhDang,trangThai};
-				
+				LocalDate ngayChieu = xc.getNgayChieu();
+				ngayChieuTrongTable = ngayChieu + "";
+				String maPhim = xc.getPhim().getMaPhim();
+
+				String maPhongChieu = xc.getPhongchieu().getMaPhongChieu();
+
+				// String maPhim = ph.getMaPhim();
+				Time GioChieu = xc.getGioChieu();
+				Time GioKetThuc = xc.getGioKetThuc();
+				String dinhDang = xc.getDinhDang();
+				String trangThai = xc.getTrangThai();
+
+				java.lang.Object[] rowData = { maXuat, maPhim, maPhongChieu, ngayChieu, GioChieu, GioKetThuc, dinhDang,
+						trangThai };
+
 				tableModel.addRow(rowData);
 			}
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
 	}
-	
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object o = e.getSource();
-		
-		 if (o.equals(btnTracuu)) {
+
+		if (o.equals(btnXoa)) {
+			try {
+				int row = table.getSelectedRow();
+				String maCanXoa = (String) table.getValueAt(row, 0);
+				XuatChieu nv_needXoa = clientXC.findPhongChieuOnMaXuat(maCanXoa);
+				clientXC.deleteXuatChieu(nv_needXoa);
+				
+				tableModel.removeRow(row);
+				JOptionPane.showMessageDialog(this, " Xóa Thành Công!");
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (ClassNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		} else if (o.equals(btnTracuu)) {
 			try {
 				timKiem();
-				
-				JOptionPane.showMessageDialog(this, "Tìm thấy!");
-			} catch (Exception e2) {
-				e2.printStackTrace();
+				JOptionPane.showMessageDialog(this, " Tìm thấy");
+			} catch (ClassNotFoundException | IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
-		 
+		} else if (o.equals(btnLamMoi)) {
+			lamMoi();
+		}else if(o.equals(btnTimtheoNgay)) {
 			
-		}else if (o.equals(btnLamMoi)) {
 			try {
-				lamMoi();;
-			} catch (Exception e2) {
-				e2.printStackTrace();
+				timKiem1();
+				JOptionPane.showMessageDialog(this, " Tìm thấy");
+			} catch (ClassNotFoundException | IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
 		
-		}else if (o.equals(btnXoa)) {
-			
-				try {
-					deleteXuatChieu();
-				} catch (ClassNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-		}
-		 
-		
+			}
+				
 
-	
-	}
-	
-
-	
-	private void deleteXuatChieu() throws ClassNotFoundException, IOException {
-	    int row = table.getSelectedRow();
-
-	    // Kiểm tra xem có hàng nào được chọn không
-	    if (row == -1) {
-	        // Nếu không có hàng nào được chọn, hiển thị thông báo và kết thúc phương thức
-	        JOptionPane.showMessageDialog(null, "Vui lòng chọn một hàng để xóa.");
-	        return;
-	    }
-
-	    // Lấy mã của dòng được chọn
-	    String maCanXoa = (String) table.getValueAt(row, 0);
-
-	    
-	        // Thực hiện xóa xuất chiếu
-	        XuatChieu xc_delete=clientXC.findXuatChieuOnMaXC(maCanXoa);
-	        //clientXC.deleteXuatChieu(xc_delete);
-	        	
-	          // Nếu xóa thành công, xóa dòng tương ứng trong bảng
-	            tableModel.removeRow(row);
-	            JOptionPane.showMessageDialog(null, "Xóa thành công!");
-	       
 	}
 
-	
-
-
-	
-	
 	public void timKiem() throws ClassNotFoundException, IOException {
 		// TODO Auto-generated method stub
 		xoaBang();
 		loadLaiDataSauKhiTimKiem();
-		
+
 	}
 	
-	
-	
+	public void timKiem1() throws ClassNotFoundException, IOException {
+		// TODO Auto-generated method stub
+		xoaBang();
+		loadLaiDataSauKhiTimKiem1();
+
+	}
 	public void loadLaiDataSauKhiTimKiem() throws ClassNotFoundException, IOException {
+
+		// Xóa dữ liệu cũ trước khi load lại dữ liệu mới
+		tableModel.setRowCount(0);
+
+		// String maXCCanTim = txtmaXC.getText();
+		String maXCCanTim = txtmaXC.getText();
+
+		XuatChieu phNeedFind = clientXC.findPhongChieuOnMaXuat(maXCCanTim);
 		
-		    // Xóa dữ liệu cũ trước khi load lại dữ liệu mới
-		    tableModel.setRowCount(0);
+		if (phNeedFind != null) {
+			String maXuat = phNeedFind.getMaXuat();
+			LocalDate ngayChieu = phNeedFind.getNgayChieu();
+			String ngayChieuTrongTable = ngayChieu + "";
+			String maPhim = phNeedFind.getPhim().getMaPhim();
+			String maPhongChieu = phNeedFind.getPhongchieu().getMaPhongChieu();
+			Time gioChieu = phNeedFind.getGioChieu();
+			Time gioKetThuc = phNeedFind.getGioKetThuc();
+			String dinhDang = phNeedFind.getDinhDang();
+			String trangThai = phNeedFind.getTrangThai();
 
-		    //String maXCCanTim = txtmaXC.getText();
-		    String maXCCanTim = txtmaXC.getText();
-		   
-		    XuatChieu phNeedFind = clientXC.findXuatChieuOnMaXC(maXCCanTim);
+			Object[] rowData = { maXuat, maPhim, maPhongChieu, ngayChieuTrongTable, gioChieu, gioKetThuc, dinhDang,
+					trangThai };
 
-		    if (phNeedFind != null) {
-		        String maXuat = phNeedFind.getMaXuat();
-		        LocalDate ngayChieu = phNeedFind.getNgayChieu();
-		        String ngayChieuTrongTable = ngayChieu + "";
-		        String maPhim = phNeedFind.getPhim().getMaPhim();
-		        String maPhongChieu = phNeedFind.getPhongchieu().getMaPhongChieu();
-		        Time gioChieu = phNeedFind.getGioChieu();
-		        Time gioKetThuc = phNeedFind.getGioKetThuc();
-		        String dinhDang = phNeedFind.getDinhDang();
-		        String trangThai = phNeedFind.getTrangThai();
+			tableModel.addRow(rowData);
 
-		        Object[] rowData = { maXuat, maPhim, maPhongChieu, ngayChieuTrongTable, gioChieu, gioKetThuc, dinhDang, trangThai };
-
-		        tableModel.addRow(rowData);
-		    
-		}else {
+		} else {
 			JOptionPane.showMessageDialog(this, "Không Tìm thấy");
 		}
+		
 
 	}
 	
-
 	
+	public void loadLaiDataSauKhiTimKiem1() {
+	    try {
+	        tableModel.setRowCount(0);
+	        String ngayChieuStr = txtNgayHienThi.getText();
+	        LocalDate ngayChieu = LocalDate.parse(ngayChieuStr);
+	        XuatChieu phNeedFind = clientXC.findXuatChieuOnNgayChieu(ngayChieu);
+	        if (phNeedFind != null) {
+	            String maXuat = phNeedFind.getMaXuat();
+	            LocalDate ngayChieuResult = phNeedFind.getNgayChieu();
+	            String maPhim = phNeedFind.getPhim().getMaPhim();
+	            String maPhongChieu = phNeedFind.getPhongchieu().getMaPhongChieu();
+	            Time gioChieu = phNeedFind.getGioChieu();
+	            Time gioKetThuc = phNeedFind.getGioKetThuc();
+	            String dinhDang = phNeedFind.getDinhDang();
+	            String trangThai = phNeedFind.getTrangThai();
+	            Object[] rowData = { maXuat, maPhim, maPhongChieu, ngayChieuResult, gioChieu, gioKetThuc, dinhDang,
+	                    trangThai };
+	            tableModel.addRow(rowData);
+	        } else {
+	            JOptionPane.showMessageDialog(this, "Không Tìm thấy");
+	        }
+	    } catch (ClassNotFoundException | IOException e) {
+	        e.printStackTrace();
+	    }
+	}
+
+
 	private void xoaBang() {
 		for (int j = 0; j < table.getRowCount(); j++) {
 			tableModel.removeRow(j);
@@ -1036,19 +1020,23 @@ private void loadDataToTable(List<XuatChieu> listXC) {
 		}
 
 	}
+
 	private void updateTable() {
 		xoaBang();
 
-	    // Load lại dữ liệu từ cơ sở dữ liệu hoặc từ mô hình dữ liệu mới
-	    loadDataToTable(listXC);
+		// Load lại dữ liệu từ cơ sở dữ liệu hoặc từ mô hình dữ liệu mới
+		loadDataToTable(listXC);
 
-	    // Cập nhật bảng để hiển thị dữ liệu mới
-	    table.setModel(tableModel);
+		// Cập nhật bảng để hiển thị dữ liệu mới
+		table.setModel(tableModel);
 	}
-	
-	private void lamMoi()  {
+
+	private void lamMoi() {
 		txtmaXC.setText("");
 		xoaBang();
 		updateTable();
 	}
+	
+	
+
 }

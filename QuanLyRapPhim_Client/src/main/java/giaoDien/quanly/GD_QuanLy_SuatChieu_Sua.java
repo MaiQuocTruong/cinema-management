@@ -15,6 +15,7 @@ import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -28,7 +29,8 @@ import javax.swing.table.DefaultTableModel;
 
 import com.toedter.calendar.JDateChooser;
 
-
+import client_dao.ClientPhim_dao;
+import client_dao.ClientPhongChieu_dao;
 import client_dao.ClientXuatChieu_dao;
 import enities.Phim;
 import enities.PhongChieuPhim;
@@ -65,51 +67,52 @@ public class GD_QuanLy_SuatChieu_Sua extends JFrame implements ActionListener{
 	//private String trangthai,dinhDang;
 	private JComboBox<String> cbx_trangThai,cbx_dinhDang,comboBoxMaPhim,cbx_gioBatDau,cbx_gioKetThuc,comboBoxMaPhongChieu;
 	private JTextField txtmaXuat;
-	private JButton  btn_Them;
+	private JButton  btn_XacNhan,btn_Huy;
 	/**
 	 * Launch the application.
 	 * @throws IOException 
 	 * @throws UnknownHostException 
 	 * @throws ClassNotFoundException 
 	 */
-	public void addMaPhimToList(String maPhim) {
-	    // Thêm mã phim vào danh sách của combobox
-	    comboBoxMaPhim.addItem(maPhim);
-	}
-	public void addMaPhongChieuToList(String maPhongChieu) {
-	    // Thêm mã phim vào danh sách của combobox
-	    comboBoxMaPhongChieu.addItem(maPhongChieu);
-	}
 	
-	public void updateFields( String maXuat,String maPhim,String maPhongChieu,String ngayChieu,String gioChieu,String gioKetThuc,String dinhDang,String trangThai) {
-		txtmaXuat.setText(maXuat);
-		cbx_dinhDang.setSelectedItem(dinhDang);
-		cbx_trangThai.setSelectedItem(trangThai);
-		comboBoxMaPhim.setSelectedItem(maPhim);
-		comboBoxMaPhongChieu.setSelectedItem(maPhongChieu);
-		// Chuyển chuỗi gioChieu thành kiểu Time
-		
-	    Time gioChieuTime = Time.valueOf(gioChieu);
-	    // Hiển thị giờ chiếu dưới dạng hh:mm trong combobox
-	    String gioChieuFormatted = gioChieuTime.toLocalTime().toString();
-	    cbx_gioBatDau.setSelectedItem(gioChieuFormatted);
-	    
-	    Time gioKTTime = Time.valueOf(gioKetThuc);
-	    // Hiển thị giờ chiếu dưới dạng hh:mm trong combobox
-	    String gioKTFormatted = gioKTTime.toLocalTime().toString();
-	    cbx_gioKetThuc.setSelectedItem(gioKTFormatted);
-		
-	    
-	 // Chuyển chuỗi ngayChieu thành kiểu LocalDate
-	    LocalDate ngayChieuLocalDate = LocalDate.parse(ngayChieu);
-
-	    // Hiển thị ngày chiếu
-	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-	    String ngayChieuFormatted = ngayChieuLocalDate.format(formatter);
-	    txtNgayChieu.setText(ngayChieuFormatted);
-		
-
-	}
+//	public void addMaPhimToList(String maPhim) {
+//	    // Thêm mã phim vào danh sách của combobox
+//	    comboBoxMaPhim.addItem(maPhim);
+//	}
+//	public void addMaPhongChieuToList(String maPhongChieu) {
+//	    // Thêm mã phim vào danh sách của combobox
+//	    comboBoxMaPhongChieu.addItem(maPhongChieu);
+//	}
+	
+//	public void updateFields( String maXuat,String ngayChieu,String gioChieu,String gioKetThuc,String dinhDang,String trangThai) {
+//		txtmaXuat.setText(maXuat);
+//		cbx_dinhDang.setSelectedItem(dinhDang);
+//		cbx_trangThai.setSelectedItem(trangThai);
+////		comboBoxMaPhim.setSelectedItem(maPhim);
+////		comboBoxMaPhongChieu.setSelectedItem(maPhongChieu);
+//		// Chuyển chuỗi gioChieu thành kiểu Time
+//		
+//	    Time gioChieuTime = Time.valueOf(gioChieu);
+//	    // Hiển thị giờ chiếu dưới dạng hh:mm trong combobox
+//	    String gioChieuFormatted = gioChieuTime.toLocalTime().toString();
+//	    cbx_gioBatDau.setSelectedItem(gioChieuFormatted);
+//	    
+//	    Time gioKTTime = Time.valueOf(gioKetThuc);
+//	    // Hiển thị giờ chiếu dưới dạng hh:mm trong combobox
+//	    String gioKTFormatted = gioKTTime.toLocalTime().toString();
+//	    cbx_gioKetThuc.setSelectedItem(gioKTFormatted);
+//		
+//	    
+//	 // Chuyển chuỗi ngayChieu thành kiểu LocalDate
+//	    LocalDate ngayChieuLocalDate = LocalDate.parse(ngayChieu);
+//
+//	    // Hiển thị ngày chiếu
+//	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//	    String ngayChieuFormatted = ngayChieuLocalDate.format(formatter);
+//	    txtNgayChieu.setText(ngayChieuFormatted);
+//		
+//
+//	}
 	
 	public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
 		try {
@@ -143,7 +146,7 @@ public class GD_QuanLy_SuatChieu_Sua extends JFrame implements ActionListener{
 	 * @throws ClassNotFoundException 
 	 */
 	public GD_QuanLy_SuatChieu_Sua() throws UnknownHostException, IOException, ClassNotFoundException {
-//		initComponents();
+		initComponents();
 		setResizable(false);
 		this.setLocationRelativeTo(null);;
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -269,7 +272,7 @@ public class GD_QuanLy_SuatChieu_Sua extends JFrame implements ActionListener{
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
 				Date selectedDate = ngayChieuDate.getDate();
-				SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 				txtNgayChieu.setText(dateFormat.format(selectedDate));
 			}
 		});
@@ -318,41 +321,18 @@ public class GD_QuanLy_SuatChieu_Sua extends JFrame implements ActionListener{
 		
 
 		
-		 btn_Them = new JButton("Sửa");
-		btn_Them.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		btn_Them.setBounds(527, 622, 124, 31);
-		contentPane.add(btn_Them);
-		btn_Them.addActionListener(this);
+		 btn_XacNhan = new JButton("Sửa");
+		 btn_XacNhan.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		 btn_XacNhan.setBounds(527, 622, 124, 31);
+		contentPane.add(btn_XacNhan);
+		btn_XacNhan.addActionListener(this);
 
-		JButton btn_xoa = new JButton("Hủy bỏ");
-		btn_xoa.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				GD_QuanLy_SuatChieu gd_SuatChieu;
-				try {
-					gd_SuatChieu = new GD_QuanLy_SuatChieu();
-					gd_SuatChieu.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-					gd_SuatChieu.setLocationRelativeTo(null);
-					gd_SuatChieu.setVisible(true);
-					dispose();
-				} catch (UnknownHostException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (ClassNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				
-			}
-		});
-		btn_xoa.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		btn_xoa.setBounds(840, 622, 124, 31);
-		contentPane.add(btn_xoa);
+		 btn_Huy = new JButton("Hủy bỏ");
 		
+		 btn_Huy .setFont(new Font("Tahoma", Font.PLAIN, 20));
+		 btn_Huy .setBounds(840, 622, 124, 31);
+		contentPane.add( btn_Huy );
+		btn_Huy.addActionListener(this);
 		JLabel lblMXc = new JLabel("Mã XC:");
 		lblMXc.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		lblMXc.setBounds(769, 207, 137, 25);
@@ -368,57 +348,14 @@ public class GD_QuanLy_SuatChieu_Sua extends JFrame implements ActionListener{
 				Socket socket = new Socket("192.168.2.10", 6789);
 				clientXC = new ClientXuatChieu_dao(socket);
 	
-	}
-	
-
-	
-
-	private void updateXuatChieu() throws ClassNotFoundException, IOException {
-		
-		String maxuat = txtmaXuat.getText();
-		String TrangThai=cbx_trangThai.getSelectedItem().toString();
-		try {
-			XuatChieu pc_needUpdate = clientXC.findXuatChieuOnMaXC(maxuat);
-				pc_needUpdate.setTrangThai(TrangThai);
 				
-				//clientXC.updateXuatChieu(pc_needUpdate);
-				JOptionPane.showMessageDialog(this, "Sửa thành công!");
-				GD_QuanLy_SuatChieu gd_PhongChieu = new GD_QuanLy_SuatChieu();
-				gd_PhongChieu.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				gd_PhongChieu.setLocationRelativeTo(null);
-				gd_PhongChieu.setVisible(true);
-				dispose();
-			
-		} catch (ClassNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-	    
 	}
-
-	
-	
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-	    Object o = e.getSource();
-	    if (o.equals(btn_Them)) {
-	    	try {
-				updateXuatChieu();
-			} catch (ClassNotFoundException | IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-	}
-	}
-
-	
 	
 
 	
+
+	
+
 	
 	
 	private void initComponents() {
@@ -445,5 +382,196 @@ public class GD_QuanLy_SuatChieu_Sua extends JFrame implements ActionListener{
 		gdql.setVisible(true);
 	}
 	
+	//Hiển thị dữ liệu lên combobox
+	public void addMaPhimToList(String maPhim) {
+    // Thêm mã phim vào danh sách của combobox
+    comboBoxMaPhim.addItem(maPhim);
+    loadPhimToComboBox(comboBoxMaPhim);
+}
+public void addMaPhongChieuToList(String maPhongChieu) {
+    // Thêm mã phim vào danh sách của combobox
+    comboBoxMaPhongChieu.addItem(maPhongChieu);
+    loadPhongChieuToComboBox(comboBoxMaPhongChieu);
+}
+	public void setMaXuat(String maXuat,String maPhim,String maPhongChieu,String trangThai,String dinhDang,String ngayChieu,String gioChieu,String gioKetThuc) {
+        this.maXuat = maXuat;
+        
+        
+        
+        // Hiển thị mã phòng chiếu lên giao diện
+        txtmaXuat.setText(maXuat);
+        
+        comboBoxMaPhim.setSelectedItem(maPhim);
+        
+        
+		comboBoxMaPhongChieu.setSelectedItem(maPhongChieu);
+		
+        cbx_trangThai.setSelectedItem(trangThai);
+        cbx_dinhDang.setSelectedItem(dinhDang);
+        txtNgayChieu.setText(ngayChieu);
+        
+        
+        Time gioChieuTime = Time.valueOf(gioChieu);
+//	    // Hiển thị giờ chiếu dưới dạng hh:mm trong combobox
+	    String gioChieuFormatted = gioChieuTime.toLocalTime().toString();
+	    cbx_gioBatDau.setSelectedItem(gioChieuFormatted);
+	    
+		
+	    Time gioKTTime = Time.valueOf(gioKetThuc);
+	    // Hiển thị giờ chiếu dưới dạng hh:mm trong combobox
+	    String gioKTFormatted = gioKTTime.toLocalTime().toString();
+	    cbx_gioKetThuc.setSelectedItem(gioKTFormatted);
+	    
+    }
+//	public void updateFields( String maXuat,String ngayChieu,String gioChieu,String gioKetThuc,String dinhDang,String trangThai) {
+//	txtmaXuat.setText(maXuat);
+//	cbx_dinhDang.setSelectedItem(dinhDang);
+//	cbx_trangThai.setSelectedItem(trangThai);
+////	comboBoxMaPhim.setSelectedItem(maPhim);
+////	comboBoxMaPhongChieu.setSelectedItem(maPhongChieu);
+//	// Chuyển chuỗi gioChieu thành kiểu Time
+//	
+//    Time gioChieuTime = Time.valueOf(gioChieu);
+//    // Hiển thị giờ chiếu dưới dạng hh:mm trong combobox
+//    String gioChieuFormatted = gioChieuTime.toLocalTime().toString();
+//    cbx_gioBatDau.setSelectedItem(gioChieuFormatted);
+//    
+//    Time gioKTTime = Time.valueOf(gioKetThuc);
+//    // Hiển thị giờ chiếu dưới dạng hh:mm trong combobox
+//    String gioKTFormatted = gioKTTime.toLocalTime().toString();
+//    cbx_gioKetThuc.setSelectedItem(gioKTFormatted);
+//	
+//    
+// // Chuyển chuỗi ngayChieu thành kiểu LocalDate
+//    LocalDate ngayChieuLocalDate = LocalDate.parse(ngayChieu);
+//
+//    // Hiển thị ngày chiếu
+//    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//    String ngayChieuFormatted = ngayChieuLocalDate.format(formatter);
+//    txtNgayChieu.setText(ngayChieuFormatted);
+//	
+//
+//}
 	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		Object o = e.getSource();
+		if (o.equals(btn_XacNhan)) {
+			
+			String maX = txtmaXuat.getText();
+			 
+			
+			String TrangThai=cbx_trangThai.getSelectedItem().toString();
+			String dinhDang=cbx_dinhDang.getSelectedItem().toString();
+			LocalDate ngayChieu = LocalDate.parse(txtNgayChieu.getText());
+			
+			String gioChieuString = cbx_gioBatDau.getSelectedItem().toString();
+			String gioKTString = cbx_gioKetThuc.getSelectedItem().toString();
+
+			PhongChieuPhim phongchieu = new PhongChieuPhim();
+			String maPhongChieu=comboBoxMaPhongChieu.getSelectedItem().toString();
+			phongchieu.setMaPhongChieu(maPhongChieu);
+			
+			Phim phim = new Phim();
+			String maPhim=comboBoxMaPhim.getSelectedItem().toString();
+			phim.setMaPhim(maPhim);
+			
+			
+			try {
+				Time gioChieuTime = Time.valueOf(gioChieuString+ ":00");
+				Time gioKTTime = Time.valueOf(gioKTString+ ":00");
+				XuatChieu pc_needUpdate = clientXC.findPhongChieuOnMaXuat(maX);
+					pc_needUpdate.setTrangThai(TrangThai);
+					pc_needUpdate.setDinhDang(dinhDang);
+					pc_needUpdate.setNgayChieu(ngayChieu);
+					pc_needUpdate.setGioChieu(gioChieuTime);
+					pc_needUpdate.setGioKetThuc(gioKTTime);
+					pc_needUpdate.setPhim(phim);
+					pc_needUpdate.setPhongchieu(phongchieu);
+					clientXC.updateXuatChieu(pc_needUpdate);
+					JOptionPane.showMessageDialog(this, "Sửa thành công!");
+					GD_QuanLy_SuatChieu gd_PhongChieu = new GD_QuanLy_SuatChieu();
+					gd_PhongChieu.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					gd_PhongChieu.setLocationRelativeTo(null);
+					gd_PhongChieu.setVisible(true);
+					dispose();
+				
+			} catch (ClassNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		if (o.equals( btn_Huy )) {
+			GD_QuanLy_SuatChieu gd_SuatChieu;
+			try {
+				gd_SuatChieu = new GD_QuanLy_SuatChieu();
+				gd_SuatChieu.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				gd_SuatChieu.setLocationRelativeTo(null);
+				gd_SuatChieu.setVisible(true);
+				dispose();
+			} catch (UnknownHostException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (ClassNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+
+		}
+
+	}
+	
+	public void loadPhongChieuToComboBox(JComboBox<String> comboBox) {
+	    try {
+	        // Tạo một đối tượng ClientPhongChieu_dao và kết nối đến server
+	        Socket socket = new Socket("192.168.2.10",6789);
+	        ClientPhongChieu_dao clientPhongChieuDao = new ClientPhongChieu_dao(socket);
+	        
+	        // Gọi phương thức getListPhongChieu() để lấy danh sách phòng chiếu từ server
+	        List<PhongChieuPhim> danhSachPhongChieu = clientPhongChieuDao.getListPhongChieu();
+	        
+	        // Xóa tất cả các mục hiện có trong combobox
+	        comboBox.removeAllItems();
+	        
+	        // Thêm tên của từng phòng chiếu vào combobox
+	        for (PhongChieuPhim phongChieu : danhSachPhongChieu) {
+	            comboBox.addItem(phongChieu.getMaPhongChieu()); // Sử dụng phương thức getTenPhongChieu() hoặc getter tương ứng
+	        }
+	        
+	        // Đóng kết nối tới server
+	        socket.close();
+	    } catch (IOException | ClassNotFoundException e) {
+	        e.printStackTrace(); // Xử lý ngoại lệ nếu có
+	    }
+	}
+	
+	public void loadPhimToComboBox(JComboBox<String> comboBox) {
+	    try {
+	        // Tạo một đối tượng ClientPhongChieu_dao và kết nối đến server
+	        Socket socket = new Socket("192.168.2.10",6789);
+	        ClientPhim_dao clientPhimDao = new ClientPhim_dao(socket);
+	        
+	        // Gọi phương thức getListPhongChieu() để lấy danh sách phòng chiếu từ server
+	        List<Phim> danhSachPhim = clientPhimDao.getListPhim();
+	        
+	        // Xóa tất cả các mục hiện có trong combobox
+	        comboBox.removeAllItems();
+	        
+	        // Thêm tên của từng phòng chiếu vào combobox
+	        for (Phim phim : danhSachPhim) {
+	            comboBox.addItem(phim.getMaPhim()); // Sử dụng phương thức getTenPhongChieu() hoặc getter tương ứng
+	        }
+	        
+	        // Đóng kết nối tới server
+	        socket.close();
+	    } catch (IOException | ClassNotFoundException e) {
+	        e.printStackTrace(); // Xử lý ngoại lệ nếu có
+	    }
+	}
 }

@@ -6,6 +6,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -16,11 +17,13 @@ import dao.EntityManagerFactoryUtil;
 import dao.KhachHang_dao;
 
 import dao.NhanVien_dao;
+import dao.Phim_dao;
 import dao.PhongChieuPhim_dao;
 import dao.TaiKhoan_dao;
 import dao.XuatChieu_dao;
 import enities.KhachHang;
 import enities.NhanVien;
+import enities.Phim;
 import enities.PhongChieuPhim;
 import enities.TaiKhoan;
 import enities.XuatChieu;
@@ -41,7 +44,7 @@ public class ClientHandler implements Runnable {
 	private TaiKhoan_dao tk_dao;
 	private PhongChieuPhim_dao pc_dao;
 	private XuatChieu_dao xc_dao;
-	
+	private Phim_dao ph_dao;
 
 
 	public ClientHandler(Socket socketClient)  {
@@ -55,7 +58,7 @@ public class ClientHandler implements Runnable {
 		tk_dao = new TaiKhoan_dao(em);
 		pc_dao = new PhongChieuPhim_dao(em);
 		xc_dao=new XuatChieu_dao(em);
-		
+		ph_dao=new Phim_dao(em);
 	}
 	
 
@@ -162,6 +165,16 @@ public class ClientHandler implements Runnable {
 					out.writeObject(listXC);
 					out.flush();
 					break;
+				case "findXuatChieuOnMaXC":
+					String maXC = in.readUTF();
+					XuatChieu XCCanTim = xc_dao.findXuatChieuOnMaXC(maXC);
+					out.writeObject(XCCanTim);
+					out.flush();
+					break;
+				case "DeleteXuatChieu":
+					XuatChieu xc_needRemove = (XuatChieu) in.readObject();
+					xc_dao.deleteXuatChieu(xc_needRemove.getMaXuat());
+					break;
 				case "AddXuatChieu":
 					XuatChieu listxc = (XuatChieu) in.readObject();
 					xc_dao.addxuatChieu(listxc);
@@ -170,25 +183,39 @@ public class ClientHandler implements Runnable {
 					XuatChieu xc_update = (XuatChieu) in.readObject();
 					xc_dao.updateXuatChieu(xc_update);
 					break;
-				case "findXuatChieuOnMaXC":
-					String maXC = in.readUTF();
-					XuatChieu maXCCanTim = xc_dao.findXuatChieuOnMaXC(maXC);
-					out.writeObject(maXCCanTim);
-					out.flush();
-					
-				case "DeleteXuatChieu":
-					XuatChieu xc_needRemove = (XuatChieu) in.readObject();
-					xc_dao.deleteXuatChieu(xc_needRemove.getMaXuat());
-					break;
 				case "FindXuatChieuOnNgayChieu":
-				    String ngayChieu =  in.readUTF();
-				   
-				    
-				    XuatChieu danhSachXC = xc_dao.findXuatChieuOnNgayChieu(ngayChieu);
-				    
-				    out.writeObject(danhSachXC);
-				    out.flush();
+				    try {
+				        // Đọc ngày chiếu từ client
+				        String ngayChieuStr = in.readUTF();
+				        
+				        // Chuyển đổi chuỗi ngày chiếu thành LocalDate
+				        LocalDate ngayChieu = LocalDate.parse(ngayChieuStr);
+				        
+				        // Gọi phương thức tìm kiếm với ngày chiếu đã chuyển đổi
+				        XuatChieu danhSachXC = xc_dao.findXuatChieuOnNgayChieu(ngayChieu);
+				        
+				        // Gửi kết quả tìm kiếm về cho client
+				        out.writeObject(danhSachXC);
+				        out.flush();
+				    } catch (IOException e) {
+				        // Xử lý ngoại lệ nếu có
+				        e.printStackTrace();
+				    }
 				    break;
+//				case "LayDanhSachMaPhongChieu":
+//				    try {
+//				        List<String> danhSachMaPhongChieu = pc_dao.layDanhSachMaPhongChieu();
+//				        out.writeObject(danhSachMaPhongChieu);
+//				        out.flush();
+//				    } catch (IOException e) {
+//				        e.printStackTrace();
+//				    }
+//				    break;
+				case "GetListCinema":
+					List<Phim> listPhim = ph_dao.getListMovies();
+					out.writeObject(listPhim);
+					out.flush();
+					break;
 				default:
 					break;
 				}

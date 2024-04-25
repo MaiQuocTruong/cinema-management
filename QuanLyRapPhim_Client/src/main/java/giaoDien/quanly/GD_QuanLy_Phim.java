@@ -39,11 +39,14 @@ import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
 
+import com.toedter.calendar.IDateEditor;
 import com.toedter.calendar.JDateChooser;
 
 
-//import enities.Phim;
-import giaoDien.nhanvien.GD_NhanVien;
+import client_dao.ClientPhim_dao;
+import enities.NhanVien;
+import enities.Phim;
+import enities.PhongChieuPhim;
 import runapp.Login;
 import testbutton.Buttontest;
 
@@ -53,12 +56,16 @@ import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.net.Socket;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -82,15 +89,26 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
     private boolean daChonPhim = false; // Biến để kiểm tra xem đã chọn Phim hay chưa
 	private JDateChooser tuNgayDateChooser, denNgayDateChooser; // Thêm đối tượng JDateChooser cho từ ngày
 	private boolean isCalendarVisible = false;
-	private JButton btnThem, btnXoa, btnLamMoi, btnSua;
+	private JButton btnThem, btnXoa, btnLamMoi, btnSua,btnTracuu,btnTracuungay;
 	private JTable table;
 	private DefaultTableModel tableModel;
-
+	private JTextField txtTenPhim;
+	private List<Phim> listphim;
+	private ClientPhim_dao clientphim;
+	private JCheckBox chkTenPhim;
+	//private GD_QuanLy_Phim_Sua sua;
 //	static String quanly;
 	/**
 	 * Launch the application.
+	 * @throws IOException 
+	 * @throws ClassNotFoundException 
+	 * @throws UnknownHostException 
 	 */
-	public static void main(String[] args) {
+	
+	public JTable getTable() {
+	    return table;
+	}
+	public static void main(String[] args) throws UnknownHostException, ClassNotFoundException, IOException {
 		try {
 			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
 				if ("Nimbus".equals(info.getName())) {
@@ -117,9 +135,14 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 
 	/**
 	 * Create the frame.
+	 * @throws IOException 
+	 * @throws UnknownHostException 
+	 * @throws ClassNotFoundException 
 	 */
-	public GD_QuanLy_Phim() {
+	public GD_QuanLy_Phim() throws UnknownHostException, IOException, ClassNotFoundException {
 		initComponents();
+		
+
 		setResizable(false);
 		setBackground(Color.WHITE);
 		setTitle("Giao Diện Quản Lý Phim");
@@ -229,13 +252,11 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 					gdqlsc.setLocationRelativeTo(null);
 					gdqlsc.setVisible(true);
 					dispose();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (ClassNotFoundException e1) {
+				} catch (ClassNotFoundException | IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+				
 			}
 		});
 		JButton btnqlyphongchieu = new JButton("Quản Lý Phòng Chiếu");
@@ -253,17 +274,11 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 					gdqlpc.setLocationRelativeTo(null);
 					gdqlpc.setVisible(true);
 					dispose();
-				} catch (UnknownHostException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (ClassNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (IOException e1) {
+				} catch (ClassNotFoundException | IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-
+				
 			}
 			
 		});
@@ -323,11 +338,13 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				GD_QuanLy_DichVu gdqldv = new GD_QuanLy_DichVu();
+				GD_QuanLy_DichVu gdqldv;
+				gdqldv = new GD_QuanLy_DichVu();
 				gdqldv.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				gdqldv.setLocationRelativeTo(null);
 				gdqldv.setVisible(true);
 				dispose();
+				
 			}
 		});
 		panelDichVu.add(btnqldv);
@@ -465,8 +482,9 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+				
 			}
-
+			
 		});
 		panelTaiKhoan.add(btnTaiKhoan);
 		
@@ -591,15 +609,17 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 		pnlTenPhim.setOpaque(false);
 		pnlTenPhim.setLayout(new BoxLayout(pnlTenPhim, BoxLayout.Y_AXIS)); // Use vertical BoxLayout
 		contentPane.add(pnlTenPhim);
-		JCheckBox chkTenPhim = new JCheckBox();
-		chkTenPhim.setFont(new Font("Open Sans", 0, 16)); // NOI18N
-		chkTenPhim.setSelected(true);
-		chkTenPhim.setText("Theo tên phim");
-		chkTenPhim.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-			}
-		});
-		pnlTenPhim.add(chkTenPhim);
+		 //chkTenPhim = new JCheckBox();
+		btnTracuu=new JButton();
+		btnTracuu.setFont(new Font("Open Sans", 0, 16)); // NOI18N
+		btnTracuu.setSelected(true);
+		btnTracuu.setText("Theo tên phim");
+		btnTracuu.addActionListener(this);
+//		chkTenPhim.setFont(new Font("Open Sans", 0, 16)); // NOI18N
+//		chkTenPhim.setSelected(true);
+//		chkTenPhim.setText("Theo tên phim");
+//		chkTenPhim.addActionListener(this);
+		pnlTenPhim.add(btnTracuu);
 
 		JPanel pnlTheoTenPhim = new JPanel();
 		pnlTheoTenPhim.setBackground(new Color(255, 255, 0));
@@ -607,7 +627,7 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 		pnlTheoTenPhim.setOpaque(false);
 		contentPane.add(pnlTheoTenPhim);
 		// Add JTextField below JCheckBox
-		JTextField txtTenPhim = new JTextField();
+		 txtTenPhim = new JTextField();
 		txtTenPhim.setFont(new Font("Open Sans", 0, 16));
 		txtTenPhim.setColumns(12); // You can adjust the column count based on your requirement
 		pnlTheoTenPhim.add(txtTenPhim);
@@ -617,15 +637,19 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 		pnlNgayCongChieu.setBounds(10, 217, 182, 40);
 		pnlNgayCongChieu.setOpaque(false);
 		contentPane.add(pnlNgayCongChieu);
-		JCheckBox chkNgayCongChieu = new JCheckBox();
-		chkNgayCongChieu.setFont(new Font("Open Sans", 0, 16));
-		chkNgayCongChieu.setText("Theo ngày công chiếu");
-		chkNgayCongChieu.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-//                chkNgayCongChieuActionPerformed(evt);
-			}
-		});
-		pnlNgayCongChieu.add(chkNgayCongChieu);
+		btnTracuungay=new JButton();
+		btnTracuungay.setFont(new Font("Open Sans", 0, 16)); // NOI18N
+		btnTracuungay.setSelected(true);
+		btnTracuungay.setText("Theo ngày công chiếu");
+//		JCheckBox chkNgayCongChieu = new JCheckBox();
+//		chkNgayCongChieu.setFont(new Font("Open Sans", 0, 16));
+//		chkNgayCongChieu.setText("Theo ngày công chiếu");
+//		chkNgayCongChieu.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent evt) {
+////                chkNgayCongChieuActionPerformed(evt);
+//			}
+//		});
+		pnlNgayCongChieu.add(btnTracuungay);
 
 		JPanel pnlTuNgay_1 = new JPanel();
 		pnlTuNgay_1.setOpaque(false);
@@ -710,7 +734,7 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 		btnXoa = new JButton("Xóa");
 		btnLamMoi = new JButton("Làm mới");
 		btnSua = new JButton("Sửa");
-
+		
 		// Đặt vị trí cho các nút
 		btnThem.setBounds(192, 99, 100, 30);
 		btnXoa.setBounds(302, 99, 100, 30);
@@ -718,59 +742,78 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 		btnSua.setBounds(522, 99, 100, 30);
 
 		// Thêm sự kiện các nút
-		btnThem.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				GD_QuanLy_Phim_Them gdThemPhim = new GD_QuanLy_Phim_Them();
-				gdThemPhim.setVisible(true);
-				gdThemPhim.setLocationRelativeTo(null);
-				dispose();
-			}
-		});
-		btnSua.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				GD_QuanLy_Phim_Sua gdsuaphim = new GD_QuanLy_Phim_Sua();
-				gdsuaphim.setVisible(true);
-				gdsuaphim.setLocationRelativeTo(null);
-				dispose();
-			}
-		});
-
+//		btnThem.addActionListener(new ActionListener() {
+//			
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				// TODO Auto-generated method stub
+//				GD_QuanLy_Phim_Them gdThemPhim;
+//				try {
+//					gdThemPhim = new GD_QuanLy_Phim_Them();
+//					gdThemPhim.setVisible(true);
+//					gdThemPhim.setLocationRelativeTo(null);
+//					dispose();
+//				} catch (ClassNotFoundException | IOException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				}
+//				
+//			}
+//		});
+//		btnSua.addActionListener(new ActionListener() {
+//			
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//		        int row = table.getSelectedRow();
+//		        if (row >= 0) {
+//		            String tenPhim = (String) table.getValueAt(row, 1);
+//		            String loaiPhim = (String) table.getValueAt(row, 2);
+//		            String quocGia = (String) table.getValueAt(row, 10);
+//		            String ngonNgu = (String) table.getValueAt(row, 9);
+//		            String trangThaiPhim = (String) table.getValueAt(row, 11);
+//		            int thoiLuong = Integer.parseInt(table.getValueAt(row, 8).toString());
+//		            double giaTien = Double.parseDouble(table.getValueAt(row, 5).toString());
+//		            int soLuongVe = Integer.parseInt(table.getValueAt(row, 6).toString());
+//		            int gioiHanTuoi = Integer.parseInt(table.getValueAt(row, 7).toString());
+//		            String ngayChieu = (String) table.getValueAt(row, 3);
+//		            String ngayHetHan = (String) table.getValueAt(row, 2);
+//
+//		            // Tạo và hiển thị giao diện cập nhật
+//		            GD_QuanLy_Phim_Sua sua;
+//					try {
+//						sua = new GD_QuanLy_Phim_Sua();
+//						sua.updateFields(tenPhim, loaiPhim, quocGia, ngonNgu, trangThaiPhim,
+//	                            thoiLuong, giaTien, soLuongVe, gioiHanTuoi, ngayChieu, ngayHetHan);
+//	            sua.setVisible(true);
+//					} catch (ClassNotFoundException | IOException e1) {
+//						// TODO Auto-generated catch block
+//						e1.printStackTrace();
+//					}
+//		            
+//		        }
+//				
+//			}
+//		});
+		btnXoa.addActionListener(this);
+		btnLamMoi.addActionListener(this);
+		btnTracuungay.addActionListener(this);
 		// Thêm các nút vào contentPane
 		contentPane.add(btnThem);
 		contentPane.add(btnXoa);
 		contentPane.add(btnLamMoi);
 		contentPane.add(btnSua);
 		// Khởi tạo DefaultTableModel với các cột
-		String[] columnNames = {"Mã phim", "Tên phim", "Loại phim", "Thời lượng", "Tuổi", "Ngày chiếu", "Ngày hết hạn", "Ngôn ngữ",
-				"Quốc gia", "Giá tiền", "SL vé", "Trạng thái"}; // Thay đổi tên cột tùy ý
+		String[] columnNames = {"Mã phim","Tên phim", "Loại phim","Ngày chiếu","Ngày hết hạn", "Giá tiền","SL vé", "Tuổi","Thời lượng","Ngôn ngữ",
+				"Quốc gia", "Trạng thái","Hinh"}; // Thay đổi tên cột tùy ý
+		
 		tableModel = new DefaultTableModel(columnNames, 0);
+		
+		//"Quốc gia", "Giá tiền", "SL vé", "Trạng thái"
 
 		// Khởi tạo JTable với DefaultTableModel
 		table = new JTable(tableModel);
 		// Đặt chiều rộng cho cột "Tên phim"
-		table.getColumnModel().getColumn(0).setPreferredWidth(30); 
-		table.getColumnModel().getColumn(1).setPreferredWidth(150); 
-		table.getColumnModel().getColumn(2).setPreferredWidth(38); 
-		table.getColumnModel().getColumn(3).setPreferredWidth(41); 
-		table.getColumnModel().getColumn(4).setPreferredWidth(50);
 		
-		table.getColumnModel().getColumn(4).setMinWidth(20); // Đặt chiều rộng tối thiểu là 0 pixel
-		table.getColumnModel().getColumn(4).setMaxWidth(40); // Đặt chiều rộng tối đa là 0 pixel
-		
-		table.getColumnModel().getColumn(5).setPreferredWidth(50); 
-		table.getColumnModel().getColumn(6).setPreferredWidth(59);
-		table.getColumnModel().getColumn(7).setPreferredWidth(46);
-		table.getColumnModel().getColumn(8).setPreferredWidth(46);
-		table.getColumnModel().getColumn(9).setPreferredWidth(40);
-		
-		table.getColumnModel().getColumn(10).setMinWidth(20); // Đặt chiều rộng tối thiểu là 0 pixel
-		table.getColumnModel().getColumn(10).setMaxWidth(40); // Đặt chiều rộng tối đa là 0 pixel
 		// Tạo JScrollPane để thêm bảng vào để có thể cuộn
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.setBounds(192, 140, 954, 469); // Điều chỉnh tọa độ và kích thước của bảng
@@ -778,14 +821,80 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 		// Thêm bảng và JScrollPane vào contentPane
 		contentPane.add(scrollPane);
 //		Load Data
-
+		Socket socket = new Socket("192.168.2.10", 6789);
+		clientphim = new ClientPhim_dao(socket);
+		
+		listphim = clientphim.getListPhim();
+		loadDataToTable(listphim);
+		
+		
 		JLabel background = new JLabel("");
 		background.setHorizontalAlignment(SwingConstants.CENTER);
 		background.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/bggalaxy1.png")));
 		background.setBounds(0, 0, 1162, 613);
 		contentPane.add(background);
-	}
+		
+		
+		
 
+
+}
+	     
+			
+	
+	
+
+	
+	private void loadDataToTable(List<Phim> listPhim) {
+			
+		try {
+			String ngayChieuTrongTable = "";
+			String ngayHetTrongTable = "";
+		
+			for (Phim ph : listPhim) {
+				String maPhim = ph.getMaPhim();
+				
+				String tenPhim =ph.getTenPhim();
+				String loaiPhim =ph.getLoaiPhim();
+				LocalDate ngayChieu = ph.getNgayChieu();
+				ngayChieuTrongTable=ngayChieu+"";
+				
+				LocalDate ngayHetHan = ph.getNgayHetHan();
+				ngayHetTrongTable=ngayHetHan+"";
+				
+				double giaTien=ph.getGiaTien();
+				String giaTienTrongTable = String.valueOf(giaTien);
+				
+				int soLuongVe = ph.getSoLuongVe();
+				String soLuongVeTrongTable = String.valueOf(soLuongVe);
+				
+				String hinhPhim =ph.getHinhPhim();
+				
+				int gioiHanTuoi = ph.getGioiHanTuoi();
+				String gioiHanTuoiTrongTable = String.valueOf(gioiHanTuoi);
+				
+				int  thoiLuong= ph.getThoiLuong();
+				String thoiLuongTrongTable = String.valueOf(thoiLuong);
+				
+				String  ngonNgu=ph.getNgonNgu();
+				String quocGia =ph.getQuocGia();
+				String trangThaiPhim =ph.getTrangThaiPhim();
+				
+				
+
+				java.lang.Object[] rowData = {maPhim,tenPhim,loaiPhim,ngayChieuTrongTable,
+				ngayHetTrongTable,giaTienTrongTable,soLuongVeTrongTable,gioiHanTuoiTrongTable,
+						thoiLuongTrongTable,ngonNgu,quocGia,trangThaiPhim,hinhPhim};
+				
+				
+				tableModel.addRow(rowData);
+			}
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+	}
+	
+	
 	private void initComponents() {
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 		addWindowListener(new java.awt.event.WindowAdapter() {
@@ -808,10 +917,26 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 		gdql.setLocationRelativeTo(null);
 		gdql.setVisible(true);
 	}
-	
-	
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
+	
+	
+	
+
+		
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 }

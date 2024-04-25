@@ -28,6 +28,7 @@ import javax.swing.table.DefaultTableModel;
 import com.toedter.calendar.JDateChooser;
 
 import client_dao.ClientKhachHang_dao;
+import client_dao.ClientPhim_dao;
 import client_dao.ClientPhongChieu_dao;
 import client_dao.ClientXuatChieu_dao;
 import enities.Phim;
@@ -61,8 +62,10 @@ public class GD_QuanLy_SuatChieu_Them extends JFrame {
 	private List<XuatChieu> listXC;
 	private static int lastPhongChieuId = 0;
 	private JTextField txtNgayChieu;
-
-
+	private JComboBox<String>  comboBoxMaPhim;
+	private ClientPhongChieu_dao phongchieu_cl;
+	private JComboBox comboBoxMaPhongChieu;
+	
 	/**
 	 * Launch the application.
 	 * @throws IOException 
@@ -91,9 +94,12 @@ public class GD_QuanLy_SuatChieu_Them extends JFrame {
 					null, ex);
 		}
 		GD_QuanLy_SuatChieu_Them run = new GD_QuanLy_SuatChieu_Them();
+		
 		run.setVisible(true);
 	}
 
+	
+	 
 	/**
 	 * Create the frame.
 	 * @throws IOException 
@@ -101,6 +107,9 @@ public class GD_QuanLy_SuatChieu_Them extends JFrame {
 	 * @throws ClassNotFoundException 
 	 */
 	public GD_QuanLy_SuatChieu_Them() throws UnknownHostException, IOException, ClassNotFoundException {
+		
+		
+
 //		initComponents();
 		setResizable(false);
 		this.setLocationRelativeTo(null);;
@@ -155,6 +164,7 @@ public class GD_QuanLy_SuatChieu_Them extends JFrame {
 		cbx_tenPhim_1.setBounds(50, 134, 347, 27);
 		pnl_danhSachSuatChieu.add(cbx_tenPhim_1);
 		
+		
 		String[] colName = {"Gio Bat Dau","Gio Ket Thuc","Ten Phim"};
 		
 		model = new DefaultTableModel(colName,0);
@@ -175,14 +185,19 @@ public class GD_QuanLy_SuatChieu_Them extends JFrame {
         lblNewLabel_1.setBounds(691, 128, 282, 31);
         contentPane.add(lblNewLabel_1);
         
+        
         JLabel lblMaPhongChieu = new JLabel("Mã Phòng Chiếu");
         lblMaPhongChieu.setFont(new Font("Tahoma", Font.PLAIN, 18));
         lblMaPhongChieu.setBounds(508, 285, 137, 25);
 		contentPane.add(lblMaPhongChieu);
-		JComboBox comboBoxMaPhongChieu = new JComboBox();
+		 comboBoxMaPhongChieu = new JComboBox();
 		comboBoxMaPhongChieu.setBounds(655, 288, 318, 25);
 		contentPane.add(comboBoxMaPhongChieu);
+		loadPhongChieuToComboBox(comboBoxMaPhongChieu);
 		
+		
+		
+
 		
 		
 		
@@ -191,9 +206,13 @@ public class GD_QuanLy_SuatChieu_Them extends JFrame {
 		lblMaPhongPhim.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		lblMaPhongPhim.setBounds(508, 239, 137, 25);
 		contentPane.add(lblMaPhongPhim);
-		JComboBox comboBoxMaPhim = new JComboBox();
+		 comboBoxMaPhim = new JComboBox();
 		comboBoxMaPhim.setBounds(655, 242, 318, 25);
 		contentPane.add(comboBoxMaPhim);
+		loadPhimToComboBox(comboBoxMaPhim);
+		
+		
+		
 		
         JLabel lbl_dinhDang = new JLabel("Định dạng:");
         lbl_dinhDang.setFont(new Font("Tahoma", Font.PLAIN, 18));
@@ -277,23 +296,6 @@ public class GD_QuanLy_SuatChieu_Them extends JFrame {
 		clientXC = new ClientXuatChieu_dao(socket);
 		
 
-		
-		 
-		
-
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		JButton btn_Them = new JButton("Thêm");
 		btn_Them.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btn_Them.setBounds(527, 622, 124, 31);
@@ -316,16 +318,20 @@ public class GD_QuanLy_SuatChieu_Them extends JFrame {
 				String maXuatChieu = "X00" + newID;
 				
 				
-				String dsPhim = comboBoxMaPhim.getSelectedItem() != null ? comboBoxMaPhim.getSelectedItem().toString() : "P001";
-				String maPhim = "P001";
-				String dsPhongChieu = comboBoxMaPhongChieu.getSelectedItem() != null ? comboBoxMaPhim.getSelectedItem().toString() : "X001";
-				String maPhong = "PC001";
+				//String dsPhim = comboBoxMaPhim.getSelectedItem() != null ? comboBoxMaPhim.getSelectedItem().toString() : "P001";
+				//String maPhim = "P001";
+				String dsphim=comboBoxMaPhim.getSelectedItem().toString();
+				Phim phim = new Phim();
+	            phim.setMaPhim(dsphim);
+				
+				
+				
+				//String dsPhongChieu = comboBoxMaPhongChieu.getSelectedItem() != null ? comboBoxMaPhim.getSelectedItem().toString() : "X001";
+				String dsPhongChieu = comboBoxMaPhongChieu.getSelectedItem().toString();
+				//String maPhong = "PC001";
 				// Tạo đối tượng Phim và PhongChieuPhim dựa trên mã phim và mã phòng chiếu
-	            Phim phim = new Phim();
-	            phim.setMaPhim(maPhim);
-
 	            PhongChieuPhim phongchieu = new PhongChieuPhim();
-	            phongchieu.setMaPhongChieu(maPhong);
+	            phongchieu.setMaPhongChieu(dsPhongChieu);
 				
 				
 				Date ngayChieutrenGD = ngayChieuDate.getDate();
@@ -426,4 +432,55 @@ public class GD_QuanLy_SuatChieu_Them extends JFrame {
 		gdql.setLocationRelativeTo(null);
 		gdql.setVisible(true);
 	}
+	public void loadPhongChieuToComboBox(JComboBox<String> comboBox) {
+	    try {
+	        // Tạo một đối tượng ClientPhongChieu_dao và kết nối đến server
+	        Socket socket = new Socket("192.168.2.10",6789);
+	        ClientPhongChieu_dao clientPhongChieuDao = new ClientPhongChieu_dao(socket);
+	        
+	        // Gọi phương thức getListPhongChieu() để lấy danh sách phòng chiếu từ server
+	        List<PhongChieuPhim> danhSachPhongChieu = clientPhongChieuDao.getListPhongChieu();
+	        
+	        // Xóa tất cả các mục hiện có trong combobox
+	        comboBox.removeAllItems();
+	        
+	        // Thêm tên của từng phòng chiếu vào combobox
+	        for (PhongChieuPhim phongChieu : danhSachPhongChieu) {
+	            comboBox.addItem(phongChieu.getMaPhongChieu()); // Sử dụng phương thức getTenPhongChieu() hoặc getter tương ứng
+	        }
+	        
+	        // Đóng kết nối tới server
+	        socket.close();
+	    } catch (IOException | ClassNotFoundException e) {
+	        e.printStackTrace(); // Xử lý ngoại lệ nếu có
+	    }
+	}
+	
+	public void loadPhimToComboBox(JComboBox<String> comboBox) {
+	    try {
+	        // Tạo một đối tượng ClientPhongChieu_dao và kết nối đến server
+	        Socket socket = new Socket("192.168.2.10",6789);
+	        ClientPhim_dao clientPhimDao = new ClientPhim_dao(socket);
+	        
+	        // Gọi phương thức getListPhongChieu() để lấy danh sách phòng chiếu từ server
+	        List<Phim> danhSachPhim = clientPhimDao.getListPhim();
+	        
+	        // Xóa tất cả các mục hiện có trong combobox
+	        comboBox.removeAllItems();
+	        
+	        // Thêm tên của từng phòng chiếu vào combobox
+	        for (Phim phim : danhSachPhim) {
+	            comboBox.addItem(phim.getMaPhim()); // Sử dụng phương thức getTenPhongChieu() hoặc getter tương ứng
+	        }
+	        
+	        // Đóng kết nối tới server
+	        socket.close();
+	    } catch (IOException | ClassNotFoundException e) {
+	        e.printStackTrace(); // Xử lý ngoại lệ nếu có
+	    }
+	}
+	
+	
 }
+    
+
