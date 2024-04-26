@@ -66,6 +66,7 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -674,7 +675,7 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
 				Date selectedDate = tuNgayDateChooser.getDate();
-				SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 				txtTuNgay.setText(dateFormat.format(selectedDate));
 			}
 		});
@@ -724,10 +725,11 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
 				Date selectedDate = denNgayDateChooser.getDate();
-				SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 				txtDenNgay.setText(dateFormat.format(selectedDate));
 			}
 		});
+		
 		
 		// Khởi tạo các nút
 		btnThem = new JButton("Thêm");
@@ -740,60 +742,61 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 		btnXoa.setBounds(302, 99, 100, 30);
 		btnLamMoi.setBounds(412, 99, 100, 30);
 		btnSua.setBounds(522, 99, 100, 30);
-
+		btnTracuungay.addActionListener(this);
 		// Thêm sự kiện các nút
-//		btnThem.addActionListener(new ActionListener() {
-//			
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				// TODO Auto-generated method stub
-//				GD_QuanLy_Phim_Them gdThemPhim;
-//				try {
-//					gdThemPhim = new GD_QuanLy_Phim_Them();
-//					gdThemPhim.setVisible(true);
-//					gdThemPhim.setLocationRelativeTo(null);
-//					dispose();
-//				} catch (ClassNotFoundException | IOException e1) {
-//					// TODO Auto-generated catch block
-//					e1.printStackTrace();
-//				}
-//				
-//			}
-//		});
-//		btnSua.addActionListener(new ActionListener() {
-//			
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//		        int row = table.getSelectedRow();
-//		        if (row >= 0) {
-//		            String tenPhim = (String) table.getValueAt(row, 1);
-//		            String loaiPhim = (String) table.getValueAt(row, 2);
-//		            String quocGia = (String) table.getValueAt(row, 10);
-//		            String ngonNgu = (String) table.getValueAt(row, 9);
-//		            String trangThaiPhim = (String) table.getValueAt(row, 11);
-//		            int thoiLuong = Integer.parseInt(table.getValueAt(row, 8).toString());
-//		            double giaTien = Double.parseDouble(table.getValueAt(row, 5).toString());
-//		            int soLuongVe = Integer.parseInt(table.getValueAt(row, 6).toString());
-//		            int gioiHanTuoi = Integer.parseInt(table.getValueAt(row, 7).toString());
-//		            String ngayChieu = (String) table.getValueAt(row, 3);
-//		            String ngayHetHan = (String) table.getValueAt(row, 2);
-//
-//		            // Tạo và hiển thị giao diện cập nhật
-//		            GD_QuanLy_Phim_Sua sua;
-//					try {
-//						sua = new GD_QuanLy_Phim_Sua();
-//						sua.updateFields(tenPhim, loaiPhim, quocGia, ngonNgu, trangThaiPhim,
-//	                            thoiLuong, giaTien, soLuongVe, gioiHanTuoi, ngayChieu, ngayHetHan);
-//	            sua.setVisible(true);
-//					} catch (ClassNotFoundException | IOException e1) {
-//						// TODO Auto-generated catch block
-//						e1.printStackTrace();
-//					}
-//		            
-//		        }
-//				
-//			}
-//		});
+		btnThem.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				GD_QuanLy_Phim_Them gdThemPhim;
+				try {
+					
+					gdThemPhim = new GD_QuanLy_Phim_Them();
+					gdThemPhim.setVisible(true);
+					gdThemPhim.setLocationRelativeTo(null);
+					dispose();
+				} catch (ClassNotFoundException | IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+			}
+		});
+		btnSua.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+		        int row = table.getSelectedRow();
+		        if (row >= 0) {
+		            String tenPhim = (String) table.getValueAt(row, 1);
+		            String loaiPhim = (String) table.getValueAt(row, 2);
+		            String quocGia = (String) table.getValueAt(row, 10);
+		            String ngonNgu = (String) table.getValueAt(row, 9);
+		            String trangThaiPhim = (String) table.getValueAt(row, 11);
+		            int thoiLuong = Integer.parseInt(table.getValueAt(row, 8).toString());
+		            double giaTien = Double.parseDouble(table.getValueAt(row, 5).toString());
+		            int soLuongVe = Integer.parseInt(table.getValueAt(row, 6).toString());
+		            int gioiHanTuoi = Integer.parseInt(table.getValueAt(row, 7).toString());
+		            String ngayChieu = (String) table.getValueAt(row, 3);
+		            String ngayHetHan = (String) table.getValueAt(row, 4 );
+		            Object value=table.getValueAt(row, 12);
+		            // Tạo và hiển thị giao diện cập nhật
+		            GD_QuanLy_Phim_Sua sua;
+					try {
+						sua = new GD_QuanLy_Phim_Sua();
+						sua.updateFields(tenPhim, loaiPhim, quocGia, ngonNgu, trangThaiPhim,
+	                            thoiLuong, giaTien, soLuongVe, gioiHanTuoi, ngayChieu, ngayHetHan,value);
+	            sua.setVisible(true);
+					} catch (ClassNotFoundException | IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+		            
+		        }
+				
+			}
+		});
 		btnXoa.addActionListener(this);
 		btnLamMoi.addActionListener(this);
 		btnTracuungay.addActionListener(this);
@@ -821,7 +824,7 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 		// Thêm bảng và JScrollPane vào contentPane
 		contentPane.add(scrollPane);
 //		Load Data
-		Socket socket = new Socket("192.168.2.10", 6789);
+		Socket socket = new Socket("192.168.2.13", 6789);
 		clientphim = new ClientPhim_dao(socket);
 		
 		listphim = clientphim.getListPhim();
@@ -839,9 +842,64 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 
 
 }
-	     
+	public void timKiem() throws ClassNotFoundException, IOException {
+		// TODO Auto-generated method stub
+		xoaBang();
+		loadLaiDataSauKhiTimKiem();
+		
+	}         
 			
-	
+	public void loadLaiDataSauKhiTimKiem() throws ClassNotFoundException, IOException {
+		// TODO Auto-generated method stub
+		String tenPhimCanTim = txtTenPhim.getText();
+		Phim phNeedFind = clientphim.findFilmonTen(tenPhimCanTim);
+		
+		try {
+			String ngayChieuTrongTable = "";
+			String ngayHetTrongTable = "";
+		
+			
+				String maPhim = phNeedFind.getMaPhim();
+				
+				String tenPhim =phNeedFind.getTenPhim();
+				String loaiPhim =phNeedFind.getLoaiPhim();
+				LocalDate ngayChieu = phNeedFind.getNgayChieu();
+				ngayChieuTrongTable=ngayChieu+"";
+				
+				LocalDate ngayHetHan = phNeedFind.getNgayHetHan();
+				ngayHetTrongTable=ngayHetHan+"";
+				
+				double giaTien=phNeedFind.getGiaTien();
+				String giaTienTrongTable = String.valueOf(giaTien);
+				
+				int soLuongVe = phNeedFind.getSoLuongVe();
+				String soLuongVeTrongTable = String.valueOf(soLuongVe);
+				
+				String hinhPhim =phNeedFind.getHinhPhim();
+				
+				int gioiHanTuoi = phNeedFind.getGioiHanTuoi();
+				String gioiHanTuoiTrongTable = String.valueOf(gioiHanTuoi);
+				
+				int  thoiLuong= phNeedFind.getThoiLuong();
+				String thoiLuongTrongTable = String.valueOf(thoiLuong);
+				
+				String  ngonNgu=phNeedFind.getNgonNgu();
+				String quocGia =phNeedFind.getQuocGia();
+				String trangThaiPhim =phNeedFind.getTrangThaiPhim();
+				
+				
+
+				java.lang.Object[] rowData = {maPhim,tenPhim,loaiPhim,ngayChieuTrongTable,
+				ngayHetTrongTable,giaTienTrongTable,soLuongVeTrongTable,gioiHanTuoiTrongTable,
+						thoiLuongTrongTable,ngonNgu,quocGia,trangThaiPhim,hinhPhim};
+				
+				
+				tableModel.addRow(rowData);
+
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+	}
 	
 
 	
@@ -917,11 +975,6 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 		gdql.setLocationRelativeTo(null);
 		gdql.setVisible(true);
 	}
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
 	
 	
 	
@@ -930,12 +983,144 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 	
 	
 	
+	private void xoaBang() {
+		for (int j = 0; j < table.getRowCount(); j++) {
+			tableModel.removeRow(j);
+			j--;
+		}
+
+	}
+	private void updateTable() {
+		xoaBang();
+
+	    // Load lại dữ liệu từ cơ sở dữ liệu hoặc từ mô hình dữ liệu mới
+	    loadDataToTable(listphim);
+
+	    // Cập nhật bảng để hiển thị dữ liệu mới
+	    table.setModel(tableModel);
+	}
+	
+	private void lamMoi()  {
+		txtTenPhim.setText("");
+		xoaBang();
+		updateTable();
+	}
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		java.lang.Object o = e.getSource();
+		 if (o.equals(btnTracuu)) {
+			try {
+				timKiem();
+				JOptionPane.showMessageDialog(this, "Tim thay!");
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		
+		} else if (o.equals(btnLamMoi)) {
+			try {
+				lamMoi();;
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+			else if (o.equals(btnTracuungay)) {
+				try {
+					timKiem1();
+				} catch (Exception e2) {
+					e2.printStackTrace();
+				}
+	}else if(o.equals(btnXoa)){
+		
+		try {
+			int row=table.getSelectedRow();
+			
+			String maCanXoa=(String) table.getValueAt(row, 0);
+			Phim ph_xoa=clientphim.findFilmonma(maCanXoa);
+			clientphim.deletephim(ph_xoa);
+			tableModel.removeRow(row);
+			JOptionPane.showMessageDialog(btnXoa, "Xoa Thanh Cong!");
+		} catch (Exception e2) {
+			// TODO: handle exception
+		}
+		
+		
+		
+		
+	}
+	
+	}
 	
 	
+public void timKiemPhimTheoKhoangNgay() throws ClassNotFoundException, IOException {
+	    
+		try {
+			
+		
+		String tuNgayStr = txtTuNgay.getText();
+	    String denNgayStr = txtDenNgay.getText();
+
+	    // Chuyển đổi chuỗi ngày sang LocalDate
+	    LocalDate tuNgay;
+	    LocalDate denNgay;
+	        tuNgay = LocalDate.parse(tuNgayStr);
+	        denNgay = LocalDate.parse(denNgayStr);
+	   
+
+	    // Gọi hàm tìm kiếm phim theo khoảng ngày (giả sử là clientphim.findXuatChieuTrongKhoangNgay(tuNgay, denNgay))
+	    List<Phim> danhSachPhim =  clientphim.findXuatChieuOnNgayChieu(tuNgay, denNgay);
+
+	    System.out.println(danhSachPhim);
+        // Hiển thị danh sách phim tìm được
+        for (Phim phim : danhSachPhim) {
+            String maPhim = phim.getMaPhim();
+            String tenPhim = phim.getTenPhim();
+            String loaiPhim = phim.getLoaiPhim();
+            LocalDate ngayChieu = phim.getNgayChieu();
+            String ngayChieuTrongTable = ngayChieu.toString();
+
+            LocalDate ngayHetHan = phim.getNgayHetHan();
+            String ngayHetTrongTable = ngayHetHan.toString();
+
+            double giaTien = phim.getGiaTien();
+            String giaTienTrongTable = String.valueOf(giaTien);
+
+            int soLuongVe = phim.getSoLuongVe();
+            String soLuongVeTrongTable = String.valueOf(soLuongVe);
+
+            String hinhPhim = phim.getHinhPhim();
+
+            int gioiHanTuoi = phim.getGioiHanTuoi();
+            String gioiHanTuoiTrongTable = String.valueOf(gioiHanTuoi);
+
+            int thoiLuong = phim.getThoiLuong();
+            String thoiLuongTrongTable = String.valueOf(thoiLuong);
+
+            String ngonNgu = phim.getNgonNgu();
+            String quocGia = phim.getQuocGia();
+            String trangThaiPhim = phim.getTrangThaiPhim();
+
+            java.lang.Object[] rowData = { maPhim, tenPhim, loaiPhim, ngayChieuTrongTable,
+                ngayHetTrongTable, giaTienTrongTable, soLuongVeTrongTable, gioiHanTuoiTrongTable,
+                thoiLuongTrongTable, ngonNgu, quocGia, trangThaiPhim, hinhPhim };
+
+            // Thêm một dòng dữ liệu mới vào table model
+            tableModel.addRow(rowData);
+            JOptionPane.showMessageDialog(null, "Tìm Thấy");
+        }  
+	} catch (Exception e2) {
+		e2.printStackTrace();
 	
-	
-	
-	
+	}
+	}
+public void timKiem1() throws ClassNotFoundException, IOException {
+		// TODO Auto-generated method stub
+		xoaBang();
+		timKiemPhimTheoKhoangNgay();
+		
+	}
+
+
 	
 	
 	

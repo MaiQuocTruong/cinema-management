@@ -231,6 +231,52 @@ public class ClientHandler implements Runnable {
 					out.writeObject(listPhim);
 					out.flush();
 					break;
+					
+				case "AddFilm":
+					Phim ph = (Phim) in.readObject();
+					ph_dao.addPhimmoi(ph);
+					break;
+				case "UpdateFilm":
+					Phim ph_needUpdate = (Phim) in.readObject();
+					ph_dao.updatePhim(ph_needUpdate);
+					break;
+				case "DeleteFilm":
+					Phim ph_needremove = (Phim) in.readObject();
+					ph_dao.deletePhim(ph_needremove.getMaPhim());;
+					break;
+				case "FindonTen":
+					String tenPhim = in.readUTF();
+					Phim resultFind = ph_dao.findPhimonTen(tenPhim);
+					out.writeObject(resultFind);
+					out.flush();
+					break;
+				case "FindonMa":
+					String maPhim = in.readUTF();
+					Phim resultFind1 = ph_dao.findPhimonma(maPhim);
+					out.writeObject(resultFind1);
+					out.flush();
+					break;
+				case "Find":
+					try {
+				        // Đọc ngày bắt đầu và ngày kết thúc từ client
+				        String tuNgayStr = in.readUTF();
+				        String denNgayStr = in.readUTF();
+
+				        // Chuyển đổi chuỗi ngày thành LocalDate
+				        LocalDate tuNgay = LocalDate.parse(tuNgayStr);
+				        LocalDate denNgay = LocalDate.parse(denNgayStr);
+
+				        // Gọi phương thức tìm kiếm với ngày bắt đầu và ngày kết thúc
+				        List<Phim> danhSachPhim = ph_dao.findXuatChieuTrongKhoangNgay(tuNgay, denNgay);
+
+				        // Gửi kết quả tìm kiếm về cho client
+				        out.writeObject(danhSachPhim);
+				        out.flush();
+				    } catch (IOException e) {
+				        // Xử lý ngoại lệ nếu có
+				        e.printStackTrace();
+				    }
+				    break;
 				default:
 					break;
 				}

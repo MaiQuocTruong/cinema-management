@@ -3,14 +3,25 @@ package giaoDien.quanly;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
+import java.awt.HeadlessException;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.net.Socket;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -19,15 +30,23 @@ import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableModel;
 
 import java.awt.Font;
 import com.toedter.calendar.JDateChooser;
 
-public class GD_QuanLy_Phim_Sua extends JFrame {
+import client_dao.ClientPhim_dao;
+import enities.NhanVien;
+import enities.Phim;
+
+public class GD_QuanLy_Phim_Sua extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -39,8 +58,48 @@ public class GD_QuanLy_Phim_Sua extends JFrame {
 			txtNgonNgu, txtTrangThai, txtTien, txtSoLuongVe;
 	private boolean isCalendarVisible = false;
 	private JDateChooser ngayChieuDateChooser, ngayHetHanDateChooser; // Thêm đối tượng JDateChooser cho từ ngày
+	private List<Phim> listphim;
+	private ClientPhim_dao clientphim;
+	private DefaultTableModel tableModel;
+	private JTable table;
+	private String imagePath="";
+	private JComboBox comboBox ;
 
-	public static void main(String[] args) {
+//// Các phương thức và thành phần khác của giao diện
+	
+	public void updateFields(String tenPhim, String loaiPhim, String quocGia, String ngonNgu, String trangThaiPhim,
+            int thoiLuong, double giaTien, int soLuongVe, int gioiHanTuoi, String ngayChieu, String ngayHetHan,Object value) {
+// Hiển thị dữ liệu từ các tham số lên các JTextField
+txtTenPhim.setText(tenPhim);
+txtLoaiPhim.setText(loaiPhim);
+txtQuocGia.setText(quocGia);
+txtNgonNgu.setText(ngonNgu);
+txtTrangThai.setText(trangThaiPhim);
+txtThoiLuong.setText(Integer.toString(thoiLuong));
+txtTien.setText(Double.toString(giaTien));
+txtSoLuongVe.setText(Integer.toString(soLuongVe));
+txtTuoi.setText(Integer.toString(gioiHanTuoi));
+txtNgayChieu.setText(ngayChieu);
+txtNgayHetHan.setText(ngayHetHan);
+
+if(value!=null) {
+	imagePath=value.toString();
+	ImageIcon imageIcon = new ImageIcon(imagePath);
+	Image image = imageIcon.getImage().getScaledInstance(lblHinhAnh.getWidth(), lblHinhAnh.getHeight(),
+			Image.SCALE_SMOOTH);
+	lblHinhAnh.setIcon(new ImageIcon(image));
+}else {
+	System.out.println("Lỗi!");
+}
+
+
+	}
+
+
+
+// Các phương thức và thành phần khác của giao diện
+
+	public static void main(String[] args) throws UnknownHostException, ClassNotFoundException, IOException {
 		try {
 			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
 				if ("Nimbus".equals(info.getName())) {
@@ -57,7 +116,7 @@ public class GD_QuanLy_Phim_Sua extends JFrame {
 		run.setVisible(true);
 	}
 
-	public GD_QuanLy_Phim_Sua() {
+	public GD_QuanLy_Phim_Sua() throws UnknownHostException, IOException, ClassNotFoundException {
 		initComponents();
 		setBounds(100, 100, 787, 820);
 		setResizable(false);
@@ -271,7 +330,7 @@ public class GD_QuanLy_Phim_Sua extends JFrame {
 			int result = fileChooser.showOpenDialog(null);
 			if (result == JFileChooser.APPROVE_OPTION) {
 				File selectedFile = fileChooser.getSelectedFile();
-				String imagePath = selectedFile.getAbsolutePath();
+				 imagePath = selectedFile.getAbsolutePath();
 
 				// Hiển thị hình ảnh đã chọn lên JLabel
 				ImageIcon imageIcon = new ImageIcon(imagePath);
@@ -281,15 +340,63 @@ public class GD_QuanLy_Phim_Sua extends JFrame {
 			}
 		});
 		
-        JLabel lblMaSC = new JLabel("Mã suất chiếu");
-        lblMaSC.setFont(new Font("Tahoma", Font.PLAIN, 16));
-        lblMaSC.setBounds(23, 446, 100, 30);
-        contentPane.add(lblMaSC);
+//        JLabel lblMaSC = new JLabel("Mã suất chiếu");
+//        lblMaSC.setFont(new Font("Tahoma", Font.PLAIN, 16));
+//        lblMaSC.setBounds(23, 446, 100, 30);
+//        contentPane.add(lblMaSC);
+//        
+//         comboBox = new JComboBox();
+//        comboBox.setBounds(135, 446, 288, 34);
+//        contentPane.add(comboBox);
         
-        JComboBox comboBox = new JComboBox();
-        comboBox.setBounds(135, 446, 288, 34);
-        contentPane.add(comboBox);
+        
+        //add sự kiện xác nhận
+        btnXacNhan.addActionListener(this);
+       //btnHuyBo.addActionListener(this);
+       btnHuyBo.addActionListener(e -> dispose());
+    
+
+//    		Load Data
+    		Socket socket = new Socket("192.168.2.13", 6789);
+    		clientphim = new ClientPhim_dao(socket);
+    		
+
+    	
+        
+        
 	}
+
+	private void updatePhim() throws ClassNotFoundException, IOException {
+	    // Retrieve the name of the film to be updated (assuming it's unique)
+	    String tenPhim = txtTenPhim.getText();
+	    
+	    // Find the film object by its name
+	    Phim phimToUpdate = clientphim.findFilmonTen(tenPhim);
+	    
+	    // Check if the film object exists
+	    if (phimToUpdate != null) {
+	        // Update the fields of the found film object
+	        phimToUpdate.setLoaiPhim(txtLoaiPhim.getText());
+	        phimToUpdate.setQuocGia(txtQuocGia.getText());
+	        phimToUpdate.setNgonNgu(txtNgonNgu.getText());
+	        phimToUpdate.setTrangThaiPhim(txtTrangThai.getText());
+	        phimToUpdate.setThoiLuong(Integer.parseInt(txtThoiLuong.getText()));
+	        phimToUpdate.setGiaTien(Double.parseDouble(txtTien.getText()));
+	        phimToUpdate.setSoLuongVe(Integer.parseInt(txtSoLuongVe.getText()));
+	        phimToUpdate.setGioiHanTuoi(Integer.parseInt(txtTuoi.getText()));
+	       //phimToUpdate.setNgayChieu(txtNgayChieu.getText());
+        //phimToUpdate.setNgayHetHan(txtNgayHetHan.getText());
+	        phimToUpdate.setHinhPhim(imagePath);
+	        // Call the method to update the film in the data source
+	        clientphim.updatePhim(phimToUpdate);
+	    } else {
+	        JOptionPane.showMessageDialog(this, "Không tìm thấy phim có tên: " + tenPhim);
+	    }
+	}
+
+	
+
+
 	private void initComponents() {
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 		addWindowListener(new java.awt.event.WindowAdapter() {
@@ -318,4 +425,62 @@ public class GD_QuanLy_Phim_Sua extends JFrame {
 		gdqlphim.setLocationRelativeTo(null);
 		gdqlphim.setVisible(true);
 	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		java.lang.Object o = e.getSource();
+		if (o.equals(btnXacNhan)) {
+			layDuLieuSua();
+		JOptionPane.showMessageDialog(btnXacNhan, "Thành Công");
+		
+		GD_QuanLy_Phim gdqlphim;
+		try {
+			gdqlphim = new GD_QuanLy_Phim();
+			gdqlphim.setVisible(true);
+			gdqlphim.setLocationRelativeTo(null);
+			dispose();
+		} catch (ClassNotFoundException | IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		}
+	
+		}
+	
+	
+	// Trong lớp GD_QuanLy_Phim_Sua:
+
+	public void layDuLieuSua() {
+	    // Retrieve updated data from text fields
+	    String tenPhim = txtTenPhim.getText();
+	    String loaiPhim = txtLoaiPhim.getText();
+	    String quocGia = txtQuocGia.getText();
+	    String ngonNgu = txtNgonNgu.getText();
+	    String trangThaiPhim = txtTrangThai.getText();
+	    int thoiLuong = Integer.parseInt(txtThoiLuong.getText());
+	    double giaTien = Double.parseDouble(txtTien.getText());
+	    int soLuongVe = Integer.parseInt(txtSoLuongVe.getText());
+	    int gioiHanTuoi = Integer.parseInt(txtTuoi.getText());
+	    String ngayChieu = txtNgayChieu.getText();
+	    String ngayHetHan = txtNgayHetHan.getText();
+	    
+	    try {
+	        // Call the method to update data in your data source
+	        updatePhim();
+	        
+	        // Display success message
+	        JOptionPane.showMessageDialog(this, "Dữ liệu đã được cập nhật thành công!");
+	        
+	        // Close the current window
+	        this.dispose();
+	    } catch (Exception e) {
+	        // Handle any errors or exceptions that may occur during the update process
+	        e.printStackTrace();
+	        JOptionPane.showMessageDialog(this, "Đã xảy ra lỗi khi cập nhật dữ liệu!");
+	    }
+	}
+
+
+
 }

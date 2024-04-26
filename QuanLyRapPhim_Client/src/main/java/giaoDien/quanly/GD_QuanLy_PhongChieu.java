@@ -760,7 +760,7 @@ public class GD_QuanLy_PhongChieu extends JFrame implements ActionListener {
 		btnXoa.addActionListener(this);
 		btnLamMoi.addActionListener(this);
 
-		Socket socket = new Socket("192.168.1.10", 6789);
+		Socket socket = new Socket("192.168.2.13", 6789);
 		clientPC_dao = new ClientPhongChieu_dao(socket);
 		ds_pc = clientPC_dao.getListPhongChieu();
 		loadTableData(ds_pc);

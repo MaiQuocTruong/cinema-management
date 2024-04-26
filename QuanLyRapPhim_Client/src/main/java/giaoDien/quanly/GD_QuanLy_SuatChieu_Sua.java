@@ -345,7 +345,7 @@ public class GD_QuanLy_SuatChieu_Sua extends JFrame implements ActionListener{
 		contentPane.add(txtmaXuat);
 		
 		//Load Data
-				Socket socket = new Socket("192.168.1.10", 6789);
+				Socket socket = new Socket("192.168.2.13", 6789);
 				clientXC = new ClientXuatChieu_dao(socket);
 	
 				
@@ -530,7 +530,7 @@ public void addMaPhongChieuToList(String maPhongChieu) {
 	public void loadPhongChieuToComboBox(JComboBox<String> comboBox) {
 	    try {
 	        // Tạo một đối tượng ClientPhongChieu_dao và kết nối đến server
-	        Socket socket = new Socket("192.168.1.10",6789);
+	        Socket socket = new Socket("192.168.2.13",6789);
 	        ClientPhongChieu_dao clientPhongChieuDao = new ClientPhongChieu_dao(socket);
 	        
 	        // Gọi phương thức getListPhongChieu() để lấy danh sách phòng chiếu từ server
@@ -554,7 +554,7 @@ public void addMaPhongChieuToList(String maPhongChieu) {
 	public void loadPhimToComboBox(JComboBox<String> comboBox) {
 	    try {
 	        // Tạo một đối tượng ClientPhongChieu_dao và kết nối đến server
-	        Socket socket = new Socket("192.168.1.10",6789);
+	        Socket socket = new Socket("192.168.2.13",6789);
 	        ClientPhim_dao clientPhimDao = new ClientPhim_dao(socket);
 	        
 	        // Gọi phương thức getListPhongChieu() để lấy danh sách phòng chiếu từ server

@@ -6,6 +6,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,17 +74,25 @@ public class ClientPhim_dao {
 	}
 	
 	
-	public List<Phim> findFilmonDateRange( java.util.Date fromDate, java.util.Date toDate) throws IOException, ClassNotFoundException {
-	    out.writeUTF("FindonDateRange");
+	public List<Phim> findXuatChieuOnNgayChieu(LocalDate tuNgay, LocalDate denNgay) throws IOException, ClassNotFoundException {
+	    // Send search request to server
+	    out.writeUTF("Find");
 	    out.flush();
-	    
-	    out.writeObject(fromDate);
-	    out.writeObject(toDate);
+
+	    // Convert LocalDate to String and send to server
+	    String tuNgayString = tuNgay.toString();
+	    String denNgayString = denNgay.toString();
+	    out.writeUTF(tuNgayString);
+	    out.writeUTF(denNgayString);
+
 	    out.flush();
-	    
+
+	    // Read result from server
 	    List<Phim> danhSachPhim = (List<Phim>) in.readObject();
+
 	    return danhSachPhim;
 	}
+	
 
 
 }

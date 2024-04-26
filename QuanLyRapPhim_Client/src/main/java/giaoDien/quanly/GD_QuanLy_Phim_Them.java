@@ -3,32 +3,52 @@ package giaoDien.quanly;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
+import java.awt.HeadlessException;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.net.Socket;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 import java.awt.Font;
 import com.toedter.calendar.JDateChooser;
+
+import client_dao.ClientPhim_dao;
+import enities.Phim;
+
 import javax.swing.JComboBox;
 
-public class GD_QuanLy_Phim_Them extends JFrame {
+public class GD_QuanLy_Phim_Them extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -38,10 +58,23 @@ public class GD_QuanLy_Phim_Them extends JFrame {
     private JButton btnUploadFile, btnXacNhan, btnHuyBo;
     private JTextField txtTenPhim, txtLoaiPhim, txtQuocGia, txtNgayChieu, txtNgayHetHan, txtTuoi, txtThoiLuong, txtNgonNgu, txtTrangThai
     ,txtTien, txtSoLuongVe;
+    private JComboBox comboBox;
     private boolean isCalendarVisible = false;
 	private JDateChooser ngayChieuDateChooser, ngayHetHanDateChooser; // Thêm đối tượng JDateChooser cho từ ngày
-    
-	public static void main(String[] args) {
+	private List<Phim> listphim;
+	private ClientPhim_dao clientphim;
+	private DefaultTableModel tableModel;
+	private JTable table;
+	private String imagePath="";
+	
+	
+	
+	
+
+
+
+
+	public static void main(String[] args) throws UnknownHostException, ClassNotFoundException, IOException {
 		try {
 			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
 				if ("Nimbus".equals(info.getName())) {
@@ -57,9 +90,15 @@ public class GD_QuanLy_Phim_Them extends JFrame {
 		GD_QuanLy_Phim_Them run = new GD_QuanLy_Phim_Them();
 		run.setVisible(true);
 	}
+	
 
-	public GD_QuanLy_Phim_Them() {
-//		initComponents();
+
+
+
+
+
+	public GD_QuanLy_Phim_Them() throws UnknownHostException, IOException, ClassNotFoundException {
+		initComponents();
 		setBounds(100, 100, 787, 820);
 		setResizable(false);
 		setBackground(Color.WHITE);
@@ -107,12 +146,12 @@ public class GD_QuanLy_Phim_Them extends JFrame {
 
         // Tạo JButton "Upload File" và xử lý sự kiện khi nút được nhấn
         btnUploadFile = new JButton("Upload File");
-        btnUploadFile.setBounds(192, 447, 165, 30);
+        btnUploadFile.setBounds(192, 397, 165, 30);
         contentPane.add(btnUploadFile);
 
         // Tạo JLabel để hiển thị hình ảnh
         lblHinhAnh = new JLabel();
-        lblHinhAnh.setBounds(192, 234, 165, 194);
+        lblHinhAnh.setBounds(192, 175, 165, 212);
         lblHinhAnh.setBorder(BorderFactory.createLineBorder(Color.BLACK)); // Tạo đường viền đen xung quanh
         contentPane.add(lblHinhAnh);
         
@@ -264,21 +303,179 @@ public class GD_QuanLy_Phim_Them extends JFrame {
 			}
 		});
 
+        //Up ảnh
         btnUploadFile.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setFileFilter(new FileNameExtensionFilter("Image Files", "jpg", "jpeg", "png"));
             int result = fileChooser.showOpenDialog(null);
             if (result == JFileChooser.APPROVE_OPTION) {
                 File selectedFile = fileChooser.getSelectedFile();
-                String imagePath = selectedFile.getAbsolutePath();
+                 imagePath = selectedFile.getAbsolutePath();
 
                 // Hiển thị hình ảnh đã chọn lên JLabel
                 ImageIcon imageIcon = new ImageIcon(imagePath);
                 Image image = imageIcon.getImage().getScaledInstance(lblHinhAnh.getWidth(), lblHinhAnh.getHeight(), Image.SCALE_SMOOTH);
                 lblHinhAnh.setIcon(new ImageIcon(image));
+                
+                
             }
         });
+        
+        
+        
+        
+        //add sự kiện xác nhận
+        btnXacNhan.addActionListener(this);
+       //btnHuyBo.addActionListener(this);
+       btnHuyBo.addActionListener(e -> dispose());
+    
+    // Khởi tạo DefaultTableModel với các cột
+    		String[] columnNames = {"Mã phim","MX","Tên phim", "Loại phim","Ngày chiếu","Ngày hết hạn", "Giá tiền","SL vé", "Tuổi","Thời lượng","Ngôn ngữ",
+    				"Quốc gia", "Trạng thái","Hinh"}; // Thay đổi tên cột tùy ý
+    		
+    		tableModel = new DefaultTableModel(columnNames, 0);
+    		
+    	
+
+    		// Khởi tạo JTable với DefaultTableModel
+    		table = new JTable(tableModel);
+    		// Đặt chiều rộng cho cột "Tên phim"
+    		
+    		// Tạo JScrollPane để thêm bảng vào để có thể cuộn
+    		JScrollPane scrollPane = new JScrollPane(table);
+    		scrollPane.setBounds(192, 140, 954, 469); // Điều chỉnh tọa độ và kích thước của bảng
+
+    		// Thêm bảng và JScrollPane vào contentPane
+    		//contentPane.add(scrollPane);
+    		
+//    		Load Data
+    		Socket socket = new Socket("192.168.2.13", 6789);
+    		clientphim = new ClientPhim_dao(socket);
+    		
+    		listphim = clientphim.getListPhim();
+    		loadDataToTable(listphim);
+        
+        
 	}
+	private void loadDataToTable(List<Phim> listPhim) {
+		
+		try {
+			String ngayChieuTrongTable = "";
+			String ngayHetTrongTable = "";
+		
+			for (Phim ph : listPhim) {
+				String maPhim = ph.getMaPhim();
+				
+				String tenPhim =ph.getTenPhim();
+				String loaiPhim =ph.getLoaiPhim();
+				LocalDate ngayChieu = ph.getNgayChieu();
+				ngayChieuTrongTable=ngayChieu+"";
+				
+				LocalDate ngayHetHan = ph.getNgayHetHan();
+				ngayHetTrongTable=ngayHetHan+"";
+				
+				double giaTien=ph.getGiaTien();
+				String giaTienTrongTable = String.valueOf(giaTien);
+				
+				int soLuongVe = ph.getSoLuongVe();
+				String soLuongVeTrongTable = String.valueOf(soLuongVe);
+				
+				String hinhPhim =ph.getHinhPhim();
+				
+				int gioiHanTuoi = ph.getGioiHanTuoi();
+				String gioiHanTuoiTrongTable = String.valueOf(gioiHanTuoi);
+				
+				int  thoiLuong= ph.getThoiLuong();
+				String thoiLuongTrongTable = String.valueOf(thoiLuong);
+				
+				String  ngonNgu=ph.getNgonNgu();
+				String quocGia =ph.getQuocGia();
+				String trangThaiPhim =ph.getTrangThaiPhim();
+				
+				
+
+				java.lang.Object[] rowData = {maPhim,tenPhim,loaiPhim,ngayChieuTrongTable,
+				ngayHetTrongTable,giaTienTrongTable,soLuongVeTrongTable,gioiHanTuoiTrongTable,
+						thoiLuongTrongTable,ngonNgu,quocGia,trangThaiPhim,hinhPhim};
+				
+				
+				tableModel.addRow(rowData);
+			}
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+	}
+//	 private void xoaTrangTF(){
+// 		txtTenPhim.setText("");
+// 		txtLoaiPhim.setText("");
+// 		txtNgayChieu.setText("");
+// 		txtNgayHetHan.setText("");
+// 		txtNgonNgu.setText("");
+// 		txtQuocGia.setText("");
+// 		txtSoLuongVe.setText("");
+// 		txtTien.setText("");
+// 		txtTrangThai.setText("");
+// 		txtTuoi.setText("");
+// 		txtThoiLuong.setText("");
+// 		txtTrangThai.setText("");
+// 	}	
+	
+	
+	
+	//Add Phim mới
+		public void AddPhimMoi() throws Exception  {
+			int idCust = 0;
+			for (Phim phim : clientphim.getListPhim()) {
+				idCust++;
+			}
+			int newID = idCust + 1;
+			String maPhim = "P00" + newID;
+			
+			
+			String tenPhim = txtTenPhim.getText();
+			String loaiPhim = txtLoaiPhim.getText();
+			
+			Date ngayChieutrenGD = ngayChieuDateChooser.getDate();
+			Instant instant = ngayChieutrenGD.toInstant();
+			LocalDate ngayChieu = instant.atZone(ZoneId.systemDefault()).toLocalDate();
+			String ngayChieuTrongTable = txtNgayChieu.getText();
+			
+			
+			Date ngayHettrenGD = ngayHetHanDateChooser.getDate();
+			Instant instant1 = ngayHettrenGD.toInstant();
+			LocalDate ngayHetHan = instant1.atZone(ZoneId.systemDefault()).toLocalDate();
+			String ngayHetTrongTable = txtNgayHetHan.getText();
+			
+			
+			
+			// Lấy dữ liệu từ ô text và chuyển đổi thành kiểu int
+			double giaTien=Double.parseDouble(txtTien.getText());
+			int soLuongVe = Integer.parseInt(txtSoLuongVe.getText());
+			int gioiHanTuoi =Integer.parseInt(txtTuoi.getText());
+			int  thoiLuong=Integer.parseInt(txtThoiLuong.getText());
+			
+			String  ngonNgu=txtNgonNgu.getText();
+			String quocGia =txtQuocGia.getText();
+			String trangThaiPhim =txtTrangThai.getText();
+			
+			String hinhPhim=imagePath; 
+
+			
+				
+			
+			
+			Phim ph=new Phim(maPhim, tenPhim, loaiPhim, ngayChieu, ngayHetHan, giaTien, soLuongVe, hinhPhim, gioiHanTuoi, thoiLuong, ngonNgu, quocGia, trangThaiPhim);
+			clientphim.addPhim(ph);
+			java.lang.Object [] rowData = {maPhim,tenPhim,loaiPhim,ngayChieuTrongTable,
+					ngayHetTrongTable,giaTien,soLuongVe,gioiHanTuoi,
+					thoiLuong,ngonNgu,quocGia,trangThaiPhim,hinhPhim};
+			tableModel.addRow(rowData);
+			
+			
+		}
+		
+		
+		
 
 	private void initComponents() {
 		// TODO Auto-generated method stub
@@ -308,5 +505,32 @@ public class GD_QuanLy_Phim_Them extends JFrame {
 		GD_QuanLy_Phim gdqlphim = new GD_QuanLy_Phim();
 		gdqlphim.setLocationRelativeTo(null);
 		gdqlphim.setVisible(true);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		java.lang.Object o = e.getSource();
+		if (o.equals(btnXacNhan)) {
+			try {
+			AddPhimMoi();
+			// Hiển thị thông báo thành công
+		    JOptionPane.showMessageDialog(this, "Thêm phim thành công!");
+			GD_QuanLy_Phim gdqlphim = new GD_QuanLy_Phim();
+			gdqlphim.setVisible(true);
+			gdqlphim.setLocationRelativeTo(null);
+			dispose();
+	        
+	        // Đóng giao diện thêm
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}else if(o.equals(btnHuyBo)){
+			//xoaTrangTF();
+		}
+		
+		
+		
+		
 	}
 }

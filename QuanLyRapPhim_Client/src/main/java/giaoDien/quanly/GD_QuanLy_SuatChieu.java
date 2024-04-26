@@ -722,7 +722,7 @@ public class GD_QuanLy_SuatChieu extends JFrame implements ActionListener {
 						// TODO Auto-generated method stub
 						GD_QuanLy_SuatChieu_Them gdThemSuatChieu;
 						try {
-							Socket socket = new Socket("192.168.1.10", 6789);
+							Socket socket = new Socket("192.168.2.13", 6789);
 							clientXC = new ClientXuatChieu_dao(socket);
 							try {
 								gdThemSuatChieu = new GD_QuanLy_SuatChieu_Them();
@@ -824,7 +824,7 @@ public class GD_QuanLy_SuatChieu extends JFrame implements ActionListener {
 
 		// Thêm dữ liệu vào bảng
 		//Load Data
-		Socket socket = new Socket("192.168.1.10", 6789);
+		Socket socket = new Socket("192.168.2.13", 6789);
 		clientXC= new ClientXuatChieu_dao(socket);
 		listXC = clientXC.getListXC();
 		loadDataToTable(listXC);
