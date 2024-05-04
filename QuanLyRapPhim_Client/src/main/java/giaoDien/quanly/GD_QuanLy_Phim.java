@@ -109,7 +109,7 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 	public JTable getTable() {
 	    return table;
 	}
-	public static void main(String[] args) throws UnknownHostException, ClassNotFoundException, IOException {
+	public static void main(String[] args) throws UnknownHostException, ClassNotFoundException, IOException, InterruptedException {
 		try {
 			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
 				if ("Nimbus".equals(info.getName())) {
@@ -139,8 +139,9 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 	 * @throws IOException 
 	 * @throws UnknownHostException 
 	 * @throws ClassNotFoundException 
+	 * 
 	 */
-	public GD_QuanLy_Phim() throws UnknownHostException, IOException, ClassNotFoundException {
+	public GD_QuanLy_Phim() throws UnknownHostException, IOException, ClassNotFoundException, InterruptedException {
 		initComponents();
 		
 
@@ -541,11 +542,21 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				GD_QuanLy_ThongKePhim gdqlthongkephim = new GD_QuanLy_ThongKePhim();
-				gdqlthongkephim.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				gdqlthongkephim.setLocationRelativeTo(null);
-				gdqlthongkephim.setVisible(true);
-				dispose();
+				GD_QuanLy_ThongKePhim gdqlthongkephim;
+				try {
+					gdqlthongkephim = new GD_QuanLy_ThongKePhim();
+					gdqlthongkephim.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					gdqlthongkephim.setLocationRelativeTo(null);
+					gdqlthongkephim.setVisible(true);
+					dispose();
+				} catch (UnknownHostException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
 			
 			}
 			});
@@ -557,11 +568,20 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				GD_QuanLy_ThongKeDichVu gdqlthongDVu = new GD_QuanLy_ThongKeDichVu();
-				gdqlthongDVu.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				gdqlthongDVu.setLocationRelativeTo(null);
-				gdqlthongDVu.setVisible(true);
-				dispose();
+				GD_QuanLy_ThongKeDichVu gdqlthongDVu;
+				try {
+					gdqlthongDVu = new GD_QuanLy_ThongKeDichVu();
+					gdqlthongDVu.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					gdqlthongDVu.setLocationRelativeTo(null);
+					gdqlthongDVu.setVisible(true);
+					dispose();
+				} catch (UnknownHostException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			
 			}
 			});
@@ -824,8 +844,10 @@ public class GD_QuanLy_Phim extends JFrame implements ActionListener {
 		// Thêm bảng và JScrollPane vào contentPane
 		contentPane.add(scrollPane);
 //		Load Data
-		Socket socket = new Socket("192.168.2.13", 6789);
+		Socket socket = new Socket("192.168.2.20", 6789);
 		clientphim = new ClientPhim_dao(socket);
+		
+		
 		
 		listphim = clientphim.getListPhim();
 		loadDataToTable(listphim);
@@ -1113,7 +1135,7 @@ public void timKiemPhimTheoKhoangNgay() throws ClassNotFoundException, IOExcepti
 	
 	}
 	}
-public void timKiem1() throws ClassNotFoundException, IOException {
+	public void timKiem1() throws ClassNotFoundException, IOException {
 		// TODO Auto-generated method stub
 		xoaBang();
 		timKiemPhimTheoKhoangNgay();

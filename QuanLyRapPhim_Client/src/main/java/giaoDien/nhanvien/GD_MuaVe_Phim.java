@@ -59,14 +59,19 @@ import java.awt.Component;
 import javax.swing.JTextField;
 import com.toedter.calendar.JDateChooser;
 
-
-
+import client_dao.ClientKhachHang_dao;
+import client_dao.ClientPhim_dao;
+import enities.KhachHang;
+import enities.Phim;
 //import enities.Phim;
 import runapp.Login;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 public class GD_MuaVe_Phim extends JFrame implements ActionListener {
 	/**
@@ -74,6 +79,7 @@ public class GD_MuaVe_Phim extends JFrame implements ActionListener {
 	 */
 	private JPanel contentPane;
 	private JLabel lblClock;
+	JLabel lbltennv;
 	private Timer timer;
 	Connection con = null;
 	ResultSet rs = null;
@@ -83,15 +89,20 @@ public class GD_MuaVe_Phim extends JFrame implements ActionListener {
 	Color whiteColor = Color.WHITE;
 	private JLabel lblNvIcon; // Thêm biến để lưu đối tượng JLabel chứa ảnh NV
 	private JTable table;
+	private int qtyVePhim;
 	private DefaultTableModel tableModel;
-	private JButton btnXacNhan, btnHuyBo, btnLamMoi;
+	private JButton btnXacNhan, btnHuyBo, btnLamMoi , btntimkiem;
 	private JTextField txtTuNgay;
 	private JTextField txtDenNgay;
 	private JDateChooser tuNgayDateChooser, denNgayDateChooser; // Thêm đối tượng JDateChooser cho từ ngày
 	private boolean isCalendarVisible = false;
 	private JTextField textField;
-	private JTextField textField_1;
-	public JLabel lbltennv;
+	private JTextField tf_sdtkh;
+	private ClientPhim_dao clientPhim;
+	private String maPhim;
+	private ClientKhachHang_dao client_kh;
+	private KhachHang kh;
+	private String maNhanVien , tenNhanVien;
 
 //	static String quanly;
 	/**
@@ -121,8 +132,8 @@ public class GD_MuaVe_Phim extends JFrame implements ActionListener {
 			java.util.logging.Logger.getLogger(GD_MuaVe_Phim.class.getName()).log(java.util.logging.Level.SEVERE, null,
 					ex);
 		}
-		GD_MuaVe_Phim run = new GD_MuaVe_Phim();
-		run.setVisible(true);
+//		GD_MuaVe_Phim run = new GD_MuaVe_Phim();
+//		run.setVisible(true);
 	}
 
 	/**
@@ -131,8 +142,10 @@ public class GD_MuaVe_Phim extends JFrame implements ActionListener {
 	 * @throws UnknownHostException 
 	 * @throws ClassNotFoundException 
 	 */
-	public GD_MuaVe_Phim() throws UnknownHostException, IOException, ClassNotFoundException {
-		initComponents();
+	public GD_MuaVe_Phim(String maNhanVien , String tenNhanVien) throws UnknownHostException, IOException, ClassNotFoundException {
+//		initComponents();
+		this.maNhanVien = maNhanVien;
+		this.tenNhanVien = tenNhanVien;
 		setResizable(false);
 		setBackground(Color.WHITE);
 		setTitle("Giao Diện Mua Vé - Phim");
@@ -186,12 +199,11 @@ public class GD_MuaVe_Phim extends JFrame implements ActionListener {
 		lblnhanvien.setForeground(Color.WHITE);
 		contentPane.add(lblnhanvien);
 
-		lbltennv = new JLabel("Trương Đại Lộc");
+		lbltennv = new JLabel(tenNhanVien);
 		lbltennv.setForeground(Color.WHITE);
 		lbltennv.setFont(new Font("Tahoma", Font.BOLD, 16));
 		lbltennv.setBounds(832, 0, 238, 50);
 		lbltennv.setForeground(Color.WHITE);
-//		lbltennv.setText(UserInfo.getTenNhanVien());
 		contentPane.add(lbltennv);
 
 		// Thêm panel nằm ngang ở trên cùng
@@ -258,50 +270,49 @@ public class GD_MuaVe_Phim extends JFrame implements ActionListener {
 		JButton btnGhe = new JButton("Chọn Ghế");
 		btnGhe.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnGhe.setIcon(new ImageIcon(GD_MuaVe_Phim.class.getResource("/imgs/chair.png")));
-		btnGhe.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				GD_MuaVe_ChonGhe gdmGHE = new GD_MuaVe_ChonGhe();
-				gdmGHE.lbltennv.setText(lbltennv.getText());
-				gdmGHE.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				gdmGHE.setLocationRelativeTo(null);
-				gdmGHE.setVisible(true);
-				dispose();
-			}
-		});
+//		btnGhe.addActionListener(new ActionListener() {
+//
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				// TODO Auto-generated method stub
+//				GD_MuaVe_ChonGhe gdmGHE = new GD_MuaVe_ChonGhe();
+//				gdmGHE.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+//				gdmGHE.setLocationRelativeTo(null);
+//				gdmGHE.setVisible(true);
+//				dispose();
+//			}
+//		});
 		JButton btnThucAn = new JButton("Thức Ăn");
 		btnThucAn.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnThucAn.setIcon(new ImageIcon(GD_MuaVe_Phim.class.getResource("/imgs/popcorn2.png")));
-		btnThucAn.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				GD_MuaVe_ThucAn gdmvthan = new GD_MuaVe_ThucAn();
-				gdmvthan.lbltennv.setText(lbltennv.getText());
-				gdmvthan.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				gdmvthan.setLocationRelativeTo(null);
-				gdmvthan.setVisible(true);
-				dispose();
-			}
-		});
+//		btnThucAn.addActionListener(new ActionListener() {
+//
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				// TODO Auto-generated method stub
+//				GD_MuaVe_ThucAn gdmvthan;
+//				try {
+//					gdmvthan = new GD_MuaVe_ThucAn();
+//					gdmvthan.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+//					gdmvthan.setLocationRelativeTo(null);
+//					gdmvthan.setVisible(true);
+//					dispose();
+//				} catch (UnknownHostException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				} catch (ClassNotFoundException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				} catch (IOException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				}
+//				
+//			}
+//		});
 		JButton btnSuatChieu = new JButton("Suất Chiếu");
 		btnSuatChieu.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnSuatChieu.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				GD_MuaVe_SuatChieu gdSChieu = new GD_MuaVe_SuatChieu();
-				gdSChieu.lbltennv.setText(lbltennv.getText());
-				gdSChieu.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				gdSChieu.setLocationRelativeTo(null);
-				gdSChieu.setVisible(true);
-				dispose();
-			}
-		});
+		
 		btnSuatChieu.setIcon(new ImageIcon(GD_MuaVe_Phim.class.getResource("/imgs/clapperboard2.png")));
 
 		panelChonVe.add(btnPhim);
@@ -420,8 +431,7 @@ public class GD_MuaVe_Phim extends JFrame implements ActionListener {
 				// TODO Auto-generated method stub
 				GD_KhachHang gdkh;
 				try {
-					gdkh = new GD_KhachHang();
-					gdkh.lbltennv.setText(lbltennv.getText());
+					gdkh = new GD_KhachHang(maNhanVien , tenNhanVien);
 					gdkh.setVisible(true);
 					gdkh.setLocationRelativeTo(null);
 					dispose();
@@ -562,37 +572,37 @@ public class GD_MuaVe_Phim extends JFrame implements ActionListener {
 		pnlTheoTenPhim_1.setBounds(10, 222, 230, 37);
 		contentPane.add(pnlTheoTenPhim_1);
 		pnlTheoTenPhim_1.setLayout(null);
-		textField_1 = new JTextField();
-		textField_1.setBounds(8, 5, 169, 27);
+		tf_sdtkh = new JTextField();
+		tf_sdtkh.setBounds(8, 5, 169, 27);
 		// Đặt kích thước chữ placeholder là 8px
         Font placeholderFont = new Font("Dialog", Font.PLAIN, 12);
-        textField_1.setFont(placeholderFont);
-		textField_1.setColumns(16);
-		pnlTheoTenPhim_1.add(textField_1);
+        tf_sdtkh.setFont(placeholderFont);
+		tf_sdtkh.setColumns(16);
+		pnlTheoTenPhim_1.add(tf_sdtkh);
 		// Thêm placeholder mờ
         String placeholderText = "SĐT KH";
-        textField_1.setForeground(Color.GRAY);
-        textField_1.setText(placeholderText);
+        tf_sdtkh.setForeground(Color.GRAY);
+        tf_sdtkh.setText(placeholderText);
 
-        textField_1.addFocusListener(new FocusListener() {
+        tf_sdtkh.addFocusListener(new FocusListener() {
             public void focusGained(FocusEvent e) {
-                if (textField_1.getText().equals(placeholderText)) {
-                    textField_1.setText("");
-                    textField_1.setForeground(Color.BLACK);
-                    textField_1.setFont(new Font("Dialog", Font.PLAIN, 16));
+                if (tf_sdtkh.getText().equals(placeholderText)) {
+                    tf_sdtkh.setText("");
+                    tf_sdtkh.setForeground(Color.BLACK);
+                    tf_sdtkh.setFont(new Font("Dialog", Font.PLAIN, 16));
                 }
             }
 
             public void focusLost(FocusEvent e) {
-                if (textField_1.getText().isEmpty()) {
-                    textField_1.setForeground(Color.GRAY);
-                    textField_1.setText(placeholderText);
-                    textField_1.setFont(placeholderFont);
+                if (tf_sdtkh.getText().isEmpty()) {
+                    tf_sdtkh.setForeground(Color.GRAY);
+                    tf_sdtkh.setText(placeholderText);
+                    tf_sdtkh.setFont(placeholderFont);
                 }
             }
         });
 		
-		JButton btntimkiem = new JButton("");
+		btntimkiem = new JButton("");
 		btntimkiem.setIcon(new ImageIcon(GD_MuaVe_Phim.class.getResource("/Imgs/search.png")));
 		btntimkiem.setBounds(191, 227, 49, 29);
 		contentPane.add(btntimkiem);
@@ -613,7 +623,7 @@ public class GD_MuaVe_Phim extends JFrame implements ActionListener {
 		contentPane.add(btnLamMoi);
 
 		// Khởi tạo DefaultTableModel với các cột
-		String[] columnNames = { "STT", "Mã phim", "Tên phim", "Thời lượng", "Giới hạn tuổi", "Ngày chiếu", "Ngôn ngữ",
+		String[] columnNames = {"Mã phim", "Tên phim", "Thời lượng", "Giới hạn tuổi", "Ngày chiếu", "Ngôn ngữ",
 				"Quốc gia", "Trạng thái" }; // Thay đổi tên cột tùy ý
 		tableModel = new DefaultTableModel(columnNames, 0);
 
@@ -631,31 +641,79 @@ public class GD_MuaVe_Phim extends JFrame implements ActionListener {
 		contentPane.add(scrollPane);
 
 		// Thêm dữ liệu vào bảng
-		Object[] rowData = { "1", "PH00001", "Thám Tử Conan: Kẻ hành pháp Zero", "120", "13", "01-01-2018",
-				"Tiếng Nhật", "Nhật Bản", "Đang Chiếu" }; // Thay đổi dữ liệu tùy ý
-		tableModel.addRow(rowData);
+//		Object[] rowData = {"PH00001", "Thám Tử Conan: Kẻ hành pháp Zero", "120", "13", "01-01-2018",
+//				"Tiếng Nhật", "Nhật Bản", "Đang Chiếu" }; // Thay đổi dữ liệu tùy ý
+//		tableModel.addRow(rowData);
 		
 		// Thêm sự kiện lắng nghe khi nhấn phím enter trên bảng
 		table.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "Enter");
 		table.getActionMap().put("Enter", new AbstractAction() {
 		    @Override
 		    public void actionPerformed(ActionEvent ae) {
+		    	boolean flagChonXuatChieu = true;
 		        int selectedRow = table.getSelectedRow();
 		        if (selectedRow != -1) { // Kiểm tra xem có dòng nào được chọn không
 		            // Hiển thị modal popup để nhập số lượng
-		            String selectedMovie = (String) table.getValueAt(selectedRow, 2); // Lấy tên phim của dòng được chọn
+		            String selectedMovie = (String) table.getValueAt(selectedRow, 1); // Lấy tên phim của dòng được chọn
+		            String idMoviesSelect = (String) table.getValueAt(selectedRow, 0); //Lấy mã phim của dòng được chọn
+		            
 		            int option = JOptionPane.showConfirmDialog(null, "Bạn muốn mua bao nhiêu vé cho phim: " + selectedMovie + "?", "Nhập số lượng", JOptionPane.OK_CANCEL_OPTION);
 		            if (option == JOptionPane.OK_OPTION) {
 		                // Xử lý khi người dùng ấn OK
 		                String quantityString = JOptionPane.showInputDialog(null, "Nhập số lượng vé:");
-		                // Chuyển đổi chuỗi số lượng thành số nguyên
-		                try {
-		                    int quantity = Integer.parseInt(quantityString);
-		                    // Thực hiện công việc tiếp theo với số lượng vé đã nhập
-		                    // Ví dụ: cập nhật số lượng vé trong cơ sở dữ liệu, hiển thị thông báo thành công, v.v.
-		                } catch (NumberFormatException e) {
-		                    JOptionPane.showMessageDialog(null, "Vui lòng nhập số lượng vé hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+		                String sdtKH = tf_sdtkh.getText();
+//		                System.out.println(sdtKH);
+ 		                if(sdtKH.trim().equals("") || sdtKH.trim().equals("null") || sdtKH.trim().equals("SĐT KH")) {
+		                	JOptionPane.showMessageDialog(null, "Vui lòng nhập SDT Khách Hàng!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+		                	
+		                }else if(flagChonXuatChieu == true){
+		                	// Chuyển đổi chuỗi số lượng thành số nguyên
+			                try {
+
+			                    int quantity = Integer.parseInt(quantityString);
+			                    qtyVePhim = quantity;
+			                    maPhim = idMoviesSelect;
+			                    // Thực hiện công việc tiếp theo với số lượng vé đã nhập
+			                    // Ví dụ: cập nhật số lượng vé trong cơ sở dữ liệu, hiển thị thông báo thành công, v.v.
+			                    
+			                    
+			                    LocalDateTime now = LocalDateTime.now();
+			  				  
+							    
+						        // Định dạng ngày tháng năm
+						        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("ddMMyyyy");
+						        String currentDate = now.format(dateFormatter);
+
+						        // Định dạng giờ phút giây và millisecond
+						        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HHmmssSSS");
+						        String currentTimeWithMillis = now.format(timeFormatter);
+
+						        // Tạo ra maHD với kiểu là HD + ngày tháng năm + giờ phút giây và mill giây + 6 ký tự ngẫu nhiên
+						        String maHD = "HD" + currentDate + "" + currentTimeWithMillis + generateRandomString();
+						        
+						        
+						        
+						        GD_MuaVe_SuatChieu  gdMuaVe_XC = new GD_MuaVe_SuatChieu(maHD , maPhim , qtyVePhim , sdtKH , maNhanVien , tenNhanVien);
+								gdMuaVe_XC.setVisible(true);
+								dispose();
+
+						       
+			                    
+			                } catch (NumberFormatException e) {
+			                    JOptionPane.showMessageDialog(null, "Vui lòng nhập số lượng vé hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+			                } catch (UnknownHostException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} catch (ClassNotFoundException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 		                }
+		                
+		                
 		            }
 		        } else {
 		            JOptionPane.showMessageDialog(null, "Vui lòng chọn một dòng trước khi nhấn enter!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
@@ -670,14 +728,60 @@ public class GD_MuaVe_Phim extends JFrame implements ActionListener {
 		background.setBounds(0, 0, 1162, 613);
 		contentPane.add(background);
 //		
-//		Socket socket = new Socket("192.168.2.20", 6789);
-//		
-//		clientPhim = new ClientPhim_dao(socket);
-//		
-//		List<Phim> listMovies = clientPhim.getListPhim();
-//		for (Phim phim : listMovies) {
-//			System.out.println(phim);
-//		}
+		Socket socket = new Socket("192.168.2.20", 6789);
+		
+		clientPhim = new ClientPhim_dao(socket);
+		
+		List<Phim> listMovies = clientPhim.getListPhim();
+		for (Phim phim : listMovies) {
+			String thoiLuong = String.valueOf(phim.getThoiLuong());
+			String gioiHanTuoi = String.valueOf(phim.getGioiHanTuoi());
+			Object [] rowData = {phim.getMaPhim(), phim.getTenPhim() , thoiLuong , gioiHanTuoi, phim.getNgayChieu() , phim.getNgonNgu() , phim.getQuocGia() , phim.getTrangThaiPhim()};
+			tableModel.addRow(rowData);
+		}
+		
+		
+		
+		
+		btnXacNhan.addActionListener(new ActionListener() {
+		
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+			
+				 	LocalDateTime now = LocalDateTime.now();
+				  
+				    
+			        // Định dạng ngày tháng năm
+			        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("ddMMyyyy");
+			        String currentDate = now.format(dateFormatter);
+
+			        // Định dạng giờ phút giây và millisecond
+			        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HHmmssSSS");
+			        String currentTimeWithMillis = now.format(timeFormatter);
+
+			        // Tạo ra maHD với kiểu là HD + ngày tháng năm + giờ phút giây và mill giây
+			        String maHD = "HD" + currentDate + "" + currentTimeWithMillis;
+			        String sdtKH = tf_sdtkh.getText();
+				try {
+					GD_MuaVe_SuatChieu  gdMuaVe_XC = new GD_MuaVe_SuatChieu(maHD , maPhim , qtyVePhim , sdtKH , maNhanVien , tenNhanVien);
+					gdMuaVe_XC.setVisible(true);
+					dispose();
+				} catch (UnknownHostException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				
+			}
+		});
 		
 
 	}
@@ -701,13 +805,78 @@ public class GD_MuaVe_Phim extends JFrame implements ActionListener {
 	}
 
 	private void formWindowClosing(java.awt.event.WindowEvent evt) {// GEN-FIRST:event_formWindowClosing
-		GD_NhanVien gdnv = new GD_NhanVien();
-		gdnv.lbltennv.setText(lbltennv.getText());
+		GD_NhanVien gdnv = new GD_NhanVien(maNhanVien , tenNhanVien);
 		gdnv.setLocationRelativeTo(null);
 		gdnv.setVisible(true);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		Object o = e.getSource();
+		if(o.equals(btntimkiem)) {
+			try {
+				Socket socket = new Socket("192.168.2.20", 6789);
+				client_kh = new ClientKhachHang_dao(socket);
+				String sdtKH = tf_sdtkh.getText();
+				
+				
+				
+			} catch (UnknownHostException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
 	}
+	
+	
+	public static String generateRandomString() {
+        String lowercaseLetters = "abcdefghijklmnopqrstuvwxyz";
+        String uppercaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String digits = "0123456789";
+
+        Random random = new Random();
+        StringBuilder sb = new StringBuilder(6);
+
+        // Sinh ngẫu nhiên một ký tự in hoa
+        char uppercaseChar = uppercaseLetters.charAt(random.nextInt(uppercaseLetters.length()));
+        sb.append(uppercaseChar);
+
+        // Sinh ngẫu nhiên một ký tự chữ thường
+        char lowercaseChar = lowercaseLetters.charAt(random.nextInt(lowercaseLetters.length()));
+        sb.append(lowercaseChar);
+
+        // Sinh ngẫu nhiên một số
+        char digitChar = digits.charAt(random.nextInt(digits.length()));
+        sb.append(digitChar);
+
+        // Sinh các ký tự còn lại ngẫu nhiên
+        for (int i = 3; i < 6; i++) {
+            String allChars = lowercaseLetters + uppercaseLetters + digits;
+            char randomChar = allChars.charAt(random.nextInt(allChars.length()));
+            sb.append(randomChar);
+        }
+
+        // Đảo lộn chuỗi để tránh các ký tự theo thứ tự nhất định
+        String shuffledString = shuffleString(sb.toString());
+
+        return shuffledString;
+    }
+
+    // Hàm đảo lộn chuỗi
+    private static String shuffleString(String input) {
+        char[] charArray = input.toCharArray();
+        Random random = new Random();
+
+        for (int i = charArray.length - 1; i > 0; i--) {
+            int index = random.nextInt(i + 1);
+            char temp = charArray[index];
+            charArray[index] = charArray[i];
+            charArray[i] = temp;
+        }
+
+        return new String(charArray);
+    }
 }

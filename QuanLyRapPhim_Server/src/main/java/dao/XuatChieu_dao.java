@@ -27,27 +27,40 @@ public class XuatChieu_dao {
 	
 	public List<XuatChieu> getListXuatChieu(){
 		List<XuatChieu> listXuatChieu = new ArrayList<XuatChieu>();
+			
+		try {
+			em.getTransaction().begin();
+
+			em.clear();
+			TypedQuery<XuatChieu> resultQuery = em.createQuery("Select xc from XuatChieu xc" , XuatChieu.class);
+			listXuatChieu = resultQuery.getResultList();
+			em.getTransaction().commit();
+			
+		}catch (Exception e) {
+			// TODO: handle exception
+		}
 		
-		TypedQuery<XuatChieu> resultQuery = em.createQuery("Select xc from XuatChieu xc" , XuatChieu.class);
-		listXuatChieu = resultQuery.getResultList();
 		return listXuatChieu;
 	}
 	
+	
+
 	public XuatChieu findXuatChieuOnMaXC(String maXC) {
 	    return em.createQuery("Select xc from XuatChieu xc where xc.maXuat = :maXuat", XuatChieu.class)
 	             .setParameter("maXuat", maXC)
 	             .getSingleResult();
-}
+	}
 	
 	public void deleteXuatChieu(String maXuat) {
 		try {
 //			// Kiểm tra xem đối tượng có trong persistence context hay không
 			XuatChieu xcDelete = em.find(XuatChieu.class, maXuat);
+			System.out.println(xcDelete);
 			 if (xcDelete != null && em.contains(xcDelete)) {
 				 	em.getTransaction().begin();
 	                em.remove(xcDelete); // Xóa đối tượng nếu nó được quản lý
 	                em.getTransaction().commit();
-	          }
+	         }
 		}catch (Exception e) {
 			if (em.getTransaction().isActive()) {
                 em.getTransaction().rollback(); // Rollback transaction nếu có lỗi xảy ra
@@ -55,6 +68,8 @@ public class XuatChieu_dao {
             e.printStackTrace();
 		}
 	}
+	
+	
 	
 	public void addxuatChieu(XuatChieu xc) {
 		// TODO Auto-generated method stub
@@ -89,5 +104,10 @@ public class XuatChieu_dao {
 	             .getSingleResult();
 	}
 
+	public XuatChieu getXuatChieuOnID(String idXuatChieu) {
+		XuatChieu xc_needFind = em.find(XuatChieu.class, idXuatChieu);
+		return xc_needFind;
+	}
+	
 	
 }

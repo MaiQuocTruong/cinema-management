@@ -14,9 +14,12 @@ import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -269,7 +272,7 @@ public class GD_QuanLy_SuatChieu_Them extends JFrame {
 		contentPane.add(cbx_trangThai);
 
 		// Load Data
-		Socket socket = new Socket("192.168.2.13", 6789);
+		Socket socket = new Socket("192.168.2.20", 6789);
 		clientXC = new ClientXuatChieu_dao(socket);
 
 		JButton btn_Them = new JButton("Thêm");
@@ -280,18 +283,20 @@ public class GD_QuanLy_SuatChieu_Them extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				LocalDateTime now = LocalDateTime.now();
+				  
+			    
+		        // Định dạng ngày tháng năm
+		        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("ddMMyyyy");
+		        String currentDate = now.format(dateFormatter);
 
-				int idCust = 0;
-				try {
-					for (XuatChieu xuat : clientXC.getListXC()) {
-						idCust++;
-					}
-				} catch (ClassNotFoundException | IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				int newID = idCust + 1;
-				String maXuatChieu = "X00" + newID;
+		        // Định dạng giờ phút giây và millisecond
+		        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HHmmssSSS");
+		        String currentTimeWithMillis = now.format(timeFormatter);
+
+		        // Tạo ra maNV với kiểu là HD + ngày tháng năm + giờ phút giây và mill giây + 6 chuỗi ngẫu nhiên
+		        String maXuatChieu = "XC" + currentDate + "" + currentTimeWithMillis + generateRandomString();
+			
 
 				// String dsPhim = comboBoxMaPhim.getSelectedItem() != null ?
 				// comboBoxMaPhim.getSelectedItem().toString() : "P001";
@@ -402,7 +407,7 @@ public class GD_QuanLy_SuatChieu_Them extends JFrame {
 	public void loadPhongChieuToComboBox(JComboBox<String> comboBox) {
 		try {
 			// Tạo một đối tượng ClientPhongChieu_dao và kết nối đến server
-			Socket socket = new Socket("192.168.2.13", 6789);
+			Socket socket = new Socket("192.168.2.20", 6789);
 			ClientPhongChieu_dao clientPhongChieuDao = new ClientPhongChieu_dao(socket);
 
 			// Gọi phương thức getListPhongChieu() để lấy danh sách phòng chiếu từ server
@@ -427,7 +432,7 @@ public class GD_QuanLy_SuatChieu_Them extends JFrame {
 	public void loadPhimToComboBox(JComboBox<String> comboBox) {
 		try {
 			// Tạo một đối tượng ClientPhongChieu_dao và kết nối đến server
-			Socket socket = new Socket("192.168.2.13", 6789);
+			Socket socket = new Socket("192.168.2.20", 6789);
 			ClientPhim_dao clientPhimDao = new ClientPhim_dao(socket);
 
 			// Gọi phương thức getListPhongChieu() để lấy danh sách phòng chiếu từ server
@@ -447,5 +452,54 @@ public class GD_QuanLy_SuatChieu_Them extends JFrame {
 			e.printStackTrace(); // Xử lý ngoại lệ nếu có
 		}
 	}
+	
+	
+	public static String generateRandomString() {
+        String lowercaseLetters = "abcdefghijklmnopqrstuvwxyz";
+        String uppercaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String digits = "0123456789";
+
+        Random random = new Random();
+        StringBuilder sb = new StringBuilder(6);
+
+        // Sinh ngẫu nhiên một ký tự in hoa
+        char uppercaseChar = uppercaseLetters.charAt(random.nextInt(uppercaseLetters.length()));
+        sb.append(uppercaseChar);
+
+        // Sinh ngẫu nhiên một ký tự chữ thường
+        char lowercaseChar = lowercaseLetters.charAt(random.nextInt(lowercaseLetters.length()));
+        sb.append(lowercaseChar);
+
+        // Sinh ngẫu nhiên một số
+        char digitChar = digits.charAt(random.nextInt(digits.length()));
+        sb.append(digitChar);
+
+        // Sinh các ký tự còn lại ngẫu nhiên
+        for (int i = 3; i < 6; i++) {
+            String allChars = lowercaseLetters + uppercaseLetters + digits;
+            char randomChar = allChars.charAt(random.nextInt(allChars.length()));
+            sb.append(randomChar);
+        }
+
+        // Đảo lộn chuỗi để tránh các ký tự theo thứ tự nhất định
+        String shuffledString = shuffleString(sb.toString());
+
+        return shuffledString;
+    }
+
+    // Hàm đảo lộn chuỗi
+    private static String shuffleString(String input) {
+        char[] charArray = input.toCharArray();
+        Random random = new Random();
+
+        for (int i = charArray.length - 1; i > 0; i--) {
+            int index = random.nextInt(i + 1);
+            char temp = charArray[index];
+            charArray[index] = charArray[i];
+            charArray[i] = temp;
+        }
+
+        return new String(charArray);
+    }
 
 }

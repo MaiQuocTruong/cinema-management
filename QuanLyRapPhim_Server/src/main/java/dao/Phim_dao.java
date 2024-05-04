@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-
+import enities.NhanVien;
 import enities.Phim;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
@@ -21,11 +21,22 @@ public class Phim_dao {
 	
 	public List<Phim> getListMovies(){
 		List<Phim> listMovies = new ArrayList<Phim>();
+			
+		try {
+			em.getTransaction().begin();
+			em.clear();
+			TypedQuery<Phim> resultQuery = em.createQuery("Select p from Phim p" , Phim.class);
+			listMovies = resultQuery.getResultList();
+			em.getTransaction().commit();
+			
+		}catch (Exception e) {
+			// TODO: handle exception
+		}
 		
-		TypedQuery<Phim> resultQuery = em.createQuery("Select p from Phim p" , Phim.class);
-		listMovies = resultQuery.getResultList();
 		return listMovies;
 	}
+	
+	
 	
 	public void addPhimmoi(Phim ph) {
 		// TODO Auto-generated method stub

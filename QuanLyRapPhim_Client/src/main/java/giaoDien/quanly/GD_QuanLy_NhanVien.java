@@ -33,7 +33,7 @@ import java.awt.GridLayout;
 import java.awt.SystemColor;
 
 import javax.swing.SwingConstants;
-import javax.swing.Timer;
+
 
 import testbutton.Buttontest;
 
@@ -63,14 +63,20 @@ import client_dao.ClientNhanVien_dao;
 import enities.KhachHang;
 import enities.NhanVien;
 import runapp.Login;
+import task.TaskExecuteMultiThreadKhachHang;
+import task.TaskExecuteMultiThreadNhanVien;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.CountDownLatch;
 
 import javax.swing.JComboBox;
@@ -230,6 +236,9 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 					gdqlphim.setVisible(true);
 					dispose();
 				} catch (ClassNotFoundException | IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (InterruptedException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
@@ -520,10 +529,20 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				GD_QuanLy_ThongKePhim gdqlthongkephim = new GD_QuanLy_ThongKePhim();
-				gdqlthongkephim.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				gdqlthongkephim.setLocationRelativeTo(null);
-				gdqlthongkephim.setVisible(true);
+				GD_QuanLy_ThongKePhim gdqlthongkephim;
+				try {
+					gdqlthongkephim = new GD_QuanLy_ThongKePhim();
+					gdqlthongkephim.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					gdqlthongkephim.setLocationRelativeTo(null);
+					gdqlthongkephim.setVisible(true);
+				} catch (UnknownHostException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
 				dispose();
 
 			}
@@ -537,11 +556,21 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				GD_QuanLy_ThongKeDichVu gdqlthongDVu = new GD_QuanLy_ThongKeDichVu();
-				gdqlthongDVu.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				gdqlthongDVu.setLocationRelativeTo(null);
-				gdqlthongDVu.setVisible(true);
-				dispose();
+				GD_QuanLy_ThongKeDichVu gdqlthongDVu;
+				try {
+					gdqlthongDVu = new GD_QuanLy_ThongKeDichVu();
+					gdqlthongDVu.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					gdqlthongDVu.setLocationRelativeTo(null);
+					gdqlthongDVu.setVisible(true);
+					dispose();
+				} catch (UnknownHostException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
 
 			}
 		});
@@ -761,11 +790,40 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 		contentPane.add(background);
 
 		// load dữ liệu
-		Socket socket = new Socket("192.168.100.4", 6789);
+		Socket socket = new Socket("192.168.2.20", 6789);
 		clientNV = new ClientNhanVien_dao(socket);
 
 		listNV = clientNV.getListNV();
 		loadDataToTable(listNV);
+		
+		
+		Timer timer = new Timer();
+//        // Tạo một TimerTask để thực hiện công việc mong muốn
+        TimerTask task = new TimerTask() {
+            public void run() {
+                // Đây là nơi để đặt hàm mà bạn muốn thực thi sau mỗi 5 giây
+            	xoaBang();
+            	try {
+					listNV = clientNV.getListNV();
+					TaskExecuteMultiThreadNhanVien task = new TaskExecuteMultiThreadNhanVien(listNV, tableModel);
+		            task.execute();
+				} catch (UnknownHostException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+              
+            }
+        };
+//
+//        // Lập lịch thực hiện TimerTask sau mỗi 10000ms (10 giây)
+        timer.schedule(task, 0, 20000);
+		
 
 		// add su kien
 		btnThem.addActionListener(this);
@@ -861,10 +919,6 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 		if (o.equals(btnThem)) {
 			try {
 				themNV();
-				listNV = clientNV.getListNV();
-				xoaBang();
-				xoaTrangTF();
-				loadDataToTable(listNV);
 			} catch (Exception e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -878,10 +932,6 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 		} else if (o.equals(btnSua)) {
 			try {
 				suaNV();
-				listNV = clientNV.getListNV();
-				xoaBang();
-				xoaTrangTF();
-				loadDataToTable(listNV);
 			} catch (Exception e2) {
 				// TODO: handle exception
 				e2.printStackTrace();
@@ -910,7 +960,6 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 	    String maNVCantim = (String) table.getValueAt(row, 0);
 
 	    String tenNV = txtHoTen.getText();
-	    System.out.println(tenNV);
 	    Date ngaySinhTrenGD = ngaySinhDateChooser.getDate();
 
 	    String sdtMoi = txtSDT.getText();
@@ -953,10 +1002,16 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 	    nv_needUpdate.setEmail(email);
 	    nv_needUpdate.setChucVu(chucVu);
 	    nv_needUpdate.setTrangThai(statusQuit);
+	    
 
-	    System.out.println("NV Trong Ham" + nv_needUpdate);
-
-	    clientNV.updateNV(nv_needUpdate);
+	    clientNV.updateNhanVien(nv_needUpdate);
+	    
+	    
+//	    Thread.sleep(1000);
+	    listNV = clientNV.getListNV();
+		xoaBang();
+		xoaTrangTF();
+		loadDataToTable(listNV);
 	    
 	}
 
@@ -1031,12 +1086,21 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 	}
 
 	public void themNV() throws Exception {
-		int idCust = 0;
-		for (NhanVien nhanVien : clientNV.getListNV()) {
-			idCust++;
-		}
-		int newID = idCust + 1;
-		String maNV = "NV00" + newID;
+		LocalDateTime now = LocalDateTime.now();
+		  
+	    
+        // Định dạng ngày tháng năm
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("ddMMyyyy");
+        String currentDate = now.format(dateFormatter);
+
+        // Định dạng giờ phút giây và millisecond
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HHmmssSSS");
+        String currentTimeWithMillis = now.format(timeFormatter);
+
+        // Tạo ra maNV với kiểu là HD + ngày tháng năm + giờ phút giây và mill giây + 6 chuỗi ngẫu nhiên
+        String maNV = "NV" + currentDate + "" + currentTimeWithMillis + generateRandomString();
+        
+        
 		String tenNV = txtHoTen.getText();
 
 		Date ngaySinhTrenGD = ngaySinhDateChooser.getDate();
@@ -1088,7 +1152,11 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 		clientNV.addNV(nv);
 		java.lang.Object[] rowData = { maNV, tenNV, ngaySinhTrongTable, sdt, diaChi, email, chucVu, gioiTinhTrongTable,
 				trangThai };
-		tableModel.addRow(rowData);
+		xoaBang();
+//		Đặt Sleep Ở Đây Vì Khi Có 1 Máy Khác Thêm Thì Nó Sẽ Đợi Để Load Dữ Liệu Lên Lại
+		Thread.sleep(2000);
+		List<NhanVien> listNV = clientNV.getListNV();
+		loadDataToTable(listNV);
 		xoaTrangTF();
 	}
 
@@ -1103,5 +1171,55 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 		cboxChucVu.setSelectedIndex(0);
 		cboxTrangThai.setSelectedIndex(0);
 	}
+	
+	
+	public static String generateRandomString() {
+        String lowercaseLetters = "abcdefghijklmnopqrstuvwxyz";
+        String uppercaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String digits = "0123456789";
+
+        Random random = new Random();
+        StringBuilder sb = new StringBuilder(6);
+
+        // Sinh ngẫu nhiên một ký tự in hoa
+        char uppercaseChar = uppercaseLetters.charAt(random.nextInt(uppercaseLetters.length()));
+        sb.append(uppercaseChar);
+
+        // Sinh ngẫu nhiên một ký tự chữ thường
+        char lowercaseChar = lowercaseLetters.charAt(random.nextInt(lowercaseLetters.length()));
+        sb.append(lowercaseChar);
+
+        // Sinh ngẫu nhiên một số
+        char digitChar = digits.charAt(random.nextInt(digits.length()));
+        sb.append(digitChar);
+
+        // Sinh các ký tự còn lại ngẫu nhiên
+        for (int i = 3; i < 6; i++) {
+            String allChars = lowercaseLetters + uppercaseLetters + digits;
+            char randomChar = allChars.charAt(random.nextInt(allChars.length()));
+            sb.append(randomChar);
+        }
+
+        // Đảo lộn chuỗi để tránh các ký tự theo thứ tự nhất định
+        String shuffledString = shuffleString(sb.toString());
+
+        return shuffledString;
+    }
+
+    // Hàm đảo lộn chuỗi
+    private static String shuffleString(String input) {
+        char[] charArray = input.toCharArray();
+        Random random = new Random();
+
+        for (int i = charArray.length - 1; i > 0; i--) {
+            int index = random.nextInt(i + 1);
+            char temp = charArray[index];
+            charArray[index] = charArray[i];
+            charArray[i] = temp;
+        }
+
+        return new String(charArray);
+    }
+
 
 }

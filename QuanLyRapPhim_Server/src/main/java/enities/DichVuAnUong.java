@@ -1,5 +1,7 @@
 package enities;
 
+import java.io.Serializable;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -7,7 +9,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "dichvuanuong")
-public class DichVuAnUong {
+public class DichVuAnUong implements Serializable{
 	@Id
 	@Column(name = "MaDichVu")
 	private String maDichVu;

@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.net.Socket;
 import java.net.UnknownHostException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,6 +19,7 @@ import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -35,13 +37,22 @@ import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
 
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.renderer.category.BarRenderer;
+import org.jfree.data.category.DefaultCategoryDataset;
+
 import com.toedter.calendar.JDateChooser;
 
+import client_dao.ClientCTHoaDonDichVu;
 //import enities.Phim;
 import runapp.Login;
 import testbutton.Buttontest;
 
-public class GD_QuanLy_ThongKeDichVu extends JFrame {
+public class GD_QuanLy_ThongKeDichVu extends JFrame implements ActionListener{
 	/**
 	 * 
 	 */
@@ -56,20 +67,24 @@ public class GD_QuanLy_ThongKeDichVu extends JFrame {
 	Color customColor = new Color(0, 92, 111);
 	Color whiteColor = Color.WHITE;
 	private JTextField txtDenNgay, txtTuNgay;
-  private JLabel lblNvIcon; // Thêm biến để lưu đối tượng JLabel chứa ảnh NV
-    private boolean daChonPhim = false; // Biến để kiểm tra xem đã chọn Phim hay chưa
+	private JLabel lblNvIcon; // Thêm biến để lưu đối tượng JLabel chứa ảnh NV
+	private boolean daChonPhim = false; // Biến để kiểm tra xem đã chọn Phim hay chưa
 	private JDateChooser ChonNgayDateChooser; // Thêm đối tượng JDateChooser cho từ ngày
 	private boolean isCalendarVisible = false;
-	
-	private JTable table;
-	private DefaultTableModel tableModel;
-	
 
+	private JTable table;
+	private JButton btnBieuDoThongKe;
+	private DefaultTableModel tableModel;
+	private ClientCTHoaDonDichVu client_hddv;
+	
 	static String quanly;
+
 	/**
 	 * Launch the application.
+	 * @throws IOException 
+	 * @throws UnknownHostException 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws UnknownHostException, IOException {
 		try {
 			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
 				if ("Nimbus".equals(info.getName())) {
@@ -90,11 +105,11 @@ public class GD_QuanLy_ThongKeDichVu extends JFrame {
 			java.util.logging.Logger.getLogger(GD_QuanLy_Phim.class.getName()).log(java.util.logging.Level.SEVERE, null,
 					ex);
 		}
-		GD_QuanLy_ThongKeDichVu run = new GD_QuanLy_ThongKeDichVu();
+		GD_QuanLy_ThongKePhim run = new GD_QuanLy_ThongKePhim();
 		run.setVisible(true);
 	}
 
-	public GD_QuanLy_ThongKeDichVu()  {
+	public GD_QuanLy_ThongKeDichVu() throws UnknownHostException, IOException {
 		initComponents();
 		setResizable(false);
 		setBackground(Color.WHITE);
@@ -106,19 +121,19 @@ public class GD_QuanLy_ThongKeDichVu extends JFrame {
 		contentPane.setBorder(null);
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
+
 		lblNvIcon = new JLabel("");
 		lblNvIcon.setBounds(760, 5, 40, 40);
-        lblNvIcon.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/avt.png")));
-        contentPane.add(lblNvIcon);
-      
+		lblNvIcon.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/avt.png")));
+		contentPane.add(lblNvIcon);
+
 		JLabel lblnhanvien = new JLabel("QL:");
 		lblnhanvien.setBounds(801, 0, 39, 50);
 		lblnhanvien.setForeground(Color.WHITE);
 		lblnhanvien.setFont(new Font("Tahoma", Font.BOLD, 16));
 		lblnhanvien.setForeground(Color.WHITE);
 		contentPane.add(lblnhanvien);
-		
+
 		lbltennv = new JLabel("Mai Quốc Trưởng");
 		lbltennv.setBounds(832, 0, 238, 50);
 		lbltennv.setForeground(Color.WHITE);
@@ -126,7 +141,7 @@ public class GD_QuanLy_ThongKeDichVu extends JFrame {
 		lbltennv.setForeground(Color.WHITE);
 //		lbltennv.setText(UserInfo.getTenNhanVien());
 		contentPane.add(lbltennv);
-		
+
 		// Thêm panel nằm ngang ở trên cùng
 		JPanel topPanel = new JPanel() {
 			private static final long serialVersionUID = 1L;
@@ -156,7 +171,7 @@ public class GD_QuanLy_ThongKeDichVu extends JFrame {
 		qlyPhimButton.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/video-camera12.png")));
 		qlyPhimButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (panelThongKe.isVisible() || panelTaiKhoan.isVisible() || panelNhanVien.isVisible() 
+				if (panelThongKe.isVisible() || panelTaiKhoan.isVisible() || panelNhanVien.isVisible()
 						|| panelDichVu.isVisible() || panelPhim.isVisible()) {
 					panelPhim.setVisible(false);
 					panelDichVu.setVisible(false);
@@ -205,6 +220,9 @@ public class GD_QuanLy_ThongKeDichVu extends JFrame {
 				} catch (ClassNotFoundException | IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
 				
 			}
@@ -214,7 +232,7 @@ public class GD_QuanLy_ThongKeDichVu extends JFrame {
 		btnSuatChieu.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnSuatChieu.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/clapperboard2.png")));
 		btnSuatChieu.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
@@ -281,7 +299,8 @@ public class GD_QuanLy_ThongKeDichVu extends JFrame {
 		dichVuButton.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/popcorn12.png")));
 		dichVuButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (panelThongKe.isVisible() ||panelTaiKhoan.isVisible() || panelNhanVien.isVisible() || panelDichVu.isVisible() || panelPhim.isVisible()) {
+				if (panelThongKe.isVisible() || panelTaiKhoan.isVisible() || panelNhanVien.isVisible()
+						|| panelDichVu.isVisible() || panelPhim.isVisible()) {
 					panelPhim.setVisible(false);
 					panelDichVu.setVisible(false);
 					panelNhanVien.setVisible(false);
@@ -295,7 +314,7 @@ public class GD_QuanLy_ThongKeDichVu extends JFrame {
 		dichVuToolbar.add(dichVuButton);
 		dichVuToolbar.setBackground(customColor); // Thay đổi ở đây
 		topPanel.add(dichVuToolbar);
-		
+
 		panelDichVu = new JPanel() {
 			private static final long serialVersionUID = 1L;
 
@@ -315,7 +334,7 @@ public class GD_QuanLy_ThongKeDichVu extends JFrame {
 		btnqldv.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnqldv.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/popcorn2.png")));
 		btnqldv.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
@@ -341,7 +360,8 @@ public class GD_QuanLy_ThongKeDichVu extends JFrame {
 		nhanVienButton.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/customer1.png")));
 		nhanVienButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (panelThongKe.isVisible() || panelTaiKhoan.isVisible() || panelNhanVien.isVisible() || panelDichVu.isVisible() || panelPhim.isVisible()) {
+				if (panelThongKe.isVisible() || panelTaiKhoan.isVisible() || panelNhanVien.isVisible()
+						|| panelDichVu.isVisible() || panelPhim.isVisible()) {
 					panelPhim.setVisible(false);
 					panelDichVu.setVisible(false);
 					panelNhanVien.setVisible(false);
@@ -355,7 +375,7 @@ public class GD_QuanLy_ThongKeDichVu extends JFrame {
 		nhanVienToolbar.add(nhanVienButton);
 		nhanVienToolbar.setBackground(customColor);
 		topPanel.add(nhanVienToolbar);
-				
+
 		panelNhanVien = new JPanel() {
 			private static final long serialVersionUID = 1L;
 
@@ -370,7 +390,7 @@ public class GD_QuanLy_ThongKeDichVu extends JFrame {
 		panelNhanVien.setVisible(false); // tắt/ẩn panel
 		panelNhanVien.setBackground(whiteColor);
 		contentPane.add(panelNhanVien);
-		
+
 		JButton btnNhanVien = new JButton("Quản Lý Nhân Viên");
 		btnNhanVien.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnNhanVien.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/khachhang1.png")));
@@ -393,11 +413,12 @@ public class GD_QuanLy_ThongKeDichVu extends JFrame {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+
 			}
 			
 		});
 		panelNhanVien.add(btnNhanVien);
-		
+
 		// Thêm toolbar "tài khoản"
 		JToolBar taiKhoanToolbar = new JToolBar();
 		taiKhoanToolbar.setFloatable(false);
@@ -411,7 +432,7 @@ public class GD_QuanLy_ThongKeDichVu extends JFrame {
 		taiKhoanButton.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/employee1.png")));
 		taiKhoanButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (panelThongKe.isVisible() || panelTaiKhoan.isVisible() || panelNhanVien.isVisible() 
+				if (panelThongKe.isVisible() || panelTaiKhoan.isVisible() || panelNhanVien.isVisible()
 						|| panelDichVu.isVisible() || panelPhim.isVisible()) {
 					panelPhim.setVisible(false);
 					panelDichVu.setVisible(false);
@@ -426,7 +447,7 @@ public class GD_QuanLy_ThongKeDichVu extends JFrame {
 		taiKhoanToolbar.add(taiKhoanButton);
 		taiKhoanToolbar.setBackground(customColor);
 		topPanel.add(taiKhoanToolbar);
-		
+
 		panelTaiKhoan = new JPanel() {
 			private static final long serialVersionUID = 1L;
 
@@ -441,7 +462,7 @@ public class GD_QuanLy_ThongKeDichVu extends JFrame {
 		panelTaiKhoan.setVisible(false); // tắt/ẩn panel
 		panelTaiKhoan.setBackground(whiteColor);
 		contentPane.add(panelTaiKhoan);
-		
+
 		JButton btnTaiKhoan = new JButton("Quản Lý Tài Khoản");
 		btnTaiKhoan.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnTaiKhoan.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/av1.png")));
@@ -465,7 +486,7 @@ public class GD_QuanLy_ThongKeDichVu extends JFrame {
 
 		});
 		panelTaiKhoan.add(btnTaiKhoan);
-		
+
 		// thêm toolbar "thống kê"
 		JToolBar thongKeToolbar = new JToolBar();
 		thongKeToolbar.setFloatable(false);
@@ -479,7 +500,7 @@ public class GD_QuanLy_ThongKeDichVu extends JFrame {
 		thongKeButton.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/thongke1.png")));
 		thongKeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (panelThongKe.isVisible() || panelTaiKhoan.isVisible() || panelNhanVien.isVisible() 
+				if (panelThongKe.isVisible() || panelTaiKhoan.isVisible() || panelNhanVien.isVisible()
 						|| panelDichVu.isVisible() || panelPhim.isVisible()) {
 					panelPhim.setVisible(false);
 					panelDichVu.setVisible(false);
@@ -494,7 +515,7 @@ public class GD_QuanLy_ThongKeDichVu extends JFrame {
 		thongKeToolbar.add(thongKeButton);
 		thongKeToolbar.setBackground(customColor);
 		topPanel.add(thongKeToolbar);
-		
+
 		panelThongKe = new JPanel() {
 			private static final long serialVersionUID = 1L;
 
@@ -509,65 +530,75 @@ public class GD_QuanLy_ThongKeDichVu extends JFrame {
 		panelThongKe.setVisible(true); // tắt/ẩn panel
 		panelThongKe.setBackground(whiteColor);
 		contentPane.add(panelThongKe);
-		
-//		JButton btnThongKeDThu = new JButton("Thống Kê Doanh Thu");
-//		btnThongKeDThu.setFont(new Font("Tahoma", Font.PLAIN, 14));
-//		btnThongKeDThu.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/thongke.png")));
-//		JButton btnThongKeVe = new JButton("Thống Kê Vé Bán");
-//		btnThongKeVe.setFont(new Font("Tahoma", Font.PLAIN, 14));
-//		btnThongKeVe.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/tickets2.png")));
+
 		JButton btnThongKePhim = new JButton("Thống Kê Phim");
 		btnThongKePhim.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnThongKePhim.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/clapperboard2.png")));
-		btnThongKePhim.addActionListener(new ActionListener() {
+		JButton btnThongKeDichVu = new JButton("Thống Kê Dịch Vụ");
+		btnThongKeDichVu.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btnThongKeDichVu.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/popcorn2.png")));
+		btnThongKeDichVu.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				GD_QuanLy_ThongKePhim gdqlthongkephim = new GD_QuanLy_ThongKePhim();
-				gdqlthongkephim.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				gdqlthongkephim.setLocationRelativeTo(null);
-				gdqlthongkephim.setVisible(true);
-				dispose();
+				GD_QuanLy_ThongKeDichVu gdqlthongDVu;
+				try {
+					gdqlthongDVu = new GD_QuanLy_ThongKeDichVu();
+					gdqlthongDVu.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					gdqlthongDVu.setLocationRelativeTo(null);
+					gdqlthongDVu.setVisible(true);
+					dispose();
+				} catch (UnknownHostException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
 
 			}
 		});
-		JButton btnThongKeDichVu = new JButton("Thống Kê Dịch Vụ"); 
-		btnThongKeDichVu.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnThongKeDichVu.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/popcorn2.png")));
-		
 		panelThongKe.add(btnThongKePhim);
 		panelThongKe.add(btnThongKeDichVu);
-		
+
 		// Create logout button
 		JToolBar logoutToolBar = new JToolBar();
 		logoutToolBar.setFloatable(false);
 		logoutToolBar.setMargin(new java.awt.Insets(-5, 438, 0, 0));
 		testbutton.Buttontest logoutButton = new Buttontest();
 		logoutButton.setText("Đăng Xuất");
-        logoutButton.setFont(new Font("Open Sans", Font.BOLD, 15));
-        logoutButton.setForeground(SystemColor.text);
-        logoutButton.setRippleColor(new Color(255, 255, 255));
-        logoutButton.setBackground(new Color(226, 110, 110));
-        logoutButton.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/logout.png")));
-        logoutButton.addActionListener(new ActionListener() {
+		logoutButton.setFont(new Font("Open Sans", Font.BOLD, 15));
+		logoutButton.setForeground(SystemColor.text);
+		logoutButton.setRippleColor(new Color(255, 255, 255));
+		logoutButton.setBackground(new Color(226, 110, 110));
+		logoutButton.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/logout.png")));
+		logoutButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-		        if (JOptionPane.showConfirmDialog(null, "Bạn có muốn đăng xuất!", null, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-		            Login lg = new Login();
-		            lg.setVisible(true);
-		            lg.setLocationRelativeTo(null);
-		            dispose();
-		        }
+				if (JOptionPane.showConfirmDialog(null, "Bạn có muốn đăng xuất!", null,
+						JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+					Login lg = new Login();
+					lg.setVisible(true);
+					lg.setLocationRelativeTo(null);
+					dispose();
+				}
 			}
 		});
-        logoutToolBar.add(logoutButton);
-        logoutToolBar.setBackground(customColor);
-        topPanel.add(logoutToolBar);       
-		
-		//Body
-        JLabel lblBoLoc = new JLabel("Bộ Lọc Thống Kê");
-        lblBoLoc.setBounds(14, 106, 152, 20);
-        lblBoLoc.setFont(new Font("Dialog", Font.BOLD, 16));
+		logoutToolBar.add(logoutButton);
+		logoutToolBar.setBackground(customColor);
+		topPanel.add(logoutToolBar);
+
+		btnBieuDoThongKe = new JButton("Biểu đồ thống kê");
+		btnBieuDoThongKe.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		btnBieuDoThongKe.setBounds(14, 202, 171, 40);
+		btnBieuDoThongKe.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/thongke.png")));
+		contentPane.add(btnBieuDoThongKe);
+
+		// Body
+		JLabel lblBoLoc = new JLabel("Bộ Lọc Thống Kê");
+		lblBoLoc.setBounds(14, 106, 140, 20);
+		lblBoLoc.setFont(new Font("Dialog", Font.BOLD, 16));
 		contentPane.add(lblBoLoc);
 
 		JPanel pnlThoiGian = new JPanel();
@@ -576,12 +607,12 @@ public class GD_QuanLy_ThongKeDichVu extends JFrame {
 		pnlThoiGian.setOpaque(false);
 		pnlThoiGian.setLayout(new BoxLayout(pnlThoiGian, BoxLayout.Y_AXIS)); // Use vertical BoxLayout
 		contentPane.add(pnlThoiGian);
-		
+
 		JLabel lblTG = new JLabel("Thời gian");
 		lblTG.setFont(new Font("Dialog", Font.PLAIN, 14));
 		lblTG.setBounds(20, 50, 20, 30);
 		pnlThoiGian.add(lblTG);
-		
+
 		JPanel pnlChonNgay_1 = new JPanel();
 		pnlChonNgay_1.setBounds(10, 160, 134, 37);
 		pnlChonNgay_1.setOpaque(false);
@@ -598,53 +629,52 @@ public class GD_QuanLy_ThongKeDichVu extends JFrame {
 		ChonNgayDateChooser.getDateEditor().getUiComponent().setVisible(isCalendarVisible);
 		contentPane.add(ChonNgayDateChooser);
 		// Thêm sự kiện cho JDateChooser để cập nhật giá trị vào textfield khi người
-				// dùng chọn ngày
+		// dùng chọn ngày
 		ChonNgayDateChooser.addPropertyChangeListener("date", new PropertyChangeListener() {
-					@Override
-					public void propertyChange(PropertyChangeEvent evt) {
-						Date selectedDate = ChonNgayDateChooser.getDate();
-						SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-						txtTuNgay.setText(dateFormat.format(selectedDate));
-					}
-				});
-				
-		JButton btnBieuDoThongKe = new JButton("Biểu đồ thống kê");
-		btnBieuDoThongKe.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		btnBieuDoThongKe.setBounds(14, 202, 171, 40);
-		btnBieuDoThongKe.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/thongke.png")));
-		contentPane.add(btnBieuDoThongKe);	
-		
-		JLabel lblTongDoanhThuDV = new JLabel("Dịch vụ có doanh thu cao nhất: ");
-		lblTongDoanhThuDV.setForeground(Color.RED);
-		lblTongDoanhThuDV.setFont(new Font("Dialog", Font.BOLD, 16));
-		lblTongDoanhThuDV.setBounds(275, 106, 471, 20);
-		contentPane.add(lblTongDoanhThuDV);
-		
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				Date selectedDate = ChonNgayDateChooser.getDate();
+				SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+				txtTuNgay.setText(dateFormat.format(selectedDate));
+			}
+		});
+
+		JLabel lblTongDoanhThuPhim = new JLabel("Phim có doanh thu cao nhất: ");
+		lblTongDoanhThuPhim.setForeground(Color.RED);
+		lblTongDoanhThuPhim.setFont(new Font("Dialog", Font.BOLD, 16));
+		lblTongDoanhThuPhim.setBounds(275, 106, 471, 20);
+		contentPane.add(lblTongDoanhThuPhim);
+
 		// Khởi tạo DefaultTableModel với các cột
-		String[] columnNames = {"STT", "Thời Gian", "Dịch Vụ", "Tổng Doanh Thu"}; // Thay đổi tên cột tùy ý
+		String[] columnNames = { "STT", "Thời Gian", "Tên Phim", "Tổng Doanh Thu" }; // Thay đổi tên cột tùy ý
 		tableModel = new DefaultTableModel(columnNames, 0);
 
 		// Khởi tạo JTable với DefaultTableModel
 		table = new JTable(tableModel);
 		// Đặt chiều rộng cho cột "Tên phim"
-		table.getColumnModel().getColumn(0).setPreferredWidth(30); 
-		table.getColumnModel().getColumn(1).setPreferredWidth(30); 
-		table.getColumnModel().getColumn(2).setPreferredWidth(30); 
-		table.getColumnModel().getColumn(3).setPreferredWidth(30); 	
-			
+		table.getColumnModel().getColumn(0).setPreferredWidth(30);
+		table.getColumnModel().getColumn(1).setPreferredWidth(30);
+		table.getColumnModel().getColumn(2).setPreferredWidth(30);
+		table.getColumnModel().getColumn(3).setPreferredWidth(30);
+
 		// Tạo JScrollPane để thêm bảng vào để có thể cuộn
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.setBounds(275, 140, 871, 469);
 
 		// Thêm bảng và JScrollPane vào contentPane
 		contentPane.add(scrollPane);
-		//loadTableData();
+		// loadTableData();
 
 		JLabel background = new JLabel("");
 		background.setBounds(0, 0, 1162, 613);
 		background.setHorizontalAlignment(SwingConstants.CENTER);
 		background.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/bggalaxy1.png")));
 		contentPane.add(background);
+		
+		Socket socket = new Socket("192.168.2.20", 6789);
+		client_hddv = new ClientCTHoaDonDichVu(socket);
+		
+		btnBieuDoThongKe.addActionListener(this);
 	}
 
 	private void initComponents() {
@@ -664,13 +694,62 @@ public class GD_QuanLy_ThongKeDichVu extends JFrame {
 
 		pack();
 	}
-	
-	
-	
+
 	private void formWindowClosing(java.awt.event.WindowEvent evt) {// GEN-FIRST:event_formWindowClosing
 		GD_QuanLy gdql = new GD_QuanLy();
 		gdql.setLocationRelativeTo(null);
 		gdql.setVisible(true);
 	}
-}
 
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		Object o = e.getSource();
+		if(o.equals(btnBieuDoThongKe)) {
+			try {
+				Map<String, Double> listDoanhThuDichVu = client_hddv.getDoanhThuTheoDichVu();
+				drawBarChart(listDoanhThuDichVu, "Doanh Thu Theo Dịch Vụ", "Tên Dịch Vụ", "Tổng Doanh Thu");
+			} catch (ClassNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		
+	}
+	
+	 public void drawBarChart(Map<String, Double> dataMap, String chartTitle, String xAxisLabel, String yAxisLabel) {
+	        // Tạo dataset từ Map<String, Double>
+	        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+	        
+	        for (Map.Entry<String, Double> entry : dataMap.entrySet()) {
+	            dataset.addValue(entry.getValue(), yAxisLabel, entry.getKey());
+	        }
+
+	        // Tạo biểu đồ cột (Bar Chart) từ dataset
+	        JFreeChart barChart = ChartFactory.createBarChart(chartTitle, // Chart title
+	                xAxisLabel, // Domain axis label
+	                yAxisLabel, // Range axis label
+	                dataset, // Data
+	                PlotOrientation.VERTICAL, // Orientation
+	                true, // Include legend
+	                true, // Tooltips
+	                false );
+	        
+//	        Set Màu Cho Cột Cho Biểu Đồ
+	     // Thiết lập màu sắc cho các cột (Bar color)
+//	        CategoryPlot plot = (CategoryPlot) barChart.getPlot();
+//	        BarRenderer renderer = (BarRenderer) plot.getRenderer();
+//	        renderer.setSeriesPaint(0, new Color(0, 102, 204)); // Đặt màu xanh biển cho cột
+
+	        // Hiển thị biểu đồ trong cửa sổ
+	        ChartPanel chartPanel = new ChartPanel(barChart);
+	        chartPanel.setPreferredSize(new java.awt.Dimension(800, 600));
+	        JFrame frame = new JFrame(chartTitle);
+	        frame.getContentPane().add(chartPanel);
+	        frame.pack();
+	        frame.setVisible(true);
+	        frame.setLocationRelativeTo(null);
+	    }
+}

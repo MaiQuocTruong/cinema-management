@@ -153,7 +153,7 @@ public class GD_QuanLy_PhongChieu_Sua extends JFrame implements ActionListener {
 		btnXacNhan.addActionListener(this);
 		btnHuyBo.addActionListener(this);
 		
-		Socket socket = new Socket("192.168.1.10",6789);
+		Socket socket = new Socket("192.168.2.20",6789);
 		clientPC_dao = new ClientPhongChieu_dao(socket);
 	}
 

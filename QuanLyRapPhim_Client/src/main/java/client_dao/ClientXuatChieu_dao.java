@@ -59,6 +59,9 @@ public class ClientXuatChieu_dao {
 		out.writeObject(xc);
 		out.flush();
 	}
+	
+	
+	
 	public void updateXuatChieu(XuatChieu xc) throws IOException {
 		out.writeUTF("UpdateXuatChieu");
 		out.flush();
@@ -81,6 +84,18 @@ public class ClientXuatChieu_dao {
 	    XuatChieu xuatChieu = (XuatChieu) in.readObject();
 	    
 	    return xuatChieu;
+	}
+	
+	
+	public XuatChieu getXuatChieuOnID(String idXuatChieu) throws IOException, ClassNotFoundException {
+		out.writeUTF("GetXuatChieuOnID");
+		out.flush();
+		
+		out.writeUTF(idXuatChieu);
+		out.flush();
+		
+		XuatChieu xc_needFind = (XuatChieu) in.readObject();
+		return xc_needFind;
 	}
 
 

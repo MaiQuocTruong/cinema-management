@@ -1,16 +1,25 @@
 package enities;
 
+import java.io.Serializable;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "giadichvu")
-public class GiaDichVu {
+public class GiaDichVu  implements Serializable{
+	
 	@Id
-	@Column(name = "MaDichVu")
-	private String maDichVu;
+	@Column(name = "MaGiaDichVu")
+	private String maGiaDichVu;
+	
+	@ManyToOne
+    @JoinColumn(name = "MaDichVu")
+    private DichVuAnUong DichVuAnUong;
 	
 	@Column(name = "DonGia")
 	private double donGia;
@@ -25,22 +34,39 @@ public class GiaDichVu {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+	
+	
+	
+	
 
-	public GiaDichVu(String maDichVu, double donGia, String kichThuoc, String trangThaiSize) {
+	public GiaDichVu(String maGiaDichVu, enities.DichVuAnUong dichVuAnUong, double donGia, String kichThuoc,
+			String trangThaiSize) {
 		super();
-		this.maDichVu = maDichVu;
+		this.maGiaDichVu = maGiaDichVu;
+		DichVuAnUong = dichVuAnUong;
 		this.donGia = donGia;
 		this.kichThuoc = kichThuoc;
 		this.trangThaiSize = trangThaiSize;
 	}
-	
 
-	public String getMaDichVu() {
-		return maDichVu;
+
+
+
+
+	public String getMaGiaDichVu() {
+		return maGiaDichVu;
 	}
 
-	public void setMaDichVu(String maDichVu) {
-		this.maDichVu = maDichVu;
+	public void setMaGiaDichVu(String maGiaDichVu) {
+		this.maGiaDichVu = maGiaDichVu;
+	}
+
+	public DichVuAnUong getDichVuAnUong() {
+		return DichVuAnUong;
+	}
+
+	public void setDichVuAnUong(DichVuAnUong dichVuAnUong) {
+		DichVuAnUong = dichVuAnUong;
 	}
 
 	public double getDonGia() {
@@ -67,11 +93,9 @@ public class GiaDichVu {
 		this.trangThaiSize = trangThaiSize;
 	}
 
-	@Override
-	public String toString() {
-		return "GiaDichVu [maDichVu=" + maDichVu + ", donGia=" + donGia + ", kichThuoc=" + kichThuoc
-				+ ", trangThaiSize=" + trangThaiSize + "]";
-	}
+	
+
+	
 	
 	
 }

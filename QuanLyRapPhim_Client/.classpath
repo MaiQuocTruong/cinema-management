@@ -19,15 +19,9 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry excluding="**" kind="src" output="target/test-classes" path="src/test/resources">
-		<attributes>
-			<attribute name="test" value="true"/>
-			<attribute name="maven.pomderived" value="true"/>
-			<attribute name="optional" value="true"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8">
 		<attributes>
+			<attribute name="module" value="true"/>
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
@@ -36,6 +30,29 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="src/main/java/thuvien/activation.jar"/>
+	<classpathentry kind="lib" path="src/main/java/thuvien/barcodes-7.2.1.jar"/>
+	<classpathentry kind="lib" path="src/main/java/thuvien/commons-7.2.1.jar"/>
+	<classpathentry kind="lib" path="src/main/java/thuvien/commons-codec-1.7.jar"/>
+	<classpathentry kind="lib" path="src/main/java/thuvien/font-asian-7.2.1.jar"/>
+	<classpathentry kind="lib" path="src/main/java/thuvien/forms-7.2.1.jar"/>
+	<classpathentry kind="lib" path="src/main/java/thuvien/hyph-7.2.1.jar"/>
+	<classpathentry kind="lib" path="src/main/java/thuvien/io-7.2.1.jar"/>
+	<classpathentry kind="lib" path="src/main/java/thuvien/itextpdf-5.1.0.jar"/>
+	<classpathentry kind="lib" path="src/main/java/thuvien/javax.mail.jar"/>
+	<classpathentry kind="lib" path="src/main/java/thuvien/jcommon-1.0.23.jar"/>
+	<classpathentry kind="lib" path="src/main/java/thuvien/kernel-7.2.1.jar"/>
+	<classpathentry kind="lib" path="src/main/java/thuvien/layout-7.2.1.jar"/>
+	<classpathentry kind="lib" path="src/main/java/thuvien/pdfa-7.2.1.jar"/>
+	<classpathentry kind="lib" path="src/main/java/thuvien/pdfbox-2.0.30.jar"/>
+	<classpathentry kind="lib" path="src/main/java/thuvien/pdftest-7.2.1.jar"/>
+	<classpathentry kind="lib" path="src/main/java/thuvien/servlet-api.jar"/>
+	<classpathentry kind="lib" path="src/main/java/thuvien/sign-7.2.1.jar"/>
+	<classpathentry kind="lib" path="src/main/java/thuvien/slf4j-api-1.7.36.jar"/>
+	<classpathentry kind="lib" path="src/main/java/thuvien/styled-xml-parser-7.2.1.jar"/>
+	<classpathentry kind="lib" path="src/main/java/thuvien/svg-7.2.1.jar"/>
+	<classpathentry kind="lib" path="src/main/java/thuvien/tomcat-util-8.0.0-rc1.jar"/>
+	<classpathentry kind="lib" path="src/main/java/thuvien/workbench-2.0.0-v200705302225.jar"/>
 	<classpathentry kind="lib" path="/QuanLyRapPhim_Server/lib/entities.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

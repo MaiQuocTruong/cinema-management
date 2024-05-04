@@ -20,6 +20,7 @@ public class Run {
 				System.out.println(clientSocket.getInetAddress());
 				ClientHandler clientHandler = new ClientHandler(clientSocket);
 				execute.execute(clientHandler);
+			
 			}		
 		}catch (Exception e) {
 			e.printStackTrace();

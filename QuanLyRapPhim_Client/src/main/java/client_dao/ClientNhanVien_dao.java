@@ -68,12 +68,15 @@ public class ClientNhanVien_dao {
 		return tenNV;
 	}
 	
-	public void updateNV(NhanVien nv) throws IOException {
+	public void updateNhanVien(NhanVien nvUpdate) throws IOException {
 		out.writeUTF("UpdateEmployee");
 		out.flush();
 		
-		out.writeObject(nv);
+		out.writeObject(nvUpdate);
 		out.flush();
+		
+		
+		
 	}
 	
 	public void setTrangThaiNV(NhanVien nv) throws IOException {

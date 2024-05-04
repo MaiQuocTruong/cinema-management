@@ -85,14 +85,14 @@ public class GD_NhanVien extends JFrame implements ActionListener {
 			java.util.logging.Logger.getLogger(GD_NhanVien.class.getName()).log(java.util.logging.Level.SEVERE, null,
 					ex);
 		}
-		GD_NhanVien run = new GD_NhanVien();
-		run.setVisible(true);
+//		GD_NhanVien run = new GD_NhanVien(ma);
+//		run.setVisible(true);
 	}
 
 	/**
 	 * Create the frame.
 	 */
-	public GD_NhanVien() {
+	public GD_NhanVien(String maNhanVien , String tenNhanVien) {
 //		initComponents();
 		setResizable(false);
 		setBackground(Color.WHITE);
@@ -117,12 +117,11 @@ public class GD_NhanVien extends JFrame implements ActionListener {
 		lblnhanvien.setForeground(Color.WHITE);
 		contentPane.add(lblnhanvien);
 		
-		lbltennv = new JLabel();
+		lbltennv = new JLabel(tenNhanVien);
 		lbltennv.setForeground(Color.WHITE);
 		lbltennv.setFont(new Font("Tahoma", Font.BOLD, 16));
 		lbltennv.setBounds(832, 0, 238, 50);
 		lbltennv.setForeground(Color.WHITE);
-//		lbltennv.setText(UserInfo.getTenNhanVien());
 		contentPane.add(lbltennv);
 		
 		// Thêm panel nằm ngang ở trên cùng
@@ -192,8 +191,7 @@ public class GD_NhanVien extends JFrame implements ActionListener {
 				// TODO Auto-generated method stub
 				GD_MuaVe_Phim gdMuaVe;
 				try {
-					gdMuaVe = new GD_MuaVe_Phim();
-					gdMuaVe.lbltennv.setText(lbltennv.getText());
+					gdMuaVe = new GD_MuaVe_Phim(maNhanVien , tenNhanVien);
 					gdMuaVe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 					gdMuaVe.setLocationRelativeTo(null);
 					gdMuaVe.setVisible(true);
@@ -367,7 +365,7 @@ public class GD_NhanVien extends JFrame implements ActionListener {
 				// TODO Auto-generated method stub
 				GD_KhachHang gdkh;
 				try {
-					gdkh = new GD_KhachHang();
+					gdkh = new GD_KhachHang(maNhanVien , tenNhanVien);
 					gdkh.lbltennv.setText(lbltennv.getText());
 					gdkh.setVisible(true);
 					gdkh.setLocationRelativeTo(null);

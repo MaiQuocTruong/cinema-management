@@ -42,6 +42,7 @@ import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.net.Socket;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.sql.Connection;
@@ -56,14 +57,20 @@ import java.awt.Component;
 import javax.swing.JTextField;
 import com.toedter.calendar.JDateChooser;
 
-
+import client_dao.ClientDichVu_dao;
+import enities.CTHoaDonDichVu;
 import enities.DichVuAnUong;
+
 import enities.GiaDichVu;
+
+import enities.KhachHang;
+
 import runapp.Login;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.JComboBox;
 import javax.swing.ButtonGroup;
@@ -74,7 +81,7 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JLabel lblClock;
+	private JLabel lblClock, lbltennv;
 	private Timer timer;
 	Connection con = null;
 	ResultSet rs = null;
@@ -88,17 +95,19 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 	private JButton btnXacNhan, btnHuyBo, btnLamMoi, btnChonKichCo;
 	private JTextField txtTen;
 	private boolean isCalendarVisible = false;
+	private ClientDichVu_dao clientDichVu;
 	private JComboBox<String> loaiDoAnComboBox; // Declare the JComboBox here
-	public JLabel lbltennv;
+	private int soLuongDichVu;
+	private List<CTHoaDonDichVu> listHoaDonDichVu = new ArrayList<>();
 	
-	private List<DichVuAnUong> listServices = new ArrayList<DichVuAnUong>();
-
-	private List<GiaDichVu> listGia = new ArrayList<GiaDichVu>();
 
 	/**
 	 * Launch the application.
+	 * @throws IOException 
+	 * @throws ClassNotFoundException 
+	 * @throws UnknownHostException 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws UnknownHostException, ClassNotFoundException, IOException {
 		try {
 			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
 				if ("Nimbus".equals(info.getName())) {
@@ -119,14 +128,16 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 			java.util.logging.Logger.getLogger(GD_MuaVe_ThucAn.class.getName()).log(java.util.logging.Level.SEVERE,
 					null, ex);
 		}
-		GD_MuaVe_ThucAn run = new GD_MuaVe_ThucAn();
-		run.setVisible(true);
+		
 	}
 
 	/**
 	 * Create the frame.
+	 * @throws IOException 
+	 * @throws UnknownHostException 
+	 * @throws ClassNotFoundException 
 	 */
-	public GD_MuaVe_ThucAn() {
+	public GD_MuaVe_ThucAn(String maHD , Set<String> setMaGhe , String maXC , int soLuongVe , String sdtkh , String maNhanVien , String tenNhanVien) throws UnknownHostException, IOException, ClassNotFoundException {
 		initComponents();
 		setResizable(false);
 		setBackground(Color.WHITE);
@@ -153,7 +164,7 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 		lblnhanvien.setForeground(Color.WHITE);
 		contentPane.add(lblnhanvien);
 
-		lbltennv = new JLabel("Trương Đại Lộc");
+		lbltennv = new JLabel(tenNhanVien);
 		lbltennv.setForeground(Color.WHITE);
 		lbltennv.setFont(new Font("Tahoma", Font.BOLD, 16));
 		lbltennv.setBounds(832, 0, 238, 50);
@@ -229,8 +240,7 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 				// TODO Auto-generated method stub
 				GD_MuaVe_Phim gdMuaVe;
 				try {
-					gdMuaVe = new GD_MuaVe_Phim();
-					gdMuaVe.lbltennv.setText(lbltennv.getText());
+					gdMuaVe = new GD_MuaVe_Phim(maNhanVien , tenNhanVien);
 					gdMuaVe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 					gdMuaVe.setLocationRelativeTo(null);
 					gdMuaVe.setVisible(true);
@@ -251,38 +261,36 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 		JButton btnGhe = new JButton("Chọn Ghế");
 		btnGhe.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnGhe.setIcon(new ImageIcon(GD_MuaVe_ThucAn.class.getResource("/imgs/chair.png")));
-		btnGhe.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				GD_MuaVe_ChonGhe gdmGHE = new GD_MuaVe_ChonGhe();
-				gdmGHE.lbltennv.setText(lbltennv.getText());
-				gdmGHE.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				gdmGHE.setLocationRelativeTo(null);
-				gdmGHE.setVisible(true);
-				dispose();
-			}
-		});
+//		btnGhe.addActionListener(new ActionListener() {
+//
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				// TODO Auto-generated method stub
+//				GD_MuaVe_ChonGhe gdmGHE = new GD_MuaVe_ChonGhe();
+//				gdmGHE.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+//				gdmGHE.setLocationRelativeTo(null);
+//				gdmGHE.setVisible(true);
+//				dispose();
+//			}
+//		});
 		JButton btnThucAn = new JButton("Thức Ăn");
 		btnThucAn.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnThucAn.setIcon(new ImageIcon(GD_MuaVe_ThucAn.class.getResource("/imgs/popcorn2.png")));
 		JButton btnSuatChieu = new JButton("Suất Chiếu");
 		btnSuatChieu.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnSuatChieu.setIcon(new ImageIcon(GD_MuaVe_ThucAn.class.getResource("/imgs/clapperboard2.png")));
-		btnSuatChieu.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				GD_MuaVe_SuatChieu gdSChieu = new GD_MuaVe_SuatChieu();
-				gdSChieu.lbltennv.setText(lbltennv.getText());
-				gdSChieu.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				gdSChieu.setLocationRelativeTo(null);
-				gdSChieu.setVisible(true);
-				dispose();
-			}
-		});
+//		btnSuatChieu.addActionListener(new ActionListener() {
+//
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				// TODO Auto-generated method stub
+//				GD_MuaVe_SuatChieu gdSChieu = new GD_MuaVe_SuatChieu();
+//				gdSChieu.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+//				gdSChieu.setLocationRelativeTo(null);
+//				gdSChieu.setVisible(true);
+//				dispose();
+//			}
+//		});
 
 		panelChonVe.add(btnPhim);
 		panelChonVe.add(btnSuatChieu);
@@ -399,8 +407,7 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 				// TODO Auto-generated method stub
 				GD_KhachHang gdkh;
 				try {
-					gdkh = new GD_KhachHang();
-					gdkh.lbltennv.setText(lbltennv.getText());
+					gdkh = new GD_KhachHang(maNhanVien , tenNhanVien);
 					gdkh.setVisible(true);
 					gdkh.setLocationRelativeTo(null);
 					dispose();
@@ -513,6 +520,39 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 		btnHuyBo.setBounds(360, 99, 100, 30);
 		btnLamMoi.setBounds(470, 99, 100, 30);
 		btnChonKichCo.setBounds(1050, 99, 100, 30);
+		
+		//Add Event Cho Nut Xac Nhan
+		btnXacNhan.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				double totalDichVu = 0;
+				for (CTHoaDonDichVu hddv : listHoaDonDichVu) {
+					double giaTien = hddv.getSoLuongDichVu() * hddv.getDongGiaDichVu();
+					totalDichVu += giaTien;
+				}
+				
+				System.out.println("Tổng Tiền Hóa Đơn : " + totalDichVu);
+				
+				
+			
+				try {
+					GD_HoaDonVePhim_BETA gd_hdPhim = new GD_HoaDonVePhim_BETA(maHD , setMaGhe , maXC , totalDichVu , soLuongVe , sdtkh , listHoaDonDichVu , maNhanVien , tenNhanVien);
+					gd_hdPhim.setVisible(true);
+					gd_hdPhim.setLocationRelativeTo(null);
+					dispose();
+				} catch (UnknownHostException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}				
+			}
+		});
 
 		// Thêm các nút vào contentPane
 		contentPane.add(btnXacNhan);
@@ -521,7 +561,7 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 		contentPane.add(btnChonKichCo);
 
 		// Khai báo các cột cho bảng đầu tiên
-		String[] columnNames1 = { "STT", "Mã dịch vụ", "Tên dịch vụ", "Trạng thái", "Loại dịch vụ" };
+		String[] columnNames1 = { "Mã dịch vụ", "Tên dịch vụ", "Trạng thái", "Loại dịch vụ" };
 
 		// Khởi tạo DefaultTableModel cho bảng đầu tiên
 		tableModel1 = new DefaultTableModel(columnNames1, 0);
@@ -570,6 +610,10 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 						if (validInput) {
 							// Thực hiện các hành động với số lượng nhập vào, ví dụ: lấy thông tin từ cả hai
 							// bảng và thực hiện xử lý
+							
+							
+							
+							
 						}
 					} else {
 						JOptionPane.showMessageDialog(null, "Vui lòng chọn size!", "Thông báo",
@@ -629,6 +673,18 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 						if (validInput) {
 							// Thực hiện các hành động với số lượng nhập vào, ví dụ: lấy thông tin từ cả hai
 							// bảng và thực hiện xử lý
+							soLuongDichVu = quantity;
+							int rowDichVu = table1.getSelectedRow();
+							int rowSize = table2.getSelectedRow();
+							
+							String maDichVu = (String) table1.getValueAt(rowDichVu, 0);
+							String tenDichVu = (String) table1.getValueAt(rowDichVu, 1);
+							int soLuongdv = soLuongDichVu;
+							double donGiaDichVu = (double) table2.getValueAt(rowSize, 1);
+							listHoaDonDichVu.add(new CTHoaDonDichVu(maHD, maDichVu, tenDichVu, soLuongdv, donGiaDichVu));
+							
+							
+							
 						}
 					} else {
 						JOptionPane.showMessageDialog(null, "Vui lòng chọn dịch vụ!", "Thông báo",
@@ -658,7 +714,56 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 		contentPane.add(background);
 
 //		Load Du Lieu Len Table
+		Socket socket = new Socket("192.168.2.20",6789);
+		clientDichVu = new ClientDichVu_dao(socket);
+		List<DichVuAnUong> listDichVuAnUong = clientDichVu.getListDichVuAnUong();
+	
+
 		
+		for (DichVuAnUong foodService : listDichVuAnUong) {
+			Object [] row = {foodService.getMaDichVu() , foodService.getTenDichVu() , foodService.getTrangThai() , foodService.getLoaiDichVu()};
+			tableModel1.addRow(row);
+		}
+		
+		
+		
+		
+		
+		table1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				try {
+					hienThiGiaDichVu();
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+
+			
+		});
+		
+		
+	}
+	
+	
+		
+	public void hienThiGiaDichVu() throws ClassNotFoundException, IOException {
+		//Set lại số dòng cho table 2
+		tableModel2.setRowCount(0);
+		int row = table1.getSelectedRow();
+		if(row != -1) {
+			String maDichVu = table1.getValueAt(row, 0).toString();
+			List<GiaDichVu> listGiaDichVu = clientDichVu.getListGiaDichVu(maDichVu);
+			for (GiaDichVu priceFoodService : listGiaDichVu) {
+				Object [] rowGiaDichVu = {priceFoodService.getKichThuoc() , priceFoodService.getDonGia() , priceFoodService.getTrangThaiSize()};
+				tableModel2.addRow(rowGiaDichVu);
+			}
+			
+		}
 	}
 
 	private void initComponents() {
@@ -680,9 +785,9 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 	}
 
 	private void formWindowClosing(java.awt.event.WindowEvent evt) {// GEN-FIRST:event_formWindowClosing
-		GD_MuaVe_ChonGhe gdmvcghe = new GD_MuaVe_ChonGhe();
-		gdmvcghe.setLocationRelativeTo(null);
-		gdmvcghe.setVisible(true);
+//		GD_MuaVe_ChonGhe gdmvcghe = new GD_MuaVe_ChonGhe();
+//		gdmvcghe.setLocationRelativeTo(null);
+//		gdmvcghe.setVisible(true);
 	}
 
 	@Override

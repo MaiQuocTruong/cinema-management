@@ -357,7 +357,7 @@ if(value!=null) {
     
 
 //    		Load Data
-    		Socket socket = new Socket("192.168.2.13", 6789);
+    		Socket socket = new Socket("192.168.2.20", 6789);
     		clientphim = new ClientPhim_dao(socket);
     		
 
@@ -406,6 +406,9 @@ if(value!=null) {
 				} catch (ClassNotFoundException | IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			}
 		});
@@ -420,7 +423,7 @@ if(value!=null) {
 		pack();
 	}
 	
-	private void formWindowClosing(java.awt.event.WindowEvent evt) throws UnknownHostException, ClassNotFoundException, IOException {// GEN-FIRST:event_formWindowClosing
+	private void formWindowClosing(java.awt.event.WindowEvent evt) throws UnknownHostException, ClassNotFoundException, IOException, InterruptedException {// GEN-FIRST:event_formWindowClosing
 		GD_QuanLy_Phim gdqlphim = new GD_QuanLy_Phim();
 		gdqlphim.setLocationRelativeTo(null);
 		gdqlphim.setVisible(true);
@@ -440,6 +443,9 @@ if(value!=null) {
 			gdqlphim.setLocationRelativeTo(null);
 			dispose();
 		} catch (ClassNotFoundException | IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (InterruptedException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}

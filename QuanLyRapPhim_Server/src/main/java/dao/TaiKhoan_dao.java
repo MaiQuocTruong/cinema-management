@@ -26,11 +26,24 @@ public class TaiKhoan_dao {
 
 	public List<TaiKhoan> getListTaiKhoan() {
 		List<TaiKhoan> listTK = new ArrayList<TaiKhoan>();
+		try {
+			em.getTransaction().begin();
 
-		TypedQuery<TaiKhoan> resultQuery = em.createQuery("Select tk from TaiKhoan tk", TaiKhoan.class);
-		listTK = resultQuery.getResultList();
+			em.clear();
+			TypedQuery<TaiKhoan> resultQuery = em.createQuery("Select tk from TaiKhoan tk", TaiKhoan.class);
+			listTK = resultQuery.getResultList();
+			em.getTransaction().commit();
+			
+		}catch (Exception e) {
+			// TODO: handle exception
+		}
+		
 		return listTK;
 	}
+	
+	
+	
+	
 
 	public void updateTrangThaiTK(String idNV1) {
 		try {

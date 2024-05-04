@@ -34,7 +34,7 @@ import java.awt.GridLayout;
 import java.awt.SystemColor;
 
 import javax.swing.SwingConstants;
-import javax.swing.Timer;
+
 
 import testbutton.Buttontest;
 
@@ -63,17 +63,24 @@ import com.mysql.cj.x.protobuf.MysqlxDatatypes.Object;
 import com.toedter.calendar.JDateChooser;
 
 import client_dao.ClientKhachHang_dao;
+
 import enities.KhachHang;
 
 import runapp.Login;
+import task.TaskExecuteMultiThreadKhachHang;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
+
 
 public class GD_KhachHang extends JFrame implements ActionListener {
 	/**
@@ -82,6 +89,7 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane, panelChonVe, panelThongKe, panelKhachHang;
 	private JLabel lblClock;
+	JLabel lbltennv;
 	private Timer timer;
 	Connection con = null;
 	ResultSet rs = null;
@@ -96,11 +104,12 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 	private JTextField txtSDT, txtCMND, txtEmail, txtNgaydky, txtTimKiem, txtHoTen;
 	private JDateChooser ngaySinhDateChooser; // Thêm đối tượng JDateChooser cho từ ngày
 	private JTextField txtNgaySinh;
-	public JLabel lbltennv;
 
 	private List<KhachHang> listKH;
 	private JRadioButton rdbtnNam, rdbtnNu;
 	private ClientKhachHang_dao clientKH;
+	private String maNhanVien , tenNhanVien;
+	
 //	static String quanly;
 
 	/**
@@ -130,8 +139,8 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 			java.util.logging.Logger.getLogger(GD_KhachHang.class.getName()).log(java.util.logging.Level.SEVERE, null,
 					ex);
 		}
-		GD_KhachHang run = new GD_KhachHang();
-		run.setVisible(true);
+//		GD_KhachHang run = new GD_KhachHang();
+//		run.setVisible(true);
 	}
 
 	/**
@@ -140,7 +149,9 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 	 * @throws IOException
 	 * @throws ClassNotFoundException
 	 */
-	public GD_KhachHang() throws IOException, ClassNotFoundException {
+	public GD_KhachHang(String maNhanVien , String tenNhanVien) throws IOException, ClassNotFoundException {
+		this.maNhanVien = maNhanVien;
+		this.tenNhanVien = tenNhanVien;
 		this.setLocationRelativeTo(null);
 		initComponents();
 		setResizable(false);
@@ -168,7 +179,7 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 		lblnhanvien.setForeground(Color.WHITE);
 		contentPane.add(lblnhanvien);
 
-		lbltennv = new JLabel();
+		lbltennv = new JLabel(tenNhanVien);
 		lbltennv.setForeground(Color.WHITE);
 		lbltennv.setFont(new Font("Tahoma", Font.BOLD, 16));
 		lbltennv.setBounds(832, 0, 238, 50);
@@ -244,8 +255,7 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 				// TODO Auto-generated method stub
 				GD_MuaVe_Phim gdmvphim;
 				try {
-					gdmvphim = new GD_MuaVe_Phim();
-					gdmvphim.lbltennv.setText(lbltennv.getText());
+					gdmvphim = new GD_MuaVe_Phim(maNhanVien , tenNhanVien);
 					gdmvphim.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 					gdmvphim.setLocationRelativeTo(null);
 					gdmvphim.setVisible(true);
@@ -266,50 +276,60 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 		JButton btnGhe = new JButton("Chọn Ghế");
 		btnGhe.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnGhe.setIcon(new ImageIcon(GD_KhachHang.class.getResource("/imgs/chair.png")));
-		btnGhe.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				GD_MuaVe_ChonGhe gdmGHE = new GD_MuaVe_ChonGhe();
-				gdmGHE.lbltennv.setText(lbltennv.getText());
-				gdmGHE.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				gdmGHE.setLocationRelativeTo(null);
-				gdmGHE.setVisible(true);
-				dispose();
-			}
-		});
+//		btnGhe.addActionListener(new ActionListener() {
+//
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				// TODO Auto-generated method stub
+//				GD_MuaVe_ChonGhe gdmGHE = new GD_MuaVe_ChonGhe();
+//				gdmGHE.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+//				gdmGHE.setLocationRelativeTo(null);
+//				gdmGHE.setVisible(true);
+//				dispose();
+//			}
+//		});
 		JButton btnThucAn = new JButton("Thức Ăn");
 		btnThucAn.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnThucAn.setIcon(new ImageIcon(GD_KhachHang.class.getResource("/imgs/popcorn2.png")));
-		btnThucAn.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				GD_MuaVe_ThucAn gdmvthan = new GD_MuaVe_ThucAn();
-				gdmvthan.lbltennv.setText(lbltennv.getText());
-				gdmvthan.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				gdmvthan.setLocationRelativeTo(null);
-				gdmvthan.setVisible(true);
-				dispose();
-			}
-		});
+//		btnThucAn.addActionListener(new ActionListener() {
+//
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				// TODO Auto-generated method stub
+//				GD_MuaVe_ThucAn gdmvthan;
+//				try {
+//					gdmvthan = new GD_MuaVe_ThucAn();
+//					gdmvthan.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+//					gdmvthan.setLocationRelativeTo(null);
+//					gdmvthan.setVisible(true);
+//					dispose();
+//				} catch (UnknownHostException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				} catch (ClassNotFoundException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				} catch (IOException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				}
+//				
+//			}
+//		});
 		JButton btnSuatChieu = new JButton("Suất Chiếu");
 		btnSuatChieu.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnSuatChieu.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				GD_MuaVe_SuatChieu gdSChieu = new GD_MuaVe_SuatChieu();
-				gdSChieu.lbltennv.setText(lbltennv.getText());
-				gdSChieu.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				gdSChieu.setLocationRelativeTo(null);
-				gdSChieu.setVisible(true);
-				dispose();
-			}
-		});
+//		btnSuatChieu.addActionListener(new ActionListener() {
+//
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				// TODO Auto-generated method stub
+//				GD_MuaVe_SuatChieu gdSChieu = new GD_MuaVe_SuatChieu();
+//				gdSChieu.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+//				gdSChieu.setLocationRelativeTo(null);
+//				gdSChieu.setVisible(true);
+//				dispose();
+//			}
+//		});
 		btnSuatChieu.setIcon(new ImageIcon(GD_KhachHang.class.getResource("/imgs/clapperboard2.png")));
 
 		panelChonVe.add(btnPhim);
@@ -609,11 +629,45 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 		contentPane.add(background);
 
 //		Load Data
-		Socket socket = new Socket("192.168.1.10", 6789);
+		Socket socket = new Socket("192.168.2.20", 6789);
 		clientKH = new ClientKhachHang_dao(socket);
 
 		listKH = clientKH.getListKH();
 		loadDataToTable(listKH);
+		
+		
+//Đặt Mỗi 5s nó sẽ tự động update Danh Sách Khách Hàng mỗi 5s nó sẽ thực thi taskExecutemultithread này
+//Và Task này sẽ được extend Swing Worker			
+		 	Timer timer = new Timer();
+//
+//	        // Tạo một TimerTask để thực hiện công việc mong muốn
+	        TimerTask task = new TimerTask() {
+	            public void run() {
+	                // Đây là nơi để đặt hàm mà bạn muốn thực thi sau mỗi 5 giây
+	            	xoaBang();
+	            	try {
+						listKH = clientKH.getListKH();
+						TaskExecuteMultiThreadKhachHang task = new TaskExecuteMultiThreadKhachHang(listKH, tableModel);
+			            task.execute();
+					} catch (UnknownHostException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (ClassNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+	              
+	            }
+	        };
+//
+//	        // Lập lịch thực hiện TimerTask sau mỗi 10000ms (10 giây)
+	        timer.schedule(task, 0, 20000);
+		
+		
+		
 
 //		Add Su Kien
 		btnThem.addActionListener(this);
@@ -651,8 +705,7 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 	}
 
 	private void formWindowClosing(java.awt.event.WindowEvent evt) {// GEN-FIRST:event_formWindowClosing
-		GD_NhanVien gdnv = new GD_NhanVien();
-		gdnv.lbltennv.setText(lbltennv.getText());
+		GD_NhanVien gdnv = new GD_NhanVien(maNhanVien,tenNhanVien);
 		gdnv.setLocationRelativeTo(null);
 		gdnv.setVisible(true);
 	}
@@ -811,12 +864,21 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 	}
 
 	public void themKhachHang() throws Exception {
-		int idCust = 0;
-		for (KhachHang khachHang : clientKH.getListKH()) {
-			idCust++;
-		}
-		int newIDKhachHang = idCust + 1;
-		String maKH = "KH00" + newIDKhachHang;
+		LocalDateTime now = LocalDateTime.now();
+		  
+	    
+        // Định dạng ngày tháng năm
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("ddMMyyyy");
+        String currentDate = now.format(dateFormatter);
+
+        // Định dạng giờ phút giây và millisecond
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HHmmssSSS");
+        String currentTimeWithMillis = now.format(timeFormatter);
+
+        // Tạo ra maKH với kiểu là HD + ngày tháng năm + giờ phút giây và mill giây + 6 chuỗi ngẫu nhiên
+        String maKH = "KH" + currentDate + "" + currentTimeWithMillis + generateRandomString();
+		
+		
 		String tenKH = txtHoTen.getText();
 		Date ngaySinhTrenGD = ngaySinhDateChooser.getDate();
 
@@ -857,10 +919,15 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 
 		java.lang.Object[] rowData = { maKH, tenKH, ngaySinhTrongTable, sdt, cmnd, email, loaiKH, gioiTinhTrongTable,
 				diemHienCoTrongTable, diemDaSuDungTrongTable };
-
-		tableModel.addRow(rowData);
+		
+		
+		
+		xoaBang();
+//		Đặt Sleep Ở Đây Vì Khi Có 1 Máy Khác Thêm Thì Nó Sẽ Đợi Để Load Dữ Liệu Lên Lại
+		Thread.sleep(2000);
+		List<KhachHang> listDSKH = clientKH.getListKH();
+		loadDataToTable(listDSKH);
 		xoaTrangTF();
-
 	}
 
 	private void loadDataToTextFlied() {
@@ -939,5 +1006,53 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 		clientKH.deleteKhachHang(kh_needRemove);
 		tableModel.removeRow(row);
 	}
+	
+	public static String generateRandomString() {
+        String lowercaseLetters = "abcdefghijklmnopqrstuvwxyz";
+        String uppercaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String digits = "0123456789";
+
+        Random random = new Random();
+        StringBuilder sb = new StringBuilder(6);
+
+        // Sinh ngẫu nhiên một ký tự in hoa
+        char uppercaseChar = uppercaseLetters.charAt(random.nextInt(uppercaseLetters.length()));
+        sb.append(uppercaseChar);
+
+        // Sinh ngẫu nhiên một ký tự chữ thường
+        char lowercaseChar = lowercaseLetters.charAt(random.nextInt(lowercaseLetters.length()));
+        sb.append(lowercaseChar);
+
+        // Sinh ngẫu nhiên một số
+        char digitChar = digits.charAt(random.nextInt(digits.length()));
+        sb.append(digitChar);
+
+        // Sinh các ký tự còn lại ngẫu nhiên
+        for (int i = 3; i < 6; i++) {
+            String allChars = lowercaseLetters + uppercaseLetters + digits;
+            char randomChar = allChars.charAt(random.nextInt(allChars.length()));
+            sb.append(randomChar);
+        }
+
+        // Đảo lộn chuỗi để tránh các ký tự theo thứ tự nhất định
+        String shuffledString = shuffleString(sb.toString());
+
+        return shuffledString;
+    }
+
+    // Hàm đảo lộn chuỗi
+    private static String shuffleString(String input) {
+        char[] charArray = input.toCharArray();
+        Random random = new Random();
+
+        for (int i = charArray.length - 1; i > 0; i--) {
+            int index = random.nextInt(i + 1);
+            char temp = charArray[index];
+            charArray[index] = charArray[i];
+            charArray[i] = temp;
+        }
+
+        return new String(charArray);
+    }
 
 }

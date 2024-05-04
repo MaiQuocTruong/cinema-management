@@ -24,7 +24,10 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Random;
 import java.awt.event.ActionEvent;
 
 public class GD_QuanLy_PhongChieu_Them extends JFrame implements ActionListener {
@@ -159,7 +162,7 @@ public class GD_QuanLy_PhongChieu_Them extends JFrame implements ActionListener 
 		btnXacNhan.addActionListener(this);
 		btnHuyBo.addActionListener(this);
 		
-		Socket socket = new Socket("192.168.1.10",6789);
+		Socket socket = new Socket("192.168.2.20",6789);
 		clientPC_dao = new ClientPhongChieu_dao(socket);
 		
 		dsPhongChieu = clientPC_dao.getListPhongChieu();
@@ -181,11 +184,24 @@ public class GD_QuanLy_PhongChieu_Them extends JFrame implements ActionListener 
 	public void actionPerformed(ActionEvent e) {
 		Object o = e.getSource();
 		if(o.equals(btnXacNhan)) {
+			LocalDateTime now = LocalDateTime.now();
+			  
+		    
+	        // Định dạng ngày tháng năm
+	        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("ddMMyyyy");
+	        String currentDate = now.format(dateFormatter);
+
+	        // Định dạng giờ phút giây và millisecond
+	        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HHmmssSSS");
+	        String currentTimeWithMillis = now.format(timeFormatter);
+
+	        // Tạo ra maNV với kiểu là HD + ngày tháng năm + giờ phút giây và mill giây + 6 chuỗi ngẫu nhiên
+	        String maPC = "PC" + currentDate + "" + currentTimeWithMillis + generateRandomString();
+			
 			String tenpc = txtTenPC.getText();
 			String succhua = txtSucChua.getText();
 
-			lastPhongChieuId++; // Tăng số cuối cùng lên 1
-            String maPC = "PC" + String.format("%03d", lastPhongChieuId);
+			
 			
             if (tenpc.isEmpty() || succhua.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!");
@@ -228,4 +244,53 @@ public class GD_QuanLy_PhongChieu_Them extends JFrame implements ActionListener 
 			}
 		}
 	}
+	
+	public static String generateRandomString() {
+        String lowercaseLetters = "abcdefghijklmnopqrstuvwxyz";
+        String uppercaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String digits = "0123456789";
+
+        Random random = new Random();
+        StringBuilder sb = new StringBuilder(6);
+
+        // Sinh ngẫu nhiên một ký tự in hoa
+        char uppercaseChar = uppercaseLetters.charAt(random.nextInt(uppercaseLetters.length()));
+        sb.append(uppercaseChar);
+
+        // Sinh ngẫu nhiên một ký tự chữ thường
+        char lowercaseChar = lowercaseLetters.charAt(random.nextInt(lowercaseLetters.length()));
+        sb.append(lowercaseChar);
+
+        // Sinh ngẫu nhiên một số
+        char digitChar = digits.charAt(random.nextInt(digits.length()));
+        sb.append(digitChar);
+
+        // Sinh các ký tự còn lại ngẫu nhiên
+        for (int i = 3; i < 6; i++) {
+            String allChars = lowercaseLetters + uppercaseLetters + digits;
+            char randomChar = allChars.charAt(random.nextInt(allChars.length()));
+            sb.append(randomChar);
+        }
+
+        // Đảo lộn chuỗi để tránh các ký tự theo thứ tự nhất định
+        String shuffledString = shuffleString(sb.toString());
+
+        return shuffledString;
+    }
+
+    // Hàm đảo lộn chuỗi
+    private static String shuffleString(String input) {
+        char[] charArray = input.toCharArray();
+        Random random = new Random();
+
+        for (int i = charArray.length - 1; i > 0; i--) {
+            int index = random.nextInt(i + 1);
+            char temp = charArray[index];
+            charArray[index] = charArray[i];
+            charArray[i] = temp;
+        }
+
+        return new String(charArray);
+    }
+
 }

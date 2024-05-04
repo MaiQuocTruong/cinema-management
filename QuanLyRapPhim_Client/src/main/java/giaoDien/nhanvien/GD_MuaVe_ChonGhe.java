@@ -4,16 +4,26 @@ import testbutton.Buttontest;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+
+import client_dao.ClientXuatChieu_dao;
+import enities.KhachHang;
+import enities.XuatChieu;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.net.Socket;
 import java.net.UnknownHostException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 	/**
@@ -21,7 +31,7 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane, panelGhe;
-	private JLabel lblClock;
+	private JLabel lblClock, lbltennv;
 	private Timer timer;
 	Connection con = null;
 	ResultSet rs = null;
@@ -35,7 +45,9 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 	private JButton btnXacNhan, btnHuyBo, btnLamMoi;
 	private boolean isCalendarVisible = false;
 	private boolean clickSelect = true;
-	public JLabel lbltennv;
+	private ClientXuatChieu_dao client_xc;
+	private Set<String> maGhe = new HashSet<>();
+
 //	static String quanly;
 	/**
 	 * Launch the application.
@@ -61,14 +73,15 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			java.util.logging.Logger.getLogger(GD_MuaVe_ChonGhe.class.getName()).log(java.util.logging.Level.SEVERE,
 					null, ex);
 		}
-		GD_MuaVe_ChonGhe run = new GD_MuaVe_ChonGhe();
-		run.setVisible(true);
+		
 	}
 
 	/**
 	 * Create the frame.
+	 * @throws IOException 
+	 * @throws UnknownHostException 
 	 */
-	public GD_MuaVe_ChonGhe() {
+	public GD_MuaVe_ChonGhe(String maHD ,String maXC , int soLuongVe , String sdtkh , String maNhanVien , String tenNhanVien) throws UnknownHostException, IOException {
 		initComponents();
 		setResizable(false);
 		setBackground(Color.WHITE);
@@ -81,6 +94,8 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
+		this.setVisible(true);
+		
 		lblNvIcon = new JLabel("");
 		lblNvIcon.setIcon(new ImageIcon(GD_MuaVe_ChonGhe.class.getResource("/imgs/avt.png"))); // Thay đổi đường dẫn ảnh
 																								// của
@@ -95,7 +110,7 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 		lblnhanvien.setForeground(Color.WHITE);
 		contentPane.add(lblnhanvien);
 
-		lbltennv = new JLabel("Trương Đại Lộc");
+		lbltennv = new JLabel(tenNhanVien);
 		lbltennv.setForeground(Color.WHITE);
 		lbltennv.setFont(new Font("Tahoma", Font.BOLD, 16));
 		lbltennv.setBounds(832, 0, 238, 50);
@@ -171,8 +186,7 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 				// TODO Auto-generated method stub
 				GD_MuaVe_Phim gdmvphim;
 				try {
-					gdmvphim = new GD_MuaVe_Phim();
-					gdmvphim.lbltennv.setText(lbltennv.getText());
+					gdmvphim = new GD_MuaVe_Phim(maNhanVien , tenNhanVien);
 					gdmvphim.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 					gdmvphim.setLocationRelativeTo(null);
 					gdmvphim.setVisible(true);
@@ -196,34 +210,33 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 		JButton btnThucAn = new JButton("Thức Ăn");
 		btnThucAn.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnThucAn.setIcon(new ImageIcon(GD_MuaVe_ChonGhe.class.getResource("/imgs/popcorn2.png")));
-		btnThucAn.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				GD_MuaVe_ThucAn gdmvthan = new GD_MuaVe_ThucAn();
-				gdmvthan.lbltennv.setText(lbltennv.getText());
-				gdmvthan.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				gdmvthan.setLocationRelativeTo(null);
-				gdmvthan.setVisible(true);
-				dispose();
-			}
-		});
+//		btnThucAn.addActionListener(new ActionListener() {
+//
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				// TODO Auto-generated method stub
+//				GD_MuaVe_ThucAn gdmvthan;
+//				try {
+//					gdmvthan = new GD_MuaVe_ThucAn();
+//					gdmvthan.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+//					gdmvthan.setLocationRelativeTo(null);
+//					gdmvthan.setVisible(true);
+//					dispose();
+//				} catch (UnknownHostException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				} catch (ClassNotFoundException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				} catch (IOException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				}
+//				
+//			}
+//		});
 		JButton btnSuatChieu = new JButton("Suất Chiếu");
 		btnSuatChieu.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnSuatChieu.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				GD_MuaVe_SuatChieu gdSChieu = new GD_MuaVe_SuatChieu();
-				gdSChieu.lbltennv.setText(lbltennv.getText());
-				gdSChieu.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				gdSChieu.setLocationRelativeTo(null);
-				gdSChieu.setVisible(true);
-				dispose();
-			}
-		});
 		btnSuatChieu.setIcon(new ImageIcon(GD_MuaVe_ChonGhe.class.getResource("/imgs/clapperboard2.png")));
 
 		panelChonVe.add(btnPhim);
@@ -341,8 +354,7 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 				// TODO Auto-generated method stub
 				GD_KhachHang gdkh;
 				try {
-					gdkh = new GD_KhachHang();
-					gdkh.lbltennv.setText(lbltennv.getText());
+					gdkh = new GD_KhachHang(maNhanVien , tenNhanVien);
 					gdkh.setVisible(true);
 					gdkh.setLocationRelativeTo(null);
 					dispose();
@@ -389,10 +401,14 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelA01.getText());
 					panelGhe.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGhe.setBackground(Color.WHITE);
+					maGhe.remove(labelA01.getText());
 				}
+				
+				System.out.println(maGhe);
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
 		});
@@ -415,10 +431,14 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelA02.getText());
 					panelGhe1.setBackground(new Color(0, 128, 255));
 				} else {
+					
 					panelGhe1.setBackground(Color.WHITE);
+					maGhe.remove(labelA02.getText());
 				}
+				System.out.println(maGhe);
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
 		});
@@ -441,9 +461,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelA03.getText());
 					panelGhe2.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGhe2.setBackground(Color.WHITE);
+					maGhe.remove(labelA03.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -467,9 +489,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelA04.getText());
 					panelGhe3.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGhe3.setBackground(Color.WHITE);
+					maGhe.remove(labelA04.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -494,8 +518,10 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
 					panelGhe4.setBackground(new Color(0, 128, 255));
+					maGhe.add(labelA05.getText());
 				} else {
 					panelGhe4.setBackground(Color.WHITE);
+					maGhe.remove(labelA05.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -519,9 +545,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelA06.getText());
 					panelGhe5.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGhe5.setBackground(Color.WHITE);
+					maGhe.remove(labelA06.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -546,9 +574,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelA07.getText());
 					panelGhe6.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGhe6.setBackground(Color.WHITE);
+					maGhe.remove(labelA07.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -572,9 +602,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelA08.getText());
 					panelGhe7.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGhe7.setBackground(Color.WHITE);
+					maGhe.remove(labelA08.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -598,9 +630,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelA09.getText());
 					panelGhe8.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGhe8.setBackground(Color.WHITE);
+					maGhe.remove(labelA09.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -624,9 +658,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelA10.getText());
 					panelGhe9.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGhe9.setBackground(Color.WHITE);
+					maGhe.remove(labelA10.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -650,9 +686,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelA11.getText());
 					panelGhe10.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGhe10.setBackground(Color.WHITE);
+					maGhe.remove(labelA11.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -676,9 +714,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelA12.getText());
 					panelGhe11.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGhe11.setBackground(Color.WHITE);
+					maGhe.remove(labelA02.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -702,9 +742,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelA13.getText());
 					panelGhe12.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGhe12.setBackground(Color.WHITE);
+					maGhe.remove(labelA13.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -729,8 +771,10 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
 					panelGhe13.setBackground(new Color(0, 128, 255));
+					maGhe.add(labelA14.getText());
 				} else {
 					panelGhe13.setBackground(Color.WHITE);
+					maGhe.remove(labelA14.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -755,9 +799,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelA15.getText());
 					panelGhe14.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGhe14.setBackground(Color.WHITE);
+					maGhe.remove(labelA15.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -781,9 +827,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelA16.getText());
 					panelGhe15.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGhe15.setBackground(Color.WHITE);
+					maGhe.remove(labelA16.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -807,9 +855,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelB01.getText());
 					panelGheB01.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheB01.setBackground(Color.WHITE);
+					maGhe.remove(labelB01.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -833,9 +883,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelB02.getText());
 					panelGheB02.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheB02.setBackground(Color.WHITE);
+					maGhe.remove(labelB02.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -859,9 +911,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelB03.getText());
 					panelGheB03.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheB03.setBackground(Color.WHITE);
+					maGhe.remove(labelB03.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -885,9 +939,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelB04.getText());
 					panelGheB04.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheB04.setBackground(Color.WHITE);
+					maGhe.remove(labelB04.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -911,9 +967,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelB05.getText());
 					panelGheB05.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheB05.setBackground(Color.WHITE);
+					maGhe.remove(labelB05.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -937,9 +995,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelb06.getText());
 					panelGheB06.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheB06.setBackground(Color.WHITE);
+					maGhe.remove(labelb06.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -963,9 +1023,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelB07.getText());
 					panelGheB07.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheB07.setBackground(Color.WHITE);
+					maGhe.remove(labelB07.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -989,9 +1051,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelB08.getText());
 					panelGheB08.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheB08.setBackground(Color.WHITE);
+					maGhe.remove(labelB08.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -1015,9 +1079,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelB09.getText());
 					panelGheB09.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheB09.setBackground(Color.WHITE);
+					maGhe.remove(labelB09.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -1041,9 +1107,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelB10.getText());
 					panelGheB10.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheB10.setBackground(Color.WHITE);
+					maGhe.remove(labelB10.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -1067,9 +1135,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelB11.getText());
 					panelGheB11.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheB11.setBackground(Color.WHITE);
+					maGhe.remove(labelB11.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -1093,9 +1163,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelB12.getText());
 					panelGheB12.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheB12.setBackground(Color.WHITE);
+					maGhe.remove(labelB12.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -1119,9 +1191,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelB13.getText());
 					panelGheB13.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheB13.setBackground(Color.WHITE);
+					maGhe.remove(labelB13.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -1145,9 +1219,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelB14.getText());
 					panelGheB14.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheB14.setBackground(Color.WHITE);
+					maGhe.remove(labelB14.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -1171,9 +1247,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelB15.getText());
 					panelGheB15.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheB15.setBackground(Color.WHITE);
+					maGhe.remove(labelB15.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -1197,9 +1275,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelB16.getText());
 					panelGheB16.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheB16.setBackground(Color.WHITE);
+					maGhe.remove(labelB16.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -1223,9 +1303,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelC01.getText());
 					panelGheC01.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheC01.setBackground(Color.WHITE);
+					maGhe.remove(labelC01.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -1249,9 +1331,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelc02.getText());
 					panelGheC02.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheC02.setBackground(Color.WHITE);
+					maGhe.remove(labelc02.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -1275,9 +1359,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelC03.getText());
 					panelGheC03.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheC03.setBackground(Color.WHITE);
+					maGhe.remove(labelC03.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -1301,9 +1387,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelC04.getText());
 					panelGheC04.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheC04.setBackground(Color.WHITE);
+					maGhe.remove(labelC04.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -1327,9 +1415,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelC05.getText());
 					panelGheC05.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheC05.setBackground(Color.WHITE);
+					maGhe.remove(labelC05.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -1353,9 +1443,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelC06.getText());
 					panelGheC06.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheC06.setBackground(Color.WHITE);
+					maGhe.remove(labelC06.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -1379,9 +1471,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelC07.getText());
 					panelGheC07.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheC07.setBackground(Color.WHITE);
+					maGhe.remove(labelC07.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -1405,9 +1499,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelC08.getText());
 					panelGheC08.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheC08.setBackground(Color.WHITE);
+					maGhe.remove(labelC08.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -1431,9 +1527,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelC09.getText());
 					panelGheC09.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheC09.setBackground(Color.WHITE);
+					maGhe.remove(labelC09.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -1457,9 +1555,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelC10.getText());
 					panelGheC10.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheC10.setBackground(Color.WHITE);
+					maGhe.remove(labelC10.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -1483,9 +1583,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelC11.getText());
 					panelGheC11.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheC11.setBackground(Color.WHITE);
+					maGhe.remove(labelC11.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -1509,9 +1611,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelC12.getText());
 					panelGheC12.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheC12.setBackground(Color.WHITE);
+					maGhe.remove(labelC12.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -1535,9 +1639,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelC13.getText());
 					panelGheC13.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheC13.setBackground(Color.WHITE);
+					maGhe.remove(labelC13.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -1561,9 +1667,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelC14.getText());
 					panelGheC14.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheC14.setBackground(Color.WHITE);
+					maGhe.remove(labelC14.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -1587,9 +1695,12 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelC15.getText());
 					panelGheC15.setBackground(new Color(0, 128, 255));
+					
 				} else {
 					panelGheC15.setBackground(Color.WHITE);
+					maGhe.remove(labelC15.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -1613,9 +1724,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelC16.getText());
 					panelGheC16.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheC16.setBackground(Color.WHITE);
+					maGhe.remove(labelC16.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -1639,9 +1752,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelD01.getText());
 					panelGheD01.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheD01.setBackground(Color.WHITE);
+					maGhe.remove(labelD01.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -1665,9 +1780,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelD02.getText());
 					panelGheD02.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheD02.setBackground(Color.WHITE);
+					maGhe.remove(labelD02.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -1691,9 +1808,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelD03.getText());
 					panelGheD03.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheD03.setBackground(Color.WHITE);
+					maGhe.remove(labelD03.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -1717,9 +1836,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelD04.getText());
 					panelGheD04.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheD04.setBackground(Color.WHITE);
+					maGhe.remove(labelD04.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -1743,9 +1864,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelD05.getText());
 					panelGheD05.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheD05.setBackground(Color.WHITE);
+					maGhe.remove(labelD05.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -1769,9 +1892,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelD06.getText());
 					panelGheD06.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheD06.setBackground(Color.WHITE);
+					maGhe.remove(labelD06.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -1795,9 +1920,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelD07.getText());
 					panelGheD07.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheD07.setBackground(Color.WHITE);
+					maGhe.remove(labelD07.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -1821,9 +1948,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelD08.getText());
 					panelGheD08.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheD08.setBackground(Color.WHITE);
+					maGhe.remove(labelD08.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -1847,9 +1976,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelD09.getText());
 					panelGheD09.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheD09.setBackground(Color.WHITE);
+					maGhe.remove(labelD09.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -1873,9 +2004,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelD10.getText());
 					panelGheD10.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheD10.setBackground(Color.WHITE);
+					maGhe.remove(labelD10.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -1899,9 +2032,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelD11.getText());
 					panelGheD11.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheD11.setBackground(Color.WHITE);
+					maGhe.remove(labelD11.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -1925,9 +2060,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelD12.getText());
 					panelGheD12.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheD12.setBackground(Color.WHITE);
+					maGhe.remove(labelD12.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -1951,9 +2088,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelD13.getText());
 					panelGheD13.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheD13.setBackground(Color.WHITE);
+					maGhe.remove(labelD13.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -1977,9 +2116,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelD14.getText());
 					panelGheD14.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheD14.setBackground(Color.WHITE);
+					maGhe.remove(labelD14.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -2003,9 +2144,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelD15.getText());
 					panelGheD15.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheD15.setBackground(Color.WHITE);
+					maGhe.remove(labelD15.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -2029,9 +2172,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelD16.getText());
 					panelGheD16.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheD16.setBackground(Color.WHITE);
+					maGhe.remove(labelD16.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -2055,9 +2200,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelE01.getText());
 					panelGheE01.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheE01.setBackground(Color.WHITE);
+					maGhe.remove(labelE01.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -2081,9 +2228,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelE02.getText());
 					panelGheE02.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheE02.setBackground(Color.WHITE);
+					maGhe.remove(labelE02.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -2107,9 +2256,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelE03.getText());
 					panelGheE03.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheE03.setBackground(Color.WHITE);
+					maGhe.remove(labelE03.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -2133,9 +2284,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelE04.getText());
 					panelGheE04.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheE04.setBackground(Color.WHITE);
+					maGhe.remove(labelE04.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -2159,9 +2312,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelE05.getText());
 					panelGheE05.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheE05.setBackground(Color.WHITE);
+					maGhe.remove(labelE05.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -2185,9 +2340,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelE06.getText());
 					panelGheE06.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheE06.setBackground(Color.WHITE);
+					maGhe.remove(labelE06.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -2211,9 +2368,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelE07.getText());
 					panelGheE07.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheE07.setBackground(Color.WHITE);
+					maGhe.remove(labelE07.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -2237,9 +2396,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelE08.getText());
 					panelGheE08.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheE08.setBackground(Color.WHITE);
+					maGhe.remove(labelE08.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -2263,9 +2424,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelE09.getText());
 					panelGheE09.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheE09.setBackground(Color.WHITE);
+					maGhe.remove(labelE09.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -2289,9 +2452,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelE10.getText());
 					panelGheE10.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheE10.setBackground(Color.WHITE);
+					maGhe.remove(labelE10.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -2315,9 +2480,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelE11.getText());
 					panelGheE11.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheE11.setBackground(Color.WHITE);
+					maGhe.remove(labelE11.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -2341,9 +2508,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelE12.getText());
 					panelGheE12.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheE12.setBackground(Color.WHITE);
+					maGhe.remove(labelE12.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -2367,9 +2536,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelE13.getText());
 					panelGheE13.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheE13.setBackground(Color.WHITE);
+					maGhe.remove(labelE13.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -2393,9 +2564,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelE14.getText());
 					panelGheE14.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheE14.setBackground(Color.WHITE);
+					maGhe.remove(labelE14.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -2419,9 +2592,11 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelE15.getText());
 					panelGheE15.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheE15.setBackground(Color.WHITE);
+					maGhe.remove(labelE15.getText());
 				}
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
@@ -2445,10 +2620,13 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				// Chuyển đổi màu giữa (0, 128, 255) và màu trắng
 				if (clickSelect) {
+					maGhe.add(labelE16.getText());
 					panelGheE16.setBackground(new Color(0, 128, 255));
 				} else {
 					panelGheE16.setBackground(Color.WHITE);
+					maGhe.remove(labelE16.getText());
 				}
+				System.out.println(maGhe);
 				clickSelect = !clickSelect; // Đảo ngược trạng thái màu
 			}
 		});
@@ -2532,6 +2710,49 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 		background.setBounds(0, 0, 1162, 613);
 		contentPane.add(background);
 
+		System.out.println("Mã Xuất Chiếu " + maXC + "Số Lượng" + soLuongVe);
+		
+		
+		btnXacNhan.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(maGhe.size() < soLuongVe) {
+					JOptionPane.showMessageDialog(null, "Số Lượng Ghế Không Hợp Lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+				}else if(maGhe.size() > soLuongVe) {
+					JOptionPane.showMessageDialog(null, "Số Lượng Ghế Không Hợp Lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+				}else {
+					try {
+						Socket socket = new Socket("192.168.2.20", 6789);
+						client_xc = new ClientXuatChieu_dao(socket);
+				
+						GD_MuaVe_ThucAn gd_dichvu = new GD_MuaVe_ThucAn(maHD , maGhe , maXC , soLuongVe , sdtkh , maNhanVien , tenNhanVien);
+						gd_dichvu.setVisible(true);
+						dispose();
+						
+					} catch (UnknownHostException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (ClassNotFoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					
+				}
+				
+			}
+		});
+		
+		
+		
+		
+		
+		
+		
+
 	}
 
 	private void initComponents() {
@@ -2553,9 +2774,10 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 	}
 
 	private void formWindowClosing(java.awt.event.WindowEvent evt) {// GEN-FIRST:event_formWindowClosing
-		GD_MuaVe_SuatChieu gdsc = new GD_MuaVe_SuatChieu();
-		gdsc.setLocationRelativeTo(null);
-		gdsc.setVisible(true);
+//		GD_MuaVe_SuatChieu gdsc = new GD_MuaVe_SuatChieu();
+//		gdsc.setLocationRelativeTo(null);
+//		gdsc.setVisible(true);
+		dispose();
 	}
 
 	@Override

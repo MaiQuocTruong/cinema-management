@@ -249,6 +249,9 @@ public class GD_QuanLy_PhongChieu extends JFrame implements ActionListener {
 				} catch (ClassNotFoundException | IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
 				
 			}
@@ -536,11 +539,21 @@ public class GD_QuanLy_PhongChieu extends JFrame implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				GD_QuanLy_ThongKePhim gdqlthongkephim = new GD_QuanLy_ThongKePhim();
-				gdqlthongkephim.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				gdqlthongkephim.setLocationRelativeTo(null);
-				gdqlthongkephim.setVisible(true);
-				dispose();
+				GD_QuanLy_ThongKePhim gdqlthongkephim;
+				try {
+					gdqlthongkephim = new GD_QuanLy_ThongKePhim();
+					gdqlthongkephim.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					gdqlthongkephim.setLocationRelativeTo(null);
+					gdqlthongkephim.setVisible(true);
+					dispose();
+				} catch (UnknownHostException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
 
 			}
 		});
@@ -553,11 +566,21 @@ public class GD_QuanLy_PhongChieu extends JFrame implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				GD_QuanLy_ThongKeDichVu gdqlthongDVu = new GD_QuanLy_ThongKeDichVu();
-				gdqlthongDVu.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				gdqlthongDVu.setLocationRelativeTo(null);
-				gdqlthongDVu.setVisible(true);
-				dispose();
+				GD_QuanLy_ThongKeDichVu gdqlthongDVu;
+				try {
+					gdqlthongDVu = new GD_QuanLy_ThongKeDichVu();
+					gdqlthongDVu.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					gdqlthongDVu.setLocationRelativeTo(null);
+					gdqlthongDVu.setVisible(true);
+					dispose();
+				} catch (UnknownHostException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
 
 			}
 		});
@@ -704,7 +727,7 @@ public class GD_QuanLy_PhongChieu extends JFrame implements ActionListener {
 				// TODO Auto-generated method stub
 				GD_QuanLy_PhongChieu_Them gdthem;
 				try {
-					Socket socket = new Socket("192.168.1.10", 6789);
+					Socket socket = new Socket("192.168.2.20", 6789);
 					clientPC_dao = new ClientPhongChieu_dao(socket);
 					gdthem = new GD_QuanLy_PhongChieu_Them();
 					gdthem.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -757,10 +780,10 @@ public class GD_QuanLy_PhongChieu extends JFrame implements ActionListener {
 		});
 
 		
-		btnXoa.addActionListener(this);
+//		btnXoa.addActionListener(this);
 		btnLamMoi.addActionListener(this);
 
-		Socket socket = new Socket("192.168.2.13", 6789);
+		Socket socket = new Socket("192.168.2.20", 6789);
 		clientPC_dao = new ClientPhongChieu_dao(socket);
 		ds_pc = clientPC_dao.getListPhongChieu();
 		loadTableData(ds_pc);

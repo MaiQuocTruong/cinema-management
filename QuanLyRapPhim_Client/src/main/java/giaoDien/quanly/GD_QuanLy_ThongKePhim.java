@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.net.Socket;
 import java.net.UnknownHostException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,6 +19,7 @@ import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -37,11 +39,22 @@ import javax.swing.table.DefaultTableModel;
 
 import com.toedter.calendar.JDateChooser;
 
+import client_dao.ClientCTHoaDonPhim;
 //import enities.Phim;
 import runapp.Login;
 import testbutton.Buttontest;
 
-public class GD_QuanLy_ThongKePhim extends JFrame {
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.renderer.category.BarRenderer;
+import org.jfree.data.category.DefaultCategoryDataset;
+
+
+
+public class GD_QuanLy_ThongKePhim extends JFrame implements ActionListener{
 	/**
 	 * 
 	 */
@@ -63,13 +76,17 @@ public class GD_QuanLy_ThongKePhim extends JFrame {
 
 	private JTable table;
 	private DefaultTableModel tableModel;
-
+	private JButton btnBieuDoThongKe;
 	static String quanly;
-
+	private ClientCTHoaDonPhim clientHoaDonPhim_dao;
+	
+	
 	/**
 	 * Launch the application.
+	 * @throws IOException 
+	 * @throws UnknownHostException 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws UnknownHostException, IOException {
 		try {
 			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
 				if ("Nimbus".equals(info.getName())) {
@@ -94,7 +111,7 @@ public class GD_QuanLy_ThongKePhim extends JFrame {
 		run.setVisible(true);
 	}
 
-	public GD_QuanLy_ThongKePhim() {
+	public GD_QuanLy_ThongKePhim() throws UnknownHostException, IOException {
 		initComponents();
 		setResizable(false);
 		setBackground(Color.WHITE);
@@ -203,6 +220,9 @@ public class GD_QuanLy_ThongKePhim extends JFrame {
 					gdqlphim.setVisible(true);
 					dispose();
 				} catch (ClassNotFoundException | IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (InterruptedException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
@@ -524,11 +544,21 @@ public class GD_QuanLy_ThongKePhim extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				GD_QuanLy_ThongKeDichVu gdqlthongDVu = new GD_QuanLy_ThongKeDichVu();
-				gdqlthongDVu.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				gdqlthongDVu.setLocationRelativeTo(null);
-				gdqlthongDVu.setVisible(true);
-				dispose();
+				GD_QuanLy_ThongKeDichVu gdqlthongDVu;
+				try {
+					gdqlthongDVu = new GD_QuanLy_ThongKeDichVu();
+					gdqlthongDVu.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					gdqlthongDVu.setLocationRelativeTo(null);
+					gdqlthongDVu.setVisible(true);
+					dispose();
+				} catch (UnknownHostException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
 
 			}
 		});
@@ -561,12 +591,15 @@ public class GD_QuanLy_ThongKePhim extends JFrame {
 		logoutToolBar.setBackground(customColor);
 		topPanel.add(logoutToolBar);
 
-		JButton btnBieuDoThongKe = new JButton("Biểu đồ thống kê");
+		btnBieuDoThongKe = new JButton("Biểu đồ thống kê");
 		btnBieuDoThongKe.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		btnBieuDoThongKe.setBounds(14, 202, 171, 40);
 		btnBieuDoThongKe.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/thongke.png")));
 		contentPane.add(btnBieuDoThongKe);
 
+		
+		
+		
 		// Body
 		JLabel lblBoLoc = new JLabel("Bộ Lọc Thống Kê");
 		lblBoLoc.setBounds(14, 106, 140, 20);
@@ -642,6 +675,11 @@ public class GD_QuanLy_ThongKePhim extends JFrame {
 		background.setHorizontalAlignment(SwingConstants.CENTER);
 		background.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/bggalaxy1.png")));
 		contentPane.add(background);
+		
+		Socket socket = new Socket("192.168.2.20", 6789);
+		clientHoaDonPhim_dao = new ClientCTHoaDonPhim(socket);
+		
+		btnBieuDoThongKe.addActionListener(this);
 
 	}
 
@@ -668,4 +706,57 @@ public class GD_QuanLy_ThongKePhim extends JFrame {
 		gdql.setLocationRelativeTo(null);
 		gdql.setVisible(true);
 	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		Object o = e.getSource();
+		if(o.equals(btnBieuDoThongKe)) {
+			try {
+				Map<String, Double> listDoanhThuPhim = clientHoaDonPhim_dao.getDoanhThuTheoPhim();
+				drawBarChart(listDoanhThuPhim, "Doanh Thu Theo Phim", "Tên Phim", "Tổng Doanh Thu");
+			} catch (ClassNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		
+	}
+	
+	
+	 public void drawBarChart(Map<String, Double> dataMap, String chartTitle, String xAxisLabel, String yAxisLabel) {
+	        // Tạo dataset từ Map<String, Double>
+	        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+	        
+	        for (Map.Entry<String, Double> entry : dataMap.entrySet()) {
+	            dataset.addValue(entry.getValue(), yAxisLabel, entry.getKey());
+	        }
+
+	        // Tạo biểu đồ cột (Bar Chart) từ dataset
+	        JFreeChart barChart = ChartFactory.createBarChart(chartTitle, // Chart title
+	                xAxisLabel, // Domain axis label
+	                yAxisLabel, // Range axis label
+	                dataset, // Data
+	                PlotOrientation.VERTICAL, // Orientation
+	                true, // Include legend
+	                true, // Tooltips
+	                false );
+	        
+//	        Set Màu Cho Cột Cho Biểu Đồ
+	     // Thiết lập màu sắc cho các cột (Bar color)
+	        CategoryPlot plot = (CategoryPlot) barChart.getPlot();
+	        BarRenderer renderer = (BarRenderer) plot.getRenderer();
+	        renderer.setSeriesPaint(0, new Color(0, 102, 204)); // Đặt màu xanh biển cho cột
+
+	        // Hiển thị biểu đồ trong cửa sổ
+	        ChartPanel chartPanel = new ChartPanel(barChart);
+	        chartPanel.setPreferredSize(new java.awt.Dimension(800, 600));
+	        JFrame frame = new JFrame(chartTitle);
+	        frame.getContentPane().add(chartPanel);
+	        frame.pack();
+	        frame.setVisible(true);
+	        frame.setLocationRelativeTo(null);
+	    }
 }

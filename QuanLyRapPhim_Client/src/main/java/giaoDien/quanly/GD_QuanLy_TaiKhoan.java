@@ -33,7 +33,7 @@ import java.awt.GridLayout;
 import java.awt.SystemColor;
 
 import javax.swing.SwingConstants;
-import javax.swing.Timer;
+
 
 import testbutton.Buttontest;
 
@@ -63,10 +63,15 @@ import enities.KhachHang;
 import enities.NhanVien;
 import enities.TaiKhoan;
 import runapp.Login;
+import task.TaskExecuteMultiThreadNhanVien;
+import task.TaskExecuteMultiThreadTaiKhoan;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import javax.swing.JComboBox;
 
 public class GD_QuanLy_TaiKhoan extends JFrame implements ActionListener {
@@ -227,6 +232,9 @@ public class GD_QuanLy_TaiKhoan extends JFrame implements ActionListener {
 					gdqlphim.setVisible(true);
 					dispose();
 				} catch (ClassNotFoundException | IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (InterruptedException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
@@ -523,11 +531,21 @@ public class GD_QuanLy_TaiKhoan extends JFrame implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				GD_QuanLy_ThongKePhim gdqlthongkephim = new GD_QuanLy_ThongKePhim();
-				gdqlthongkephim.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				gdqlthongkephim.setLocationRelativeTo(null);
-				gdqlthongkephim.setVisible(true);
-				dispose();
+				GD_QuanLy_ThongKePhim gdqlthongkephim;
+				try {
+					gdqlthongkephim = new GD_QuanLy_ThongKePhim();
+					gdqlthongkephim.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					gdqlthongkephim.setLocationRelativeTo(null);
+					gdqlthongkephim.setVisible(true);
+					dispose();
+				} catch (UnknownHostException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
 
 			}
 		});
@@ -540,11 +558,21 @@ public class GD_QuanLy_TaiKhoan extends JFrame implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				GD_QuanLy_ThongKeDichVu gdqlthongDVu = new GD_QuanLy_ThongKeDichVu();
-				gdqlthongDVu.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				gdqlthongDVu.setLocationRelativeTo(null);
-				gdqlthongDVu.setVisible(true);
-				dispose();
+				GD_QuanLy_ThongKeDichVu gdqlthongDVu;
+				try {
+					gdqlthongDVu = new GD_QuanLy_ThongKeDichVu();
+					gdqlthongDVu.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					gdqlthongDVu.setLocationRelativeTo(null);
+					gdqlthongDVu.setVisible(true);
+					dispose();
+				} catch (UnknownHostException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
 
 			}
 		});
@@ -677,7 +705,7 @@ public class GD_QuanLy_TaiKhoan extends JFrame implements ActionListener {
 		contentPane.add(background);
 
 		// load dữ liệu
-		Socket socket = new Socket("192.168.100.4", 6789);
+		Socket socket = new Socket("192.168.2.20", 6789);
 		clientTK = new ClientTaiKhoan_dao(socket);
 		
 		listTK = clientTK.getListTK();
@@ -764,6 +792,35 @@ public class GD_QuanLy_TaiKhoan extends JFrame implements ActionListener {
 				loadDataToTextFlied();
 			}
 		});
+		
+		
+		Timer timer = new Timer();
+//      // Tạo một TimerTask để thực hiện công việc mong muốn
+      TimerTask task = new TimerTask() {
+          public void run() {
+              // Đây là nơi để đặt hàm mà bạn muốn thực thi sau mỗi 5 giây
+          	xoaBang();
+          	try {
+					listTK = clientTK.getListTK();
+					TaskExecuteMultiThreadTaiKhoan task = new TaskExecuteMultiThreadTaiKhoan(listTK, tableModel);
+		            task.execute();
+				} catch (UnknownHostException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+            
+          }
+      };
+//
+//      // Lập lịch thực hiện TimerTask sau mỗi 10000ms (10 giây)
+      timer.schedule(task, 0, 5000);
+		
 	}
 
 	private void timKiem() throws ClassNotFoundException, IOException{

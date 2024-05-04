@@ -20,10 +20,26 @@ public class PhongChieuPhim_dao {
 	public List<PhongChieuPhim> getListPhongChieu(){
 		List<PhongChieuPhim> listPhongChieu = new ArrayList<PhongChieuPhim>();
 		
-		TypedQuery<PhongChieuPhim> resultQuery = em.createQuery("Select pc from PhongChieuPhim pc" , PhongChieuPhim.class);
-		listPhongChieu = resultQuery.getResultList();
+		try {
+			em.getTransaction().begin();
+
+			em.clear();
+			TypedQuery<PhongChieuPhim> resultQuery = em.createQuery("Select pc from PhongChieuPhim pc" , PhongChieuPhim.class);
+			listPhongChieu = resultQuery.getResultList();
+			em.getTransaction().commit();
+			
+		}catch (Exception e) {
+			// TODO: handle exception
+		}
+		
 		return listPhongChieu;
 	}
+	
+	
+
+	
+	
+	
 	
 	public void addPhongChieu(PhongChieuPhim pcp) {
 		try {

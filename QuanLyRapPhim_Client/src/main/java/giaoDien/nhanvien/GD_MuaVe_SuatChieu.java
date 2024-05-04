@@ -42,6 +42,7 @@ import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.net.Socket;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.sql.Connection;
@@ -55,10 +56,15 @@ import java.awt.Component;
 import javax.swing.JTextField;
 import com.toedter.calendar.JDateChooser;
 
+import client_dao.ClientXuatChieu_dao;
+import enities.KhachHang;
+import enities.XuatChieu;
 import runapp.Login;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+
 import javax.swing.JComboBox;
 import javax.swing.ButtonGroup;
 
@@ -68,7 +74,7 @@ public class GD_MuaVe_SuatChieu extends JFrame implements ActionListener {
 	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JLabel lblClock;
+	private JLabel lblClock, lbltennv;
 	private Timer timer;
 	Connection con = null;
 	ResultSet rs = null;
@@ -84,8 +90,11 @@ public class GD_MuaVe_SuatChieu extends JFrame implements ActionListener {
 	private JDateChooser ngayHienThiDateChooser; // Thêm đối tượng JDateChooser cho từ ngày
 	private boolean isCalendarVisible = false;
 	private JComboBox<String> phongChieuComboBox; // Declare the JComboBox here
-	public JLabel lbltennv;
 //	static String quanly;
+	private String maPhim;
+	private int soLuongPhim;
+	private ClientXuatChieu_dao clientXuatChieu_dao;
+	private String maNhanVien , tenNhanVien;
 
 	/**
 	 * Launch the application.
@@ -111,25 +120,40 @@ public class GD_MuaVe_SuatChieu extends JFrame implements ActionListener {
 			java.util.logging.Logger.getLogger(GD_MuaVe_SuatChieu.class.getName()).log(java.util.logging.Level.SEVERE,
 					null, ex);
 		}
-		GD_MuaVe_SuatChieu run = new GD_MuaVe_SuatChieu();
-		run.setVisible(true);
+		
 	}
 
 	/**
 	 * Create the frame.
+	 * @throws IOException 
+	 * @throws UnknownHostException 
+	 * @throws ClassNotFoundException 
 	 */
-	public GD_MuaVe_SuatChieu() {
+//	public GD_MuaVe_SuatChieu(String maPhim , int soLuongPhim) {
+//		this.maPhim = maPhim;
+//		this.soLuongPhim = soLuongPhim;
+//	}
+	
+	
+	public GD_MuaVe_SuatChieu(String maHD, String maPhim , int soLuongVe , String sdtkh , String maNhanVien , String tenNhanVien) throws UnknownHostException, IOException, ClassNotFoundException {
 		initComponents();
+		this.maNhanVien = maNhanVien;
+		this.tenNhanVien = tenNhanVien;
+		
 		setResizable(false);
 		setBackground(Color.WHITE);
 		setTitle("Giao Diện Mua Vé - Suất Chiếu");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.setLocationRelativeTo(null);
+		
 		setBounds(100, 100, 1168, 650);
 		contentPane = new JPanel();
 		contentPane.setBorder(null);
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
+		this.setVisible(true);
+		
 
 		lblNvIcon = new JLabel("");
 		lblNvIcon.setIcon(new ImageIcon(GD_MuaVe_SuatChieu.class.getResource("/imgs/avt.png"))); // Thay đổi đường dẫn
@@ -145,7 +169,7 @@ public class GD_MuaVe_SuatChieu extends JFrame implements ActionListener {
 		lblnhanvien.setForeground(Color.WHITE);
 		contentPane.add(lblnhanvien);
 
-		lbltennv = new JLabel("Trương Đại Lộc");
+		lbltennv = new JLabel(tenNhanVien);
 		lbltennv.setForeground(Color.WHITE);
 		lbltennv.setFont(new Font("Tahoma", Font.BOLD, 16));
 		lbltennv.setBounds(832, 0, 238, 50);
@@ -221,8 +245,7 @@ public class GD_MuaVe_SuatChieu extends JFrame implements ActionListener {
 				// TODO Auto-generated method stub
 				GD_MuaVe_Phim gdMuaVePhim;
 				try {
-					gdMuaVePhim = new GD_MuaVe_Phim();
-					gdMuaVePhim.lbltennv.setText(lbltennv.getText());
+					gdMuaVePhim = new GD_MuaVe_Phim(maNhanVien , tenNhanVien);
 					gdMuaVePhim.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 					gdMuaVePhim.setLocationRelativeTo(null);
 					gdMuaVePhim.setVisible(true);
@@ -243,35 +266,46 @@ public class GD_MuaVe_SuatChieu extends JFrame implements ActionListener {
 		JButton btnGhe = new JButton("Chọn Ghế");
 		btnGhe.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnGhe.setIcon(new ImageIcon(GD_MuaVe_SuatChieu.class.getResource("/imgs/chair.png")));
-		btnGhe.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				GD_MuaVe_ChonGhe gdmGHE = new GD_MuaVe_ChonGhe();
-				gdmGHE.lbltennv.setText(lbltennv.getText());
-				gdmGHE.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				gdmGHE.setLocationRelativeTo(null);
-				gdmGHE.setVisible(true);
-				dispose();
-			}
-		});
+//		btnGhe.addActionListener(new ActionListener() {
+//
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				// TODO Auto-generated method stub
+//				GD_MuaVe_ChonGhe gdmGHE = new GD_MuaVe_ChonGhe();
+//				gdmGHE.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+//				gdmGHE.setLocationRelativeTo(null);
+//				gdmGHE.setVisible(true);
+//				dispose();
+//			}
+//		});
 		JButton btnThucAn = new JButton("Thức Ăn");
 		btnThucAn.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnThucAn.setIcon(new ImageIcon(GD_MuaVe_SuatChieu.class.getResource("/imgs/popcorn2.png")));
-		btnThucAn.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				GD_MuaVe_ThucAn gdmvthan = new GD_MuaVe_ThucAn();
-				gdmvthan.lbltennv.setText(lbltennv.getText());
-				gdmvthan.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				gdmvthan.setLocationRelativeTo(null);
-				gdmvthan.setVisible(true);
-				dispose();
-			}
-		});
+//		btnThucAn.addActionListener(new ActionListener() {
+//
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				// TODO Auto-generated method stub
+//				GD_MuaVe_ThucAn gdmvthan;
+//				try {
+//					gdmvthan = new GD_MuaVe_ThucAn();
+//					gdmvthan.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+//					gdmvthan.setLocationRelativeTo(null);
+//					gdmvthan.setVisible(true);
+//					dispose();
+//				} catch (UnknownHostException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				} catch (ClassNotFoundException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				} catch (IOException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				}
+//				
+//			}
+//		});
 		JButton btnSuatChieu = new JButton("Suất Chiếu");
 		btnSuatChieu.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnSuatChieu.setIcon(new ImageIcon(GD_MuaVe_SuatChieu.class.getResource("/imgs/clapperboard2.png")));
@@ -391,8 +425,7 @@ public class GD_MuaVe_SuatChieu extends JFrame implements ActionListener {
 				// TODO Auto-generated method stub
 				GD_KhachHang gdkh;
 				try {
-					gdkh = new GD_KhachHang();
-					gdkh.lbltennv.setText(lbltennv.getText());
+					gdkh = new GD_KhachHang(maNhanVien , tenNhanVien);
 					gdkh.setVisible(true);
 					gdkh.setLocationRelativeTo(null);
 					dispose();
@@ -549,7 +582,7 @@ public class GD_MuaVe_SuatChieu extends JFrame implements ActionListener {
 		contentPane.add(btnLamMoi);
 
 		// Khởi tạo DefaultTableModel với các cột
-		String[] columnNames = { "STT", "Mã suất chiếu", "Tên phim", "Ngày chiếu", "Giờ chiếu", "Định dạng", "Ngôn ngữ",
+		String[] columnNames = {"Mã suất chiếu", "Tên phim", "Ngày chiếu", "Giờ chiếu", "Định dạng", "Ngôn ngữ",
 				"Phòng chiếu", "Trạng thái" }; // Thay đổi tên cột tùy ý
 		tableModel = new DefaultTableModel(columnNames, 0);
 
@@ -567,15 +600,57 @@ public class GD_MuaVe_SuatChieu extends JFrame implements ActionListener {
 		contentPane.add(scrollPane);
 
 		// Thêm dữ liệu vào bảng
-		Object[] rowData = { "1", "SC00001", "Màn Sương Phủ Máu", "10-12-2019", "08:30 - 09:15", "3D", "Tiếng Anh",
-				"Phòng 1", "Đã Chiếu" }; // Thay đổi dữ liệu tùy ý
-		tableModel.addRow(rowData);
 		JLabel background = new JLabel("");
 		background.setHorizontalAlignment(SwingConstants.CENTER);
 		background.setIcon(new ImageIcon(GD_NhanVien.class.getResource("/imgs/bggalaxy1.png")));
 		background.setBounds(0, 0, 1162, 613);
 		contentPane.add(background);
-
+		
+		
+//		System.out.println("Mã Phim Trong Xuất Chiếu " + maPhim + "Số Lượng Vé Phim " + soLuongVe);
+		Socket socket = new Socket("192.168.2.20", 6789);
+		clientXuatChieu_dao = new ClientXuatChieu_dao(socket);
+		List<XuatChieu> listXuatChieu = clientXuatChieu_dao.getListXC();
+		
+		
+		
+		for (XuatChieu xuatChieu : listXuatChieu) {
+			if(xuatChieu.getPhim().getMaPhim().equalsIgnoreCase(maPhim)) {
+				Object [] rowData = {xuatChieu.getMaXuat() , xuatChieu.getPhim().getTenPhim() , xuatChieu.getNgayChieu() , xuatChieu.getGioChieu() , xuatChieu.getDinhDang() , xuatChieu.getPhim().getNgonNgu() , xuatChieu.getPhongchieu().getTenPhongChieu() ,xuatChieu.getTrangThai()};
+				tableModel.addRow(rowData);
+			}
+			
+		}
+		
+		
+		btnXacNhan.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int row = table.getSelectedRow();
+				if(row != -1) {
+					 String maSuatChieu = (String) table.getValueAt(row, 0);
+					 
+					try {
+						 GD_MuaVe_ChonGhe gd_chonGhe = new GD_MuaVe_ChonGhe(maHD , maSuatChieu , soLuongVe , sdtkh , maNhanVien , tenNhanVien);
+						 gd_chonGhe.setVisible(true);
+						 dispose();
+					} catch (UnknownHostException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					
+					 
+				}else {
+					 JOptionPane.showMessageDialog(null, "Vui lòng chọn 1 suất chiếu", "Lỗi", JOptionPane.ERROR_MESSAGE);
+				}
+				
+			}
+		});
+		
 	}
 
 	private void initComponents() {
@@ -608,7 +683,7 @@ public class GD_MuaVe_SuatChieu extends JFrame implements ActionListener {
 	}
 
 	private void formWindowClosing(java.awt.event.WindowEvent evt) throws UnknownHostException, IOException, ClassNotFoundException {// GEN-FIRST:event_formWindowClosing
-		GD_MuaVe_Phim gdmvphim = new GD_MuaVe_Phim();
+		GD_MuaVe_Phim gdmvphim = new GD_MuaVe_Phim(maNhanVien , tenNhanVien);
 		gdmvphim.setLocationRelativeTo(null);
 		gdmvphim.setVisible(true);
 	}

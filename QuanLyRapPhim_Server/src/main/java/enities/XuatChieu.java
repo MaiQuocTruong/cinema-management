@@ -21,11 +21,11 @@ public class XuatChieu implements Serializable {
 	@Column(name = "MaXuat")
 	private String maXuat;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "MaPhim")
 	private Phim phim;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "MaPhongChieu")
 	private PhongChieuPhim phongchieu;
 	

@@ -20,10 +20,22 @@ public class NhanVien_dao {
 	public List<NhanVien> getListNhanVien(){
 		List<NhanVien> listNV = new ArrayList<NhanVien>();
 		
-		TypedQuery<NhanVien> resultQuery = em.createQuery("Select nv from NhanVien nv" , NhanVien.class);
-		listNV = resultQuery.getResultList();
+		try {
+			em.getTransaction().begin();
+			em.clear();
+			TypedQuery<NhanVien> resultQuery = em.createQuery("Select nv from NhanVien nv" , NhanVien.class);
+			listNV = resultQuery.getResultList();
+			em.getTransaction().commit();
+			
+		}catch (Exception e) {
+			// TODO: handle exception
+		}
+		
 		return listNV;
 	}
+	
+	
+	
 
 	public void addNhanVien(NhanVien nv) {
 		// TODO Auto-generated method stub
