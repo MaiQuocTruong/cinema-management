@@ -352,7 +352,7 @@ public class GD_QuanLy_Phim_Them extends JFrame implements ActionListener {
     		//contentPane.add(scrollPane);
     		
 //    		Load Data
-    		Socket socket = new Socket("192.168.2.20", 6789);
+    		Socket socket = new Socket("192.168.2.10", 6789);
     		clientphim = new ClientPhim_dao(socket);
     		
     		listphim = clientphim.getListPhim();
@@ -484,7 +484,65 @@ public class GD_QuanLy_Phim_Them extends JFrame implements ActionListener {
 			
 		}
 		
-		
+		//Ràng buộc
+		private Boolean checkEmpty() {
+			String tenPhim = txtTenPhim.getText();
+			String loaiPhim = txtLoaiPhim.getText();
+			String  ngonNgu=txtNgonNgu.getText();
+			String quocGia =txtQuocGia.getText();
+			String trangThaiPhim =txtTrangThai.getText();
+			String hinhPhim=imagePath;
+			double giaTien = 0; // Giá trị mặc định là 0
+			int gioiHanTuoi=0;
+			int soLuongVe=0;
+			int  thoiLuong=0;
+			Date ngayChieutrenGD = ngayChieuDateChooser.getDate();
+			
+			if (ngayChieutrenGD == null) {
+			    // Hiển thị thông báo lỗi trên giao diện người dùng
+			    JOptionPane.showMessageDialog(null, "Vui lòng chọn ngày tháng năm trước khi tiếp tục.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+			} else {
+				Instant instant = ngayChieutrenGD.toInstant();
+				LocalDate ngayChieu = instant.atZone(ZoneId.systemDefault()).toLocalDate();
+				String ngayChieuTrongTable = txtNgayChieu.getText();
+			}
+			
+			
+			
+			Date ngayHettrenGD = ngayHetHanDateChooser.getDate();
+			if (ngayHettrenGD == null) {
+			    // Hiển thị thông báo lỗi trên giao diện người dùng
+			    JOptionPane.showMessageDialog(null, "Vui lòng chọn ngày tháng năm trước khi tiếp tục.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+			} else {
+			Instant instant1 = ngayHettrenGD.toInstant();
+			LocalDate ngayHetHan = instant1.atZone(ZoneId.systemDefault()).toLocalDate();
+			String ngayHetTrongTable = txtNgayHetHan.getText();
+			}
+		    // Kiểm tra xem chuỗi giá tiền có rỗng không trước khi chuyển đổi
+		    if (!txtTien.getText().isEmpty() || !txtTuoi.getText().isEmpty() || !txtSoLuongVe.getText().isEmpty() || !txtThoiLuong.getText().isEmpty()) {
+		        try {
+		            giaTien = Double.parseDouble(txtTien.getText());
+		            gioiHanTuoi =Integer.parseInt(txtTuoi.getText());
+		            soLuongVe = Integer.parseInt(txtSoLuongVe.getText());
+		            thoiLuong=Integer.parseInt(txtThoiLuong.getText());
+		        } catch (NumberFormatException e) {
+		            // Xử lý ngoại lệ nếu giá trị không hợp lệ
+		            e.printStackTrace();
+		            // Hiển thị thông báo hoặc thực hiện xử lý khác tùy ý
+		        }
+		    }
+			
+			if (tenPhim.isEmpty() || loaiPhim.isEmpty() || quocGia.isEmpty() || ngonNgu.isEmpty() || trangThaiPhim.isEmpty() 
+					|| hinhPhim.isEmpty() || giaTien==0 || gioiHanTuoi==0 || soLuongVe==0 || thoiLuong==0 ) {
+				return showErrorTx(null,"Không được để trống");
+			}
+			return true;
+		}
+		private Boolean showErrorTx(JTextField tx, String errorInfo) {
+			JOptionPane.showMessageDialog(tx, errorInfo);
+			tx.requestFocus();
+			return false;
+		}
 		
 
 	private void initComponents() {
@@ -525,19 +583,23 @@ public class GD_QuanLy_Phim_Them extends JFrame implements ActionListener {
 		java.lang.Object o = e.getSource();
 		if (o.equals(btnXacNhan)) {
 			try {
-			AddPhimMoi();
-			// Hiển thị thông báo thành công
-		    JOptionPane.showMessageDialog(this, "Thêm phim thành công!");
-			GD_QuanLy_Phim gdqlphim = new GD_QuanLy_Phim();
-			gdqlphim.setVisible(true);
-			gdqlphim.setLocationRelativeTo(null);
-			dispose();
-	        
-	        // Đóng giao diện thêm
-			} catch (Exception e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+				if(checkEmpty()) {
+				AddPhimMoi();
+				// Hiển thị thông báo thành công
+			    JOptionPane.showMessageDialog(this, "Thêm phim thành công!");
+				GD_QuanLy_Phim gdqlphim = new GD_QuanLy_Phim();
+				gdqlphim.setVisible(true);
+				gdqlphim.setLocationRelativeTo(null);
+				dispose();
+				}else {
+					JOptionPane.showMessageDialog(null, "Có lỗi");
+				}
+		        
+		        // Đóng giao diện thêm
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 		}else if(o.equals(btnHuyBo)){
 			//xoaTrangTF();
 		}

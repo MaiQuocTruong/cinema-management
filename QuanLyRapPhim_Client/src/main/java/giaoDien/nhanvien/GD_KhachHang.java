@@ -629,7 +629,7 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 		contentPane.add(background);
 
 //		Load Data
-		Socket socket = new Socket("192.168.2.20", 6789);
+		Socket socket = new Socket("192.168.2.10", 6789);
 		clientKH = new ClientKhachHang_dao(socket);
 
 		listKH = clientKH.getListKH();
@@ -880,13 +880,23 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 		
 		
 		String tenKH = txtHoTen.getText();
+		
+		//Ràng buộc dữ liệu
+		LocalDate ngayHienTai = LocalDate.now();
 		Date ngaySinhTrenGD = ngaySinhDateChooser.getDate();
-
+		if (ngaySinhTrenGD == null) {
+		    // Hiển thị thông báo lỗi trên giao diện người dùng
+		    JOptionPane.showMessageDialog(null, "Vui lòng chọn ngày tháng năm trước khi tiếp tục.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+		} else {
 		Instant instant = ngaySinhTrenGD.toInstant();
 
 		LocalDate ngaySinh = instant.atZone(ZoneId.systemDefault()).toLocalDate();
-
+		if (ngaySinh.isAfter(ngayHienTai)) {
+	        JOptionPane.showMessageDialog(null, "Ngày sinh không thể sau ngày hiện tại.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+	        // Thực hiện xử lý thích hợp nếu ngày sinh sau ngày hiện tại
+	    } else {
 		String ngaySinhTrongTable = txtNgaySinh.getText();
+		
 		String sdt = txtSDT.getText();
 		String email = txtEmail.getText();
 		String loaiKH = "Thuong";
@@ -911,7 +921,46 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 		int diemDaSuDung = 0;
 		String diemHienCoTrongTable = "0";
 		String diemDaSuDungTrongTable = "0";
-
+		//Ràng buộc 
+		if (tenKH.trim().equals("") ) {
+			showErrorTx(txtHoTen,"Tên Khách Hàng không được để trống");
+			return;
+		}else if(!tenKH.matches("[aAàÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬbBcCdDđĐeEèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆ\"\r\n"
+					+ "				+ \"fFgGhHiIìÌỉỈĩĨíÍịỊjJkKlLmMnNoOòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢpPqQrRsStTu\"\r\n"
+					+ "				+ \"UùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰvVwWxXyYỳỲỷỶỹỸýÝỵỴzZ ]+")) {
+				JOptionPane.showMessageDialog(this, "Nhập sai tên. Tên không chứa số hoặc các ký tự đặc biệt", "Thông báo",
+						JOptionPane.ERROR_MESSAGE);
+				txtHoTen.selectAll();
+				txtHoTen.requestFocus();
+				return;
+		}else if (sdt.trim().equals("")) {
+				 showErrorTx(txtSDT, "Số điện thoại không được để trống");
+				 return;
+		}else if(sdt.length() < 0 || !sdt.matches("^0[0-9]{9}")) {
+				JOptionPane.showMessageDialog(this, "Số Điện Thoại Nhập Vào Không Hợp Lệ !", "Thông báo",
+							JOptionPane.ERROR_MESSAGE);
+					txtSDT.selectAll();
+					txtSDT.requestFocus();
+					return ;
+		}else if (cmnd.trim().equals("")) {
+			 showErrorTx(txtCMND, "CCCD không được để trống");
+			 return;
+		} else if (!cmnd.matches("^[0-9]{12}$")) {
+	        JOptionPane.showMessageDialog(this, "CCCD phải chứa đúng 12 chữ số", "Thông báo",
+	                JOptionPane.ERROR_MESSAGE);
+	        txtCMND.selectAll();
+	        txtCMND.requestFocus();
+	        return ;
+		}else if(email.trim().equals("")) {
+			 showErrorTx(txtEmail, "Email không được để trống");
+			 return;
+		}else if(!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+			JOptionPane.showMessageDialog(this, "Email Nhập Khong Hop Le", "Thông báo",
+					JOptionPane.ERROR_MESSAGE);
+			txtEmail.selectAll();
+			txtEmail.requestFocus();
+			return ;
+		}
 		KhachHang kh = new KhachHang(maKH, tenKH, email, ngaySinh, gender, loaiKH, sdt, diemHienCo, cmnd, diemDaSuDung,
 				0);
 
@@ -929,7 +978,14 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 		loadDataToTable(listDSKH);
 		xoaTrangTF();
 	}
-
+		}
+	}
+	
+	private Boolean showErrorTx(JTextField tx, String errorInfo) {
+		JOptionPane.showMessageDialog(tx, errorInfo);
+		tx.requestFocus();
+		return false;
+	}
 	private void loadDataToTextFlied() {
 		int row = table.getSelectedRow();
 		if (row >= 0) {
@@ -981,7 +1037,46 @@ public class GD_KhachHang extends JFrame implements ActionListener {
 		}
 
 		System.out.println(ngaySinh);
-
+//		//Ràng buộc 
+//		if (tenKH.trim().equals("") ) {
+//			showErrorTx(txtHoTen,"Tên Khách Hàng không được để trống");
+//			return;
+//		}else if(!tenKH.matches("[aAàÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬbBcCdDđĐeEèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆ\"\r\n"
+//					+ "				+ \"fFgGhHiIìÌỉỈĩĨíÍịỊjJkKlLmMnNoOòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢpPqQrRsStTu\"\r\n"
+//					+ "				+ \"UùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰvVwWxXyYỳỲỷỶỹỸýÝỵỴzZ ]+")) {
+//				JOptionPane.showMessageDialog(this, "Nhập sai tên. Tên không chứa số hoặc các ký tự đặc biệt", "Thông báo",
+//						JOptionPane.ERROR_MESSAGE);
+//				txtHoTen.selectAll();
+//				txtHoTen.requestFocus();
+//				return;
+//		}else if (sdtMoi.trim().equals("")) {
+//				 showErrorTx(txtSDT, "Số điện thoại không được để trống");
+//				 return;
+//		}else if(sdtMoi.length() < 0 || !sdtMoi.matches("^0[0-9]{9}")) {
+//				JOptionPane.showMessageDialog(this, "Số Điện Thoại Nhập Vào Không Hợp Lệ !", "Thông báo",
+//							JOptionPane.ERROR_MESSAGE);
+//					txtSDT.selectAll();
+//					txtSDT.requestFocus();
+//					return ;
+//		}else if (cmnd.trim().equals("")) {
+//			 showErrorTx(txtCMND, "CCCD không được để trống");
+//			 return;
+//		} else if (!cmnd.matches("^[0-9]{12}$")) {
+//	        JOptionPane.showMessageDialog(this, "CCCD phải chứa đúng 12 chữ số", "Thông báo",
+//	                JOptionPane.ERROR_MESSAGE);
+//	        txtCMND.selectAll();
+//	        txtCMND.requestFocus();
+//	        return ;
+//		}else if(email.trim().equals("")) {
+//			 showErrorTx(txtEmail, "Email không được để trống");
+//			 return;
+//		}else if(!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+//			JOptionPane.showMessageDialog(this, "Email Nhập Khong Hop Le", "Thông báo",
+//					JOptionPane.ERROR_MESSAGE);
+//			txtEmail.selectAll();
+//			txtEmail.requestFocus();
+//			return ;
+//		}
 		KhachHang khNeedUpdate = clientKH.findCustomerOnPhoneNumber(sdtCanTim);
 		khNeedUpdate.setTenKH(tenKH);
 		khNeedUpdate.setNgaySinh(ngaySinh);

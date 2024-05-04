@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -345,7 +346,7 @@ public class GD_QuanLy_SuatChieu_Sua extends JFrame implements ActionListener{
 		contentPane.add(txtmaXuat);
 		
 		//Load Data
-				Socket socket = new Socket("192.168.2.20", 6789);
+				Socket socket = new Socket("192.168.2.10", 6789);
 				clientXC = new ClientXuatChieu_dao(socket);
 	
 				
@@ -463,8 +464,21 @@ public void addMaPhongChieuToList(String maPhongChieu) {
 			
 			String TrangThai=cbx_trangThai.getSelectedItem().toString();
 			String dinhDang=cbx_dinhDang.getSelectedItem().toString();
-			LocalDate ngayChieu = LocalDate.parse(txtNgayChieu.getText());
 			
+			//LocalDate ngayChieu = LocalDate.parse(txtNgayChieu.getText());
+			
+			String ngayChieuString = txtNgayChieu.getText();
+		    if (ngayChieuString.isEmpty()) {
+		        JOptionPane.showMessageDialog(this, "Ngày chiếu không được để trống!","Lỗi", JOptionPane.ERROR_MESSAGE);
+		        return; // Dừng việc thực hiện khi có lỗi xảy ra
+		    }
+		    LocalDate ngayChieu;
+		    try {
+		        ngayChieu = LocalDate.parse(ngayChieuString);
+		    } catch (DateTimeParseException e1) {
+		        JOptionPane.showMessageDialog(this, "Định dạng ngày chiếu không đúng! Vui lòng nhập lại.");
+		        return; // Dừng việc thực hiện khi có lỗi xảy ra
+		    }
 			String gioChieuString = cbx_gioBatDau.getSelectedItem().toString();
 			String gioKTString = cbx_gioKetThuc.getSelectedItem().toString();
 
@@ -524,13 +538,14 @@ public void addMaPhongChieuToList(String maPhongChieu) {
 			}
 
 		}
+		
 
 	}
 	
 	public void loadPhongChieuToComboBox(JComboBox<String> comboBox) {
 	    try {
 	        // Tạo một đối tượng ClientPhongChieu_dao và kết nối đến server
-	        Socket socket = new Socket("192.168.2.20",6789);
+	        Socket socket = new Socket("192.168.2.10",6789);
 	        ClientPhongChieu_dao clientPhongChieuDao = new ClientPhongChieu_dao(socket);
 	        
 	        // Gọi phương thức getListPhongChieu() để lấy danh sách phòng chiếu từ server
@@ -554,7 +569,7 @@ public void addMaPhongChieuToList(String maPhongChieu) {
 	public void loadPhimToComboBox(JComboBox<String> comboBox) {
 	    try {
 	        // Tạo một đối tượng ClientPhongChieu_dao và kết nối đến server
-	        Socket socket = new Socket("192.168.2.20",6789);
+	        Socket socket = new Socket("192.168.2.10",6789);
 	        ClientPhim_dao clientPhimDao = new ClientPhim_dao(socket);
 	        
 	        // Gọi phương thức getListPhongChieu() để lấy danh sách phòng chiếu từ server

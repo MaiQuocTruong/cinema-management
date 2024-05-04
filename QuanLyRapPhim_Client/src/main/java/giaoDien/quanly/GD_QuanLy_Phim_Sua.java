@@ -357,7 +357,7 @@ if(value!=null) {
     
 
 //    		Load Data
-    		Socket socket = new Socket("192.168.2.20", 6789);
+    		Socket socket = new Socket("192.168.2.10", 6789);
     		clientphim = new ClientPhim_dao(socket);
     		
 
@@ -433,59 +433,117 @@ if(value!=null) {
 	public void actionPerformed(ActionEvent e) {
 		java.lang.Object o = e.getSource();
 		if (o.equals(btnXacNhan)) {
-			layDuLieuSua();
-		JOptionPane.showMessageDialog(btnXacNhan, "Thành Công");
+			
+			if (checkEmpty()) {
+				try {
+					updatePhim();
+				} catch (ClassNotFoundException | IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				JOptionPane.showMessageDialog(this, " cập nhật thành công!");
+				GD_QuanLy_Phim gdqlphim;
+				try {
+					gdqlphim = new GD_QuanLy_Phim();
+					gdqlphim.setVisible(true);
+					gdqlphim.setLocationRelativeTo(null);
+					dispose();
+				} catch (ClassNotFoundException | IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}else {
+				JOptionPane.showMessageDialog(this, "lỗi!");
+			}
 		
-		GD_QuanLy_Phim gdqlphim;
-		try {
-			gdqlphim = new GD_QuanLy_Phim();
-			gdqlphim.setVisible(true);
-			gdqlphim.setLocationRelativeTo(null);
-			dispose();
-		} catch (ClassNotFoundException | IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+			
+		
 		
 		}
 	
 		}
 	
+	private Boolean checkEmpty() {
+		String tenPhim = txtTenPhim.getText();
+		String loaiPhim = txtLoaiPhim.getText();
+		String  ngonNgu=txtNgonNgu.getText();
+		String quocGia =txtQuocGia.getText();
+		String trangThaiPhim =txtTrangThai.getText();
+		String hinhPhim=imagePath;
+		double giaTien = 0; // Giá trị mặc định là 0
+		int gioiHanTuoi=0;
+		int soLuongVe=0;
+		int  thoiLuong=0;
+		
+	    // Kiểm tra xem chuỗi giá tiền có rỗng không trước khi chuyển đổi
+	    if (!txtTien.getText().isEmpty() || !txtTuoi.getText().isEmpty() || !txtSoLuongVe.getText().isEmpty() || !txtThoiLuong.getText().isEmpty()) {
+	        try {
+	            giaTien = Double.parseDouble(txtTien.getText());
+	            gioiHanTuoi =Integer.parseInt(txtTuoi.getText());
+	            soLuongVe = Integer.parseInt(txtSoLuongVe.getText());
+	            thoiLuong=Integer.parseInt(txtThoiLuong.getText());
+	        } catch (NumberFormatException e) {
+	            // Xử lý ngoại lệ nếu giá trị không hợp lệ
+	            e.printStackTrace();
+	            // Hiển thị thông báo hoặc thực hiện xử lý khác tùy ý
+	        }
+	    }
+		
+		if (tenPhim.isEmpty() || loaiPhim.isEmpty() || quocGia.isEmpty() || ngonNgu.isEmpty() || trangThaiPhim.isEmpty() 
+				|| hinhPhim.isEmpty() || giaTien==0 || gioiHanTuoi==0 || soLuongVe==0 || thoiLuong==0 ) {
+			return showErrorTx(null,"Không được để trống");
+		}
+		return true;
+	}
+	private Boolean showErrorTx(JTextField tx, String errorInfo) {
+		JOptionPane.showMessageDialog(tx, errorInfo);
+		tx.requestFocus();
+		return false;
+	}
 	
 	// Trong lớp GD_QuanLy_Phim_Sua:
 
-	public void layDuLieuSua() {
-	    // Retrieve updated data from text fields
-	    String tenPhim = txtTenPhim.getText();
-	    String loaiPhim = txtLoaiPhim.getText();
-	    String quocGia = txtQuocGia.getText();
-	    String ngonNgu = txtNgonNgu.getText();
-	    String trangThaiPhim = txtTrangThai.getText();
-	    int thoiLuong = Integer.parseInt(txtThoiLuong.getText());
-	    double giaTien = Double.parseDouble(txtTien.getText());
-	    int soLuongVe = Integer.parseInt(txtSoLuongVe.getText());
-	    int gioiHanTuoi = Integer.parseInt(txtTuoi.getText());
-	    String ngayChieu = txtNgayChieu.getText();
-	    String ngayHetHan = txtNgayHetHan.getText();
-	    
-	    try {
-	        // Call the method to update data in your data source
-	        updatePhim();
-	        
-	        // Display success message
-	        JOptionPane.showMessageDialog(this, "Dữ liệu đã được cập nhật thành công!");
-	        
-	        // Close the current window
-	        this.dispose();
-	    } catch (Exception e) {
-	        // Handle any errors or exceptions that may occur during the update process
-	        e.printStackTrace();
-	        JOptionPane.showMessageDialog(this, "Đã xảy ra lỗi khi cập nhật dữ liệu!");
-	    }
-	}
+//	public void layDuLieuSua() {
+//	    // Retrieve updated data from text fields
+////	    String tenPhim = txtTenPhim.getText();
+////	    String loaiPhim = txtLoaiPhim.getText();
+////	    String quocGia = txtQuocGia.getText();
+////	    String ngonNgu = txtNgonNgu.getText();
+////	    String trangThaiPhim = txtTrangThai.getText();
+////	    int thoiLuong = Integer.parseInt(txtThoiLuong.getText());
+////	    double giaTien = Double.parseDouble(txtTien.getText());
+////	    int soLuongVe = Integer.parseInt(txtSoLuongVe.getText());
+////	    int gioiHanTuoi = Integer.parseInt(txtTuoi.getText());
+////	    String ngayChieu = txtNgayChieu.getText();
+////	    String ngayHetHan = txtNgayHetHan.getText();
+//	    
+//	    try {
+//	        // Call the method to update data in your data source
+//	    		if (checkEmpty()) {
+//	    			updatePhim();
+//	    			JOptionPane.showMessageDialog(this, "Dữ liệu đã được cập nhật thành công!");
+//	    			// Close the current window
+//	    	        this.dispose();
+//				}else {
+//					JOptionPane.showMessageDialog(this, "lỗi");
+//				}
+//	    		
+//	    	
+//	        
+//	        
+//	        // Display success message
+//	        
+//	        
+//	        
+//	    } catch (Exception e) {
+//	        // Handle any errors or exceptions that may occur during the update process
+//	        e.printStackTrace();
+//	        JOptionPane.showMessageDialog(this, "Đã xảy ra lỗi khi cập nhật dữ liệu!");
+//	    }
+//	}
 
 
 

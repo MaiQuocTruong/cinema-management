@@ -272,7 +272,7 @@ public class GD_QuanLy_SuatChieu_Them extends JFrame {
 		contentPane.add(cbx_trangThai);
 
 		// Load Data
-		Socket socket = new Socket("192.168.2.20", 6789);
+		Socket socket = new Socket("192.168.2.10", 6789);
 		clientXC = new ClientXuatChieu_dao(socket);
 
 		JButton btn_Them = new JButton("Thêm");
@@ -314,6 +314,11 @@ public class GD_QuanLy_SuatChieu_Them extends JFrame {
 				phongchieu.setMaPhongChieu(dsPhongChieu);
 
 				Date ngayChieutrenGD = ngayChieuDate.getDate();
+				
+				if (ngayChieutrenGD == null) {
+				    // Hiển thị thông báo lỗi trên giao diện người dùng
+				    JOptionPane.showMessageDialog(null, "Vui lòng chọn ngày tháng năm trước khi tiếp tục.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+				} else {
 				Instant instant = ngayChieutrenGD.toInstant();
 				LocalDate ngayChieu = instant.atZone(ZoneId.systemDefault()).toLocalDate();
 				String ngayChieuTrongTable = txtNgayChieu.getText();
@@ -346,6 +351,7 @@ public class GD_QuanLy_SuatChieu_Them extends JFrame {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+			}
 			}
 		});
 
@@ -407,7 +413,7 @@ public class GD_QuanLy_SuatChieu_Them extends JFrame {
 	public void loadPhongChieuToComboBox(JComboBox<String> comboBox) {
 		try {
 			// Tạo một đối tượng ClientPhongChieu_dao và kết nối đến server
-			Socket socket = new Socket("192.168.2.20", 6789);
+			Socket socket = new Socket("192.168.2.10", 6789);
 			ClientPhongChieu_dao clientPhongChieuDao = new ClientPhongChieu_dao(socket);
 
 			// Gọi phương thức getListPhongChieu() để lấy danh sách phòng chiếu từ server
@@ -432,7 +438,7 @@ public class GD_QuanLy_SuatChieu_Them extends JFrame {
 	public void loadPhimToComboBox(JComboBox<String> comboBox) {
 		try {
 			// Tạo một đối tượng ClientPhongChieu_dao và kết nối đến server
-			Socket socket = new Socket("192.168.2.20", 6789);
+			Socket socket = new Socket("192.168.2.10", 6789);
 			ClientPhim_dao clientPhimDao = new ClientPhim_dao(socket);
 
 			// Gọi phương thức getListPhongChieu() để lấy danh sách phòng chiếu từ server

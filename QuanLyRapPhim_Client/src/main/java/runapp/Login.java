@@ -106,7 +106,7 @@ public class Login extends JFrame implements ActionListener{
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				try {
-					Socket socket = new Socket("192.168.2.20", 6789);
+					Socket socket = new Socket("192.168.2.10", 6789);
 					clientNV_dao = new ClientNhanVien_dao(socket);
 					dangNhap();
 				} catch (ClassNotFoundException e1) {
@@ -225,7 +225,7 @@ public class Login extends JFrame implements ActionListener{
             gdqly.setLocationRelativeTo(null);
             dispose();
         }else {
-        	Socket socket = new Socket("192.168.2.20",6789);
+        	Socket socket = new Socket("192.168.2.10",6789);
         	clientTK_dao = new ClientTaiKhoan_dao(socket);
         	TaiKhoan tk = clientTK_dao.findTKOnMaNV(txtUser.getText());
         	if(tk.getMatkhau().equals(new String(passMk.getPassword()))) {
