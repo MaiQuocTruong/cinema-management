@@ -454,20 +454,20 @@ public class GD_HoaDonTinhTien_BETA extends JFrame {
 		double uuDai = 0;
 		
 		
-		Socket socket = new Socket("192.168.100.4", 6789);
+		Socket socket = new Socket("192.168.147.1", 6789);
 		client_kh = new ClientKhachHang_dao(socket);
 		
-		Socket socket2 = new Socket("192.168.100.4", 6789);
+		Socket socket2 = new Socket("192.168.147.1", 6789);
 		clientHDTong = new ClientCTHoaDonTong(socket2);
 		KhachHang kh = client_kh.findCustomerOnPhoneNumber(sdtKH);
 		
-		Socket socket3 = new Socket("192.168.100.4", 6789);
+		Socket socket3 = new Socket("192.168.147.1", 6789);
 		clienHDPhim = new ClientCTHoaDonPhim(socket3);
 		
-		Socket socket4 = new Socket("192.168.100.4", 6789);
+		Socket socket4 = new Socket("192.168.147.1", 6789);
 		clientHDDichVu = new ClientCTHoaDonDichVu(socket4);
 		
-		Socket socket5 = new Socket("192.168.100.4", 6789);
+		Socket socket5 = new Socket("192.168.147.1", 6789);
 		clientNhanVien = new ClientNhanVien_dao(socket5);
 		
 		if(kh.getLoaiKH().equalsIgnoreCase("VIP")) {

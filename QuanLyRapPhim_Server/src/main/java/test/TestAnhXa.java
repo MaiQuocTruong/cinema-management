@@ -44,7 +44,7 @@ public class TestAnhXa {
 //		 }
 		
 		
-//		xc_dao.deleteXuatChieu("X005");
+		xc_dao.deleteXuatChieu("X003");
 //		
 //		List<Phim> listMovies = phim_dao.getListMovies();
 //		for (Phim phim : listMovies) {

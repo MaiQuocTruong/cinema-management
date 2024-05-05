@@ -317,6 +317,8 @@ public class ClientHandler implements Runnable {
 						lock.writeLock().unlock();
 					}
 					
+					
+					
 					break;
 				case "AddXuatChieu":
 					XuatChieu listxc = (XuatChieu) in.readObject();

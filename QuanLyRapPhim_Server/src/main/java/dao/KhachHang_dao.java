@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import javax.swing.JOptionPane;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.NoResultException;
@@ -68,8 +70,14 @@ public class KhachHang_dao {
 	        
 	        return kh; // Trả về khách hàng nếu tìm thấy
 	    } catch (NoResultException e) {
-	        return new KhachHang(); // Trả về null nếu không tìm thấy khách hàng
+	        JOptionPane.showMessageDialog(null, "Không Tìm Thấy SDT KH!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+	        return null; // Trả về null hoặc xử lý một cách thích hợp khi không tìm thấy
+	    } catch (NullPointerException e) {
+	    	JOptionPane.showMessageDialog(null, "Không Tìm Thấy SDT KH!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+	        e.printStackTrace(); // In stack trace để phân tích lỗi
+	        return null; // Trả về null hoặc xử lý một cách thích hợp với lỗi khác
 	    }
+				
 	}
 	
 	public void updateKhachHang(KhachHang kh_update) {

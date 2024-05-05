@@ -54,13 +54,14 @@ public class XuatChieu_dao {
 	public void deleteXuatChieu(String maXuat) {
 		try {
 //			// Kiểm tra xem đối tượng có trong persistence context hay không
-			XuatChieu xcDelete = em.find(XuatChieu.class, maXuat);
-			System.out.println(xcDelete);
-			 if (xcDelete != null && em.contains(xcDelete)) {
 				 	em.getTransaction().begin();
-	                em.remove(xcDelete); // Xóa đối tượng nếu nó được quản lý
-	                em.getTransaction().commit();
-	         }
+					XuatChieu xcDelete = em.find(XuatChieu.class, maXuat);
+				 	 if (xcDelete != null && em.contains(xcDelete)) {
+				 		em.remove(xcDelete);
+				 		System.out.println("Xoa Thanh Cong");
+				 	 }
+				 	em.getTransaction().commit();
+	                           
 		}catch (Exception e) {
 			if (em.getTransaction().isActive()) {
                 em.getTransaction().rollback(); // Rollback transaction nếu có lỗi xảy ra

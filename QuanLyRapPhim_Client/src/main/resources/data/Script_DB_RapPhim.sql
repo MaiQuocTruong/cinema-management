@@ -28,9 +28,8 @@ CREATE TABLE `cthoadondichvu` (
   `MaHD` varchar(30) NOT NULL,
   `MaDichVu` varchar(30) NOT NULL,
   `TenDichVu` varchar(50) NOT NULL,
-  `SoLuongDichVu` int NOT NULL,
+  `SoLuong` int NOT NULL,
   `DonGiaDichVu` double NOT NULL,
-  `TongTienDichVu` double NOT NULL,
   KEY `MaHD` (`MaHD`),
   KEY `MaDichVu` (`MaDichVu`),
   CONSTRAINT `cthoadondichvu_ibfk_1` FOREIGN KEY (`MaHD`) REFERENCES `hoadon` (`MaHD`),
@@ -44,6 +43,7 @@ CREATE TABLE `cthoadondichvu` (
 
 LOCK TABLES `cthoadondichvu` WRITE;
 /*!40000 ALTER TABLE `cthoadondichvu` DISABLE KEYS */;
+INSERT INTO `cthoadondichvu` VALUES ('HD001','DV001','BapNuoc',3,300),('HD001','DV002','Binh Nuoc Avatar',3,300),('HD002','DV001','BapNuoc',3,300),('HD05052024123030624F0jjoL','DV002','Pepsi',4,60000);
 /*!40000 ALTER TABLE `cthoadondichvu` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -63,9 +63,7 @@ CREATE TABLE `cthoadonve` (
   `GioChieu` time NOT NULL,
   `MaPhim` varchar(30) NOT NULL,
   `TenPhim` varchar(50) NOT NULL,
-  `TongSoLuongVe` int NOT NULL,
   `DonGiaPhim` double NOT NULL,
-  `TongTienVe` double NOT NULL,
   PRIMARY KEY (`MaVe`),
   KEY `MaHD` (`MaHD`),
   KEY `MaPhongChieu` (`MaPhongChieu`),
@@ -84,6 +82,7 @@ CREATE TABLE `cthoadonve` (
 
 LOCK TABLES `cthoadonve` WRITE;
 /*!40000 ALTER TABLE `cthoadonve` DISABLE KEYS */;
+INSERT INTO `cthoadonve` VALUES ('HD001','V001','H7','PC001','X001','16:20:00','P001','Doraemon',40000),('HD001','V002','H7','PC002','X002','16:25:00','P002','Conan',45000),('HD002','V003','H7','PC001','X001','16:20:00','P001','Doraemon',40000),('HD05052024123030624F0jjoL','VA01P00112:30:4505052024123105060','A01','PC001','X001','12:30:45','P001','Conan',400),('HD05052024123030624F0jjoL','VA02P00112:30:4505052024123105061','A02','PC001','X001','12:30:45','P001','Conan',400),('HD05052024123030624F0jjoL','VA03P00112:30:4505052024123105061','A03','PC001','X001','12:30:45','P001','Conan',400);
 /*!40000 ALTER TABLE `cthoadonve` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -110,6 +109,7 @@ CREATE TABLE `dichvuanuong` (
 
 LOCK TABLES `dichvuanuong` WRITE;
 /*!40000 ALTER TABLE `dichvuanuong` DISABLE KEYS */;
+INSERT INTO `dichvuanuong` VALUES ('DV001','Bánh Oreo','Đang Bán','Bánh Kẹo',300),('DV002','Pepsi','Đang Bán','Nước Giải Khát',300);
 /*!40000 ALTER TABLE `dichvuanuong` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -121,10 +121,12 @@ DROP TABLE IF EXISTS `giadichvu`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `giadichvu` (
+  `MaGiaDichVu` varchar(30) NOT NULL,
   `MaDichVu` varchar(30) NOT NULL,
   `DonGia` double NOT NULL,
   `KichThuoc` varchar(20) NOT NULL,
   `TrangThaiSize` varchar(20) NOT NULL,
+  PRIMARY KEY (`MaGiaDichVu`),
   KEY `MaDichVu` (`MaDichVu`),
   CONSTRAINT `giadichvu_ibfk_1` FOREIGN KEY (`MaDichVu`) REFERENCES `dichvuanuong` (`MaDichVu`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -136,6 +138,7 @@ CREATE TABLE `giadichvu` (
 
 LOCK TABLES `giadichvu` WRITE;
 /*!40000 ALTER TABLE `giadichvu` DISABLE KEYS */;
+INSERT INTO `giadichvu` VALUES ('GDV001','DV001',90000,'XL','Đang Bán'),('GDV002','DV001',30000,'Nhỏ','Đang Bán'),('GDV003','DV002',60000,'Lớn','Đang Bán');
 /*!40000 ALTER TABLE `giadichvu` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -153,7 +156,7 @@ CREATE TABLE `hoadon` (
   `UuDai` double NOT NULL,
   `VAT` double NOT NULL,
   `TongTien` double NOT NULL,
-  `NgayLapHD` date DEFAULT NULL,
+  `NgayLapHD` date NOT NULL,
   PRIMARY KEY (`MaHD`),
   KEY `MaKhachHang` (`MaKhachHang`),
   KEY `MaNhanVien` (`MaNhanVien`),
@@ -168,7 +171,7 @@ CREATE TABLE `hoadon` (
 
 LOCK TABLES `hoadon` WRITE;
 /*!40000 ALTER TABLE `hoadon` DISABLE KEYS */;
-INSERT INTO `hoadon` VALUES ('HD001','KH001','NV001',0.3,0.4,800,'2023-11-06');
+INSERT INTO `hoadon` VALUES ('HD001','KH001','NV001',0.3,0.4,800,'2023-11-06'),('HD002','KH001','NV001',0.3,0.4,800,'2023-11-06'),('HD05052024123030624F0jjoL','KH001','NV001',0.1,0.08,236376,'2024-05-05');
 /*!40000 ALTER TABLE `hoadon` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -183,7 +186,7 @@ CREATE TABLE `khachhang` (
   `MaKH` varchar(30) NOT NULL,
   `TenKH` varchar(50) NOT NULL,
   `Email` varchar(50) NOT NULL,
-  `NgaySinh` date DEFAULT NULL,
+  `NgaySinh` date NOT NULL,
   `GioiTinh` bit(1) NOT NULL,
   `LoaiKhachHang` varchar(20) NOT NULL,
   `SDT` char(30) NOT NULL,
@@ -201,7 +204,7 @@ CREATE TABLE `khachhang` (
 
 LOCK TABLES `khachhang` WRITE;
 /*!40000 ALTER TABLE `khachhang` DISABLE KEYS */;
-INSERT INTO `khachhang` VALUES ('KH001','Trưởng','maiqtruong2403@gmail.com','2003-03-24',_binary '','VIP','0398911257',1000,'0123',600,0),('KH002','Hai','hainguyendoanngoc@gmail.com','2003-03-24',_binary '','Thuong','0398911257',1000,'0123',600,0);
+INSERT INTO `khachhang` VALUES ('KH001','Hải','hainguyendoanngoc@gmail.com','2024-05-15',_binary '','VIP','0961236009',1000,'09777211907',600,0),('KH002','Hải','hainguyendoanngoc@gmail.com','2024-05-15',_binary '','Thuong','0961236005',0,'09777211',0,0),('KH003','Lộc','loc@gmail.com','2024-05-16',_binary '','Thuong','0812345',0,'0977209',0,0);
 /*!40000 ALTER TABLE `khachhang` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -215,7 +218,7 @@ DROP TABLE IF EXISTS `nhanvien`;
 CREATE TABLE `nhanvien` (
   `MaNhanVien` varchar(30) NOT NULL,
   `TenNhanVien` varchar(50) NOT NULL,
-  `NgaySinh` date DEFAULT NULL,
+  `NgaySinh` date NOT NULL,
   `DiaChi` varchar(50) NOT NULL,
   `SDT` varchar(20) NOT NULL,
   `Email` varchar(50) NOT NULL,
@@ -232,7 +235,7 @@ CREATE TABLE `nhanvien` (
 
 LOCK TABLES `nhanvien` WRITE;
 /*!40000 ALTER TABLE `nhanvien` DISABLE KEYS */;
-INSERT INTO `nhanvien` VALUES ('NV001','Hai','2003-11-06','HCM','0961236005','hainguyendoanngoc@gmail.com','Nhân Viên',_binary '',_binary ''),('NV002','Truong','2024-04-11','HCM','0912312','t@gmail.com','Nhân Viên',_binary '',_binary '');
+INSERT INTO `nhanvien` VALUES ('NV001','Hai','2003-11-06','HCM','0961236005','hainguyendoanngoc@gmail.com','Nhân Viên',_binary '',_binary ''),('NV002','Trưởng','2024-05-02','HCM','0961239890','truong@gmail.com','Quản Lý',_binary '',_binary ''),('NV003','Trí ','2024-05-02','HCM','097812','tri@gmail.com','Nhân Viên',_binary '',_binary ''),('NV04052024230607935mZk6lR','Nhân','2024-05-15','HCM','096123','nhan@gmail.com','Nhân Viên',_binary '',_binary ''),('NV040520242306089789o4OR7','Thương','2024-05-16','HaNoi','04564','thuong@gmail.com','Nhân Viên',_binary '',_binary '');
 /*!40000 ALTER TABLE `nhanvien` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -287,7 +290,7 @@ CREATE TABLE `phim` (
 
 LOCK TABLES `phim` WRITE;
 /*!40000 ALTER TABLE `phim` DISABLE KEYS */;
-INSERT INTO `phim` VALUES ('P001','Conan','HoatHinh','2023-11-06','2023-12-12',400,300,_binary 'https://codex-themes.com/thegem/sites/shop-bakery',13,120,'TV','Japan','Đang Chiếu'),('P002','Avatar','HanhDong','2023-11-06','2023-12-12',400,300,_binary 'https://codex-themes.com/thegem/sites/shop-bakery',13,120,'TV','America','Đang Chiếu');
+INSERT INTO `phim` VALUES ('P001','Conan','HoatHinh','2023-11-06','2023-12-12',400,300,_binary 'https://codex-themes.com/thegem/sites/shop-bakery',13,120,'TV','Japan','Đang Chiếu'),('P002','Avatar','HanhDong','2023-11-06','2023-12-12',400,300,_binary 'https://codex-themes.com/thegem/sites/shop-bakery',13,120,'TV','America','Đang Chiếu'),('P04052024233819533V0FnZw','Shin','Hoạt Hình','2024-05-17','2024-05-18',70000,300,_binary 'C:\\Users\\ACER\\Desktop\\Active Trả Xe.jpg',18,120,'Nhật','Nhật Bản','Đang Chiếu'),('P04052024233820561LpyW0k','Meo Di Ha','Hoạt Hình','2024-05-07','2024-05-10',30000,300,_binary 'C:\\Users\\ASUS\\OneDrive\\Hình ảnh\\Ảnh chụp màn hình\\Ảnh chụp màn hình (845).png',19,120,'VietSub','Nhật Bản','Đang Chiếu');
 /*!40000 ALTER TABLE `phim` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -312,7 +315,7 @@ CREATE TABLE `phongchieuphim` (
 
 LOCK TABLES `phongchieuphim` WRITE;
 /*!40000 ALTER TABLE `phongchieuphim` DISABLE KEYS */;
-INSERT INTO `phongchieuphim` VALUES ('PC001','P1',30),('PC002','P2',30);
+INSERT INTO `phongchieuphim` VALUES ('PC001','P1',30),('PC002','Phòng 2',40),('PC003','Phòng 1',30);
 /*!40000 ALTER TABLE `phongchieuphim` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -339,7 +342,7 @@ CREATE TABLE `taikhoan` (
 
 LOCK TABLES `taikhoan` WRITE;
 /*!40000 ALTER TABLE `taikhoan` DISABLE KEYS */;
-INSERT INTO `taikhoan` VALUES ('NV001','1111','hainguyendoanngoc@gmail.com',_binary '\0'),('NV002','1111','t@gmail.com',_binary '\0');
+INSERT INTO `taikhoan` VALUES ('NV001','1111','hainguyendoanngoc@gmail.com',_binary ''),('NV002','1111','truong@gmail.com',_binary ''),('NV003','1111','tri@gmail.com',_binary ''),('NV04052024230607935mZk6lR','1111','nhan@gmail.com',_binary ''),('NV040520242306089789o4OR7','1111','thuong@gmail.com',_binary '');
 /*!40000 ALTER TABLE `taikhoan` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -373,7 +376,7 @@ CREATE TABLE `xuatchieu` (
 
 LOCK TABLES `xuatchieu` WRITE;
 /*!40000 ALTER TABLE `xuatchieu` DISABLE KEYS */;
-INSERT INTO `xuatchieu` VALUES ('X001','P001','PC001','3D','2023-12-12','12:30:45','13:40:00','Đang Chiếu'),('X002','P002','PC002','3D','2023-12-12','12:30:45','14:50:00','Đang Chiếu'),('X003','P001','PC002','3D','2023-12-12','12:30:45','14:50:00','Đang Chiếu');
+INSERT INTO `xuatchieu` VALUES ('X001','P001','PC001','3D','2023-12-12','12:30:45','13:40:00','Đang Chiếu'),('X002','P002','PC002','3D','2023-12-12','01:39:00','15:27:00','Đang chiếu');
 /*!40000 ALTER TABLE `xuatchieu` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -394,4 +397,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-04-17 20:02:50
+-- Dump completed on 2024-05-05 13:35:38

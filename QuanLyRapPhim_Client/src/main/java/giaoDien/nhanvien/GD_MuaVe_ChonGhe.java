@@ -2723,7 +2723,7 @@ public class GD_MuaVe_ChonGhe extends JFrame implements ActionListener {
 					JOptionPane.showMessageDialog(null, "Số Lượng Ghế Không Hợp Lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
 				}else {
 					try {
-						Socket socket = new Socket("192.168.100.4", 6789);
+						Socket socket = new Socket("192.168.147.1", 6789);
 						client_xc = new ClientXuatChieu_dao(socket);
 				
 						GD_MuaVe_ThucAn gd_dichvu = new GD_MuaVe_ThucAn(maHD , maGhe , maXC , soLuongVe , sdtkh , maNhanVien , tenNhanVien);

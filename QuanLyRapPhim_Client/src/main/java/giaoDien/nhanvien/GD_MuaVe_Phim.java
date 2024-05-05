@@ -662,7 +662,8 @@ public class GD_MuaVe_Phim extends JFrame implements ActionListener {
 		                // Xử lý khi người dùng ấn OK
 		                String quantityString = JOptionPane.showInputDialog(null, "Nhập số lượng vé:");
 		                String sdtKH = tf_sdtkh.getText();
-//		                System.out.println(sdtKH);
+		                
+		                
  		                if(sdtKH.trim().equals("") || sdtKH.trim().equals("null") || sdtKH.trim().equals("SĐT KH")) {
 		                	JOptionPane.showMessageDialog(null, "Vui lòng nhập SDT Khách Hàng!", "Lỗi", JOptionPane.ERROR_MESSAGE);
 		                	
@@ -728,7 +729,7 @@ public class GD_MuaVe_Phim extends JFrame implements ActionListener {
 		background.setBounds(0, 0, 1162, 613);
 		contentPane.add(background);
 //		
-		Socket socket = new Socket("192.168.100.4", 6789);
+		Socket socket = new Socket("192.168.147.1", 6789);
 		
 		clientPhim = new ClientPhim_dao(socket);
 		
@@ -815,7 +816,7 @@ public class GD_MuaVe_Phim extends JFrame implements ActionListener {
 		Object o = e.getSource();
 		if(o.equals(btntimkiem)) {
 			try {
-				Socket socket = new Socket("192.168.100.4", 6789);
+				Socket socket = new Socket("192.168.147.1", 6789);
 				client_kh = new ClientKhachHang_dao(socket);
 				String sdtKH = tf_sdtkh.getText();
 				

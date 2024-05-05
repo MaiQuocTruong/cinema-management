@@ -226,7 +226,7 @@ public class GD_HoaDonVePhim_BETA extends JFrame implements ActionListener {
 //        lblNewLabel_3.setIcon(scaledIcon);
 		
 		
-		Socket socket = new Socket("192.168.100.4", 6789);
+		Socket socket = new Socket("192.168.147.1",6789);
 		client_xc = new ClientXuatChieu_dao(socket);
 		XuatChieu xc = client_xc.getXuatChieuOnID(maXC);
 

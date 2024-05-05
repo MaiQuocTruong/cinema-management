@@ -714,7 +714,7 @@ public class GD_MuaVe_ThucAn extends JFrame implements ActionListener {
 		contentPane.add(background);
 
 //		Load Du Lieu Len Table
-		Socket socket = new Socket("192.168.100.4",6789);
+		Socket socket = new Socket("192.168.147.1",6789);
 		clientDichVu = new ClientDichVu_dao(socket);
 		List<DichVuAnUong> listDichVuAnUong = clientDichVu.getListDichVuAnUong();
 	
