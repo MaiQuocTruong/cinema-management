@@ -705,7 +705,7 @@ public class GD_QuanLy_TaiKhoan extends JFrame implements ActionListener {
 		contentPane.add(background);
 
 		// load dữ liệu
-		Socket socket = new Socket("192.168.2.20", 6789);
+		Socket socket = new Socket("192.168.100.4", 6789);
 		clientTK = new ClientTaiKhoan_dao(socket);
 		
 		listTK = clientTK.getListTK();

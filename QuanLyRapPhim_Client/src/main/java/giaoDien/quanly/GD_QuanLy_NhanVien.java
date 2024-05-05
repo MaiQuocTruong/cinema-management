@@ -790,7 +790,7 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 		contentPane.add(background);
 
 		// load dữ liệu
-		Socket socket = new Socket("192.168.2.20", 6789);
+		Socket socket = new Socket("192.168.100.4", 6789);
 		clientNV = new ClientNhanVien_dao(socket);
 
 		listNV = clientNV.getListNV();
@@ -960,11 +960,35 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 	    String maNVCantim = (String) table.getValueAt(row, 0);
 
 	    String tenNV = txtHoTen.getText();
+		if (!tenNV.matches("[\\p{L}\\s]+")) {
+		    // Hiển thị thông báo lỗi nếu tên không hợp lệ
+		    JOptionPane.showMessageDialog(this, "Tên nhân viên không được chứa ký tự đặc biệt và số", "Lỗi", JOptionPane.ERROR_MESSAGE);
+		    return; // Dừng việc thêm nhân viên
+		}
+		
 	    Date ngaySinhTrenGD = ngaySinhDateChooser.getDate();
 
 	    String sdtMoi = txtSDT.getText();
+		if (!sdtMoi.matches("\\d{10}")) {
+		    // Hiển thị thông báo lỗi nếu SĐT không hợp lệ
+		    JOptionPane.showMessageDialog(this, "Số điện thoại phải chứa 10 số", "Lỗi", JOptionPane.ERROR_MESSAGE);
+		    return; // Dừng việc thêm nhân viên
+		}
+		
 	    String diaChi = txtDiaChi.getText();
+		if (!diaChi.matches("[\\p{L}\\s\\d,\\/]+")) {
+		    // Hiển thị thông báo lỗi nếu địa chỉ không hợp lệ
+		    JOptionPane.showMessageDialog(this, "Địa chỉ không được chứa ký tự đặc biệt, ngoại trừ dấu phẩy, dấu gạch chéo và khoảng trắng", "Lỗi", JOptionPane.ERROR_MESSAGE);
+		    return; // Dừng việc thêm
+		}
+		
 	    String email = txtEmail.getText();
+		if (!email.matches("[a-zA-Z0-9._%+-]+@gmail.com")) {
+		    // Hiển thị thông báo lỗi nếu email không hợp lệ
+		    JOptionPane.showMessageDialog(this, "Email phải có định dạng example@gmail.com", "Lỗi", JOptionPane.ERROR_MESSAGE);
+		    return; // Dừng việc thêm nhân viên
+		}
+		
 	    String chucVu = cboxChucVu.getSelectedItem().toString();
 
 	    boolean statusQuit = true;
@@ -1102,15 +1126,51 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
         
         
 		String tenNV = txtHoTen.getText();
+		// Kiểm tra tên nhân viên không chứa ký tự đặc biệt và số
+		if (!tenNV.matches("[\\p{L}\\s]+")) {
+		    // Hiển thị thông báo lỗi nếu tên không hợp lệ
+		    JOptionPane.showMessageDialog(this, "Tên nhân viên không được chứa ký tự đặc biệt và số", "Lỗi", JOptionPane.ERROR_MESSAGE);
+		    return; // Dừng việc thêm nhân viên
+		}
 
 		Date ngaySinhTrenGD = ngaySinhDateChooser.getDate();
+		if (ngaySinhTrenGD == null) {
+		    // Hiển thị thông báo lỗi trên giao diện người dùng
+		    JOptionPane.showMessageDialog(null, "Vui lòng chọn ngày tháng năm trước khi tiếp tục.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+		    return;
+		}
 		Instant instant = ngaySinhTrenGD.toInstant();
+	
 		LocalDate ngaySinh = instant.atZone(ZoneId.systemDefault()).toLocalDate();
+		if (ngaySinh.isAfter(LocalDate.now())) {
+	        JOptionPane.showMessageDialog(null, "Ngày sinh không thể sau ngày hiện tại.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+	        return;
+	    }
 		String ngaySinhTrongTable = txtNgaySinh.getText();
 
+		
 		String sdt = txtSDT.getText();
+		// Kiểm tra SĐT chỉ chứa 10 số
+		if (!sdt.matches("\\d{10}")) {
+		    // Hiển thị thông báo lỗi nếu SĐT không hợp lệ
+		    JOptionPane.showMessageDialog(this, "Số điện thoại phải chứa 10 số", "Lỗi", JOptionPane.ERROR_MESSAGE);
+		    return; // Dừng việc thêm nhân viên
+		}
+		
 		String diaChi = txtDiaChi.getText();
+		if (!diaChi.matches("[\\p{L}\\s\\d,\\/]+")) {
+		    // Hiển thị thông báo lỗi nếu địa chỉ không hợp lệ
+		    JOptionPane.showMessageDialog(this, "Địa chỉ không được chứa ký tự đặc biệt, ngoại trừ dấu phẩy, dấu gạch chéo và khoảng trắng", "Lỗi", JOptionPane.ERROR_MESSAGE);
+		    return; // Dừng việc thêm
+		}
+		
 		String email = txtEmail.getText();
+		// Kiểm tra email có đúng định dạng
+		if (!email.matches("[a-zA-Z0-9._%+-]+@gmail.com")) {
+		    // Hiển thị thông báo lỗi nếu email không hợp lệ
+		    JOptionPane.showMessageDialog(this, "Email phải có định dạng example@gmail.com", "Lỗi", JOptionPane.ERROR_MESSAGE);
+		    return; // Dừng việc thêm nhân viên
+		}
 
 		boolean gender = true;
 		if (rdbtnNu.isSelected()) {
@@ -1141,13 +1201,6 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 			trangThai = "Ngưng làm";
 		}
 
-//		boolean statusQuit = false;
-//		String trangThai = cboxTrangThai.getSelectedItem().toString();
-//		if(!trangThai.trim().equals("Còn làm")) {
-//			statusQuit = true;
-//		}else {
-//			statusQuit = false;
-//		}
 		NhanVien nv = new NhanVien(maNV, tenNV, diaChi, ngaySinh, gender, email, sdt, chucVu, statusQuit);
 		clientNV.addNV(nv);
 		java.lang.Object[] rowData = { maNV, tenNV, ngaySinhTrongTable, sdt, diaChi, email, chucVu, gioiTinhTrongTable,
@@ -1220,6 +1273,4 @@ public class GD_QuanLy_NhanVien extends JFrame implements ActionListener {
 
         return new String(charArray);
     }
-
-
 }

@@ -671,7 +671,7 @@ public class GD_QuanLy_ThongKeDichVu extends JFrame implements ActionListener{
 		background.setIcon(new ImageIcon(GD_QuanLy_Phim.class.getResource("/imgs/bggalaxy1.png")));
 		contentPane.add(background);
 		
-		Socket socket = new Socket("192.168.2.20", 6789);
+		Socket socket = new Socket("192.168.100.4", 6789);
 		client_hddv = new ClientCTHoaDonDichVu(socket);
 		
 		btnBieuDoThongKe.addActionListener(this);

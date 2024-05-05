@@ -126,25 +126,25 @@ public class GD_HoaDonTinhTien_BETA extends JFrame {
 		JPanel topPanel = new JPanel() {
 			private static final long serialVersionUID = 1L;
 
-//			protected void paintComponent(Graphics g) {
-//				g.setColor(getBackground());
-//				g.fillRect(0, 0, getWidth(), getHeight());
-//				super.paintComponent(g);
-//
-//				// Đường dẫn đến hình ảnh
-//				Image image = null;
-//				try {
-//				    BufferedImage img = ImageIO.read(getClass().getResource("/imgs/cinemacity3x.jpg"));
-//				    image = img.getScaledInstance(getWidth(), getHeight(), Image.SCALE_SMOOTH);
-//				} catch (IOException e) {
-//				    e.printStackTrace();
-//				}
-//
-//				// Vẽ hình ảnh lên panel
-//				g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
-//			}
+			protected void paintComponent(Graphics g) {
+				g.setColor(getBackground());
+				g.fillRect(0, 0, getWidth(), getHeight());
+				super.paintComponent(g);
+
+				// Đường dẫn đến hình ảnh
+				Image image = null;
+				try {
+				    BufferedImage img = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/cinema3xjpg.jpg"));
+				    image = img.getScaledInstance(getWidth(), getHeight(), Image.SCALE_SMOOTH);
+				} catch (IOException e) {
+				    e.printStackTrace();
+				}
+
+				// Vẽ hình ảnh lên panel
+				g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+			}
 		};
-//		topPanel.setOpaque(false);
+		topPanel.setOpaque(false);
 		topPanel.setBounds(363, 183, 350, 150);
 		topPanel.setLayout(new FlowLayout(FlowLayout.LEFT)); // Sử dụng FlowLayout
 		contentPane.add(topPanel);
@@ -426,23 +426,23 @@ public class GD_HoaDonTinhTien_BETA extends JFrame {
 		contentPane.add(lbl_close);
 		
 		topPanel_1 = new JPanel() {
-//			protected void paintComponent(Graphics g) {
-//				g.setColor(getBackground());
-//				g.fillRect(0, 0, getWidth(), getHeight());
-//				super.paintComponent(g);
-//
-//				// Đường dẫn đến hình ảnh
-//				Image image = null;
-//				try {
-//				    BufferedImage img = ImageIO.read(getClass().getResource("/imgs/9881854_4271747.jpg"));
-//				    image = img.getScaledInstance(getWidth(), getHeight(), Image.SCALE_SMOOTH);
-//				} catch (IOException e) {
-//				    e.printStackTrace();
-//				}
-//
-//				// Vẽ hình ảnh lên panel
-//				g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
-//			}
+			protected void paintComponent(Graphics g) {
+				g.setColor(getBackground());
+				g.fillRect(0, 0, getWidth(), getHeight());
+				super.paintComponent(g);
+
+				// Đường dẫn đến hình ảnh
+				Image image = null;
+				try {
+				    BufferedImage img = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/ccity.jpg"));
+				    image = img.getScaledInstance(getWidth(), getHeight(), Image.SCALE_SMOOTH);
+				} catch (IOException e) {
+				    e.printStackTrace();
+				}
+
+				// Vẽ hình ảnh lên panel
+				g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+			}
 		};
 		topPanel_1.setBounds(10, 222, 343, 111);
 		contentPane.add(topPanel_1);
@@ -454,20 +454,20 @@ public class GD_HoaDonTinhTien_BETA extends JFrame {
 		double uuDai = 0;
 		
 		
-		Socket socket = new Socket("192.168.2.20", 6789);
+		Socket socket = new Socket("192.168.100.4", 6789);
 		client_kh = new ClientKhachHang_dao(socket);
 		
-		Socket socket2 = new Socket("192.168.2.20", 6789);
+		Socket socket2 = new Socket("192.168.100.4", 6789);
 		clientHDTong = new ClientCTHoaDonTong(socket2);
 		KhachHang kh = client_kh.findCustomerOnPhoneNumber(sdtKH);
 		
-		Socket socket3 = new Socket("192.168.2.20", 6789);
+		Socket socket3 = new Socket("192.168.100.4", 6789);
 		clienHDPhim = new ClientCTHoaDonPhim(socket3);
 		
-		Socket socket4 = new Socket("192.168.2.20", 6789);
+		Socket socket4 = new Socket("192.168.100.4", 6789);
 		clientHDDichVu = new ClientCTHoaDonDichVu(socket4);
 		
-		Socket socket5 = new Socket("192.168.2.20", 6789);
+		Socket socket5 = new Socket("192.168.100.4", 6789);
 		clientNhanVien = new ClientNhanVien_dao(socket5);
 		
 		if(kh.getLoaiKH().equalsIgnoreCase("VIP")) {

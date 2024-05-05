@@ -189,7 +189,8 @@ public class GD_HoaDonVePhim_BETA extends JFrame implements ActionListener {
 				// Đường dẫn đến hình ảnh
 				Image image = null;
 				try {
-				    BufferedImage img = ImageIO.read(getClass().getResource("/imgs/cinema3x.png"));
+//				    BufferedImage img = ImageIO.read(getClass().getResource("/imgs/cinema3xjpg.jpg"));
+				    BufferedImage img = ImageIO.read(getClass().getClassLoader().getResourceAsStream("imgs/cinema3xjpg.jpg"));
 				    image = img.getScaledInstance(getWidth(), getHeight(), Image.SCALE_SMOOTH);
 				} catch (IOException e) {
 				    e.printStackTrace();
@@ -201,32 +202,31 @@ public class GD_HoaDonVePhim_BETA extends JFrame implements ActionListener {
 		};
 		topPanel.setOpaque(false);
 		topPanel.setBounds(363, 183, 350, 150);
+		topPanel.setLayout(new FlowLayout(FlowLayout.LEFT)); // Sử dụng FlowLayout
 		contentPane.add(topPanel);
-		topPanel.setLayout(null);
-		
-		
-		
+//		topPanel.setLayout(null);
+				
 		JPanel panel = new JPanel();
 		panel.setBounds(0, 0, 350, 150);
 		topPanel.add(panel);
 		panel.setLayout(null);
 		
-		JLabel lblNewLabel_3 = new JLabel("New label");
-		lblNewLabel_3.setBounds(0, 0, 350, 150);
-		panel.add(lblNewLabel_3);
+//		JLabel lblNewLabel_3 = new JLabel("New label");
+//		lblNewLabel_3.setBounds(0, 0, 350, 150);
+//		panel.add(lblNewLabel_3);
 
-		// Đọc và điều chỉnh kích thước hình ảnh
-        ImageIcon icon = new ImageIcon(GD_HoaDonVePhim_BETA.class.getResource("/imgs/cinema3x.png"));
-        Image image = icon.getImage().getScaledInstance(getWidth(), getHeight(), Image.SCALE_SMOOTH); // Điều chỉnh kích thước hình ảnh mong muốn
-
-        // Tạo biểu tượng mới từ hình ảnh đã điều chỉnh kích thước
-        ImageIcon scaledIcon = new ImageIcon(image);
-
-        // Đặt biểu tượng làm icon cho JLabel
-        lblNewLabel_3.setIcon(scaledIcon);
+//		// Đọc và điều chỉnh kích thước hình ảnh
+//        ImageIcon icon = new ImageIcon(GD_HoaDonVePhim_BETA.class.getResource("/imgs/cinema3x.png"));
+//        Image image = icon.getImage().getScaledInstance(getWidth(), getHeight(), Image.SCALE_SMOOTH); // Điều chỉnh kích thước hình ảnh mong muốn
+//
+//        // Tạo biểu tượng mới từ hình ảnh đã điều chỉnh kích thước
+//        ImageIcon scaledIcon = new ImageIcon(image);
+//
+//        // Đặt biểu tượng làm icon cho JLabel
+//        lblNewLabel_3.setIcon(scaledIcon);
 		
 		
-		Socket socket = new Socket("192.168.2.20", 6789);
+		Socket socket = new Socket("192.168.100.4", 6789);
 		client_xc = new ClientXuatChieu_dao(socket);
 		XuatChieu xc = client_xc.getXuatChieuOnID(maXC);
 

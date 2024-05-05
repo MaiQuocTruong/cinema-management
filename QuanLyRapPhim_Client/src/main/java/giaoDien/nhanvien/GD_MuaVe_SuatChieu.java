@@ -608,7 +608,7 @@ public class GD_MuaVe_SuatChieu extends JFrame implements ActionListener {
 		
 		
 //		System.out.println("Mã Phim Trong Xuất Chiếu " + maPhim + "Số Lượng Vé Phim " + soLuongVe);
-		Socket socket = new Socket("192.168.2.20", 6789);
+		Socket socket = new Socket("192.168.100.4", 6789);
 		clientXuatChieu_dao = new ClientXuatChieu_dao(socket);
 		List<XuatChieu> listXuatChieu = clientXuatChieu_dao.getListXC();
 		

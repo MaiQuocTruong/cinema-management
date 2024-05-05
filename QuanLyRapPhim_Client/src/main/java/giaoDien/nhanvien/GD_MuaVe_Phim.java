@@ -728,7 +728,7 @@ public class GD_MuaVe_Phim extends JFrame implements ActionListener {
 		background.setBounds(0, 0, 1162, 613);
 		contentPane.add(background);
 //		
-		Socket socket = new Socket("192.168.2.20", 6789);
+		Socket socket = new Socket("192.168.100.4", 6789);
 		
 		clientPhim = new ClientPhim_dao(socket);
 		
@@ -815,7 +815,7 @@ public class GD_MuaVe_Phim extends JFrame implements ActionListener {
 		Object o = e.getSource();
 		if(o.equals(btntimkiem)) {
 			try {
-				Socket socket = new Socket("192.168.2.20", 6789);
+				Socket socket = new Socket("192.168.100.4", 6789);
 				client_kh = new ClientKhachHang_dao(socket);
 				String sdtKH = tf_sdtkh.getText();
 				

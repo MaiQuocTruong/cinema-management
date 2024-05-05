@@ -30,6 +30,7 @@ import java.awt.SystemColor;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 
+import giaoDien.quanly.GD_QuanLy;
 import runapp.Login;
 import testbutton.Buttontest;
 
@@ -60,7 +61,6 @@ public class GD_NhanVien extends JFrame implements ActionListener {
     private JLabel lblNvIcon; // Thêm biến để lưu đối tượng JLabel chứa ảnh NV
     private boolean daChonPhim = false; // Biến để kiểm tra xem đã chọn Phim hay chưa
     public JLabel lbltennv;
-//	static String quanly;
 	/**
 	 * Launch the application.
 	 */
@@ -85,7 +85,7 @@ public class GD_NhanVien extends JFrame implements ActionListener {
 			java.util.logging.Logger.getLogger(GD_NhanVien.class.getName()).log(java.util.logging.Level.SEVERE, null,
 					ex);
 		}
-//		GD_NhanVien run = new GD_NhanVien(ma);
+//		GD_NhanVien run = new GD_NhanVien();
 //		run.setVisible(true);
 	}
 

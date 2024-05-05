@@ -352,7 +352,7 @@ public class GD_QuanLy_Phim_Them extends JFrame implements ActionListener {
     		//contentPane.add(scrollPane);
     		
 //    		Load Data
-    		Socket socket = new Socket("192.168.2.10", 6789);
+    		Socket socket = new Socket("192.168.100.4", 6789);
     		clientphim = new ClientPhim_dao(socket);
     		
     		listphim = clientphim.getListPhim();
